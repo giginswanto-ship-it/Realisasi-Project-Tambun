@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monitoring Realisasi Pembelanjaan Proyek Tambun</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .badge-success { background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+    .badge-info { background-color: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+    .badge-warning { background-color: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
+    .badge-danger { background-color: #fff1f2; color: #be123c; border: 1px solid #fecdd3; }
+    .badge-purple { background-color: #faf5ff; color: #6b21a8; border: 1px solid #e9d5ff; }
+    .badge-neutral { background-color: #f8fafc; color: #475569; border: 1px solid #e2e8f0; }
+  </style>
+</head>
+<body class="bg-slate-50/75 text-slate-900 min-h-screen antialiased">
+
+  <!-- ========================================================================= -->
+  <!-- TOP NAVIGATION HEADER -->
+  <!-- ========================================================================= -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="h-10 w-10 bg-slate-900 text-white rounded-xl flex items-center justify-center shadow-md">
+          <i data-lucide="building-2" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-base font-bold text-slate-900 leading-tight">Realisasi Dana Proyek Tambun</h1>
+            <span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-300">Live Active</span>
+          </div>
+          <p class="text-xs text-slate-500">Monitoring Kasbon Lapangan, Pagu RAB & Realisasi LPJ Terpadu</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button onclick="openRealizationModal()" class="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-lg border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 shadow-sm transition">
+          <i data-lucide="receipt" class="w-4 h-4 text-blue-600"></i>
+          Input LPJ Belanja
+        </button>
+        <button onclick="openRequestModal()" class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-lg bg-slate-900 hover:bg-slate-800 text-white shadow-sm transition">
+          <i data-lucide="file-plus-2" class="w-4 h-4"></i>
+          Buat Kasbon Baru
+        </button>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex gap-8 text-xs font-semibold">
+      <button onclick="switchTab('overview')" id="tab-btn-overview" class="py-3 border-b-2 border-slate-900 text-slate-900 flex items-center gap-1.5 transition">
+        <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Ikhtisar Eksekutif
+      </button>
+      <button onclick="switchTab('requests')" id="tab-btn-requests" class="py-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-1.5 transition">
+        <i data-lucide="wallet" class="w-4 h-4"></i> Pengajuan Kasbon (<span id="count-requests">0</span>)
+      </button>
+      <button onclick="switchTab('realizations')" id="tab-btn-realizations" class="py-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-1.5 transition">
+        <i data-lucide="file-check-2" class="w-4 h-4"></i> Realisasi LPJ (<span id="count-realizations">0</span>)
+      </button>
+      <button onclick="switchTab('alerts')" id="tab-btn-alerts" class="py-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-1.5 transition">
+        <i data-lucide="bell" class="w-4 h-4"></i> Peringatan Pagu (<span id="count-alerts">0</span>)
+      </button>
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- MAIN CONTAINER -->
+  <!-- ========================================================================= -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+
+    <!-- TAB 1: OVERVIEW -->
+    <div id="tab-overview" class="space-y-6">
+      <!-- 4 EXECUTIVE KPI CARDS -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Card 1 -->
+        <div class="bg-white rounded-xl border border-slate-200/90 p-5 shadow-sm border-l-4 border-l-slate-900">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Pagu Anggaran</span>
+            <div class="p-2 rounded-lg bg-slate-100 text-slate-700"><i data-lucide="wallet" class="w-5 h-5"></i></div>
+          </div>
+          <div class="mt-3">
+            <div id="kpi-budget" class="text-2xl font-black text-slate-900">Rp 0</div>
+            <div class="mt-1 text-xs text-slate-500">Nilai Kontrak: <span id="kpi-contract" class="font-medium text-slate-700">Rp 0</span></div>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="bg-white rounded-xl border border-slate-200/90 p-5 shadow-sm border-l-4 border-l-blue-600">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Kas Bon Dicairkan</span>
+            <div class="p-2 rounded-lg bg-blue-50 text-blue-600"><i data-lucide="coins" class="w-5 h-5"></i></div>
+          </div>
+          <div class="mt-3">
+            <div id="kpi-committed" class="text-2xl font-black text-slate-900">Rp 0</div>
+            <div class="mt-1.5 flex justify-between text-xs text-slate-500">
+              <span>Rasio Komitmen</span>
+              <span id="kpi-committed-pct" class="font-bold text-slate-700">0%</span>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-2 mt-1">
+              <div id="kpi-committed-bar" class="bg-blue-600 h-2 rounded-full" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="bg-white rounded-xl border border-slate-200/90 p-5 shadow-sm border-l-4 border-l-emerald-600">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Realisasi Sah (LPJ)</span>
+            <div class="p-2 rounded-lg bg-emerald-50 text-emerald-600"><i data-lucide="check-circle-2" class="w-5 h-5"></i></div>
+          </div>
+          <div class="mt-3">
+            <div id="kpi-realized" class="text-2xl font-black text-slate-900">Rp 0</div>
+            <div class="mt-1.5 flex justify-between text-xs text-slate-500">
+              <span>Burn Rate</span>
+              <span id="kpi-realized-pct" class="font-bold text-slate-700">0%</span>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-2 mt-1">
+              <div id="kpi-realized-bar" class="bg-emerald-600 h-2 rounded-full" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="bg-white rounded-xl border border-slate-200/90 p-5 shadow-sm border-l-4 border-l-purple-600">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Sisa Pagu Tersedia</span>
+            <div class="p-2 rounded-lg bg-purple-50 text-purple-600"><i data-lucide="pie-chart" class="w-5 h-5"></i></div>
+          </div>
+          <div class="mt-3">
+            <div id="kpi-remaining" class="text-2xl font-black text-slate-900">Rp 0</div>
+            <div class="mt-1 flex items-center justify-between text-xs">
+              <span class="text-emerald-600 font-semibold flex items-center gap-1">
+                <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Status Sehat
+              </span>
+              <span id="kpi-active-tickets" class="text-slate-400">0 Kasbon</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MIDDLE ROW: WBS BREAKDOWN + AUDIT TRAIL -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Distribution per WBS -->
+        <div class="lg:col-span-2 bg-white rounded-xl border border-slate-200/90 p-5 shadow-sm">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+            <div>
+              <h2 class="text-sm font-bold text-slate-900">Distribusi & Realisasi Anggaran per WBS</h2>
+              <p class="text-xs text-slate-400">Proyek Fasilitas Pergudangan Tambun</p>
+            </div>
+            <span class="text-xs font-semibold px-2.5 py-1 bg-slate-100 text-slate-700 rounded-lg">WBS Kontrak</span>
+          </div>
+          <div id="wbs-breakdown-list" class="space-y-3.5">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- Recent Activity Feed -->
+        <div class="bg-white rounded-xl border border-slate-200/90 p-5 shadow-sm">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+            <h2 class="text-sm font-bold text-slate-900">Jejak Audit & Aktivitas</h2>
+            <span class="text-[11px] text-slate-400 flex items-center gap-1"><i data-lucide="clock" class="w-3.5 h-3.5"></i> Live</span>
+          </div>
+          <div id="audit-feed-list" class="divide-y divide-slate-100 text-xs">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: REQUESTS TABLE -->
+    <div id="tab-requests" class="hidden space-y-4">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div class="flex items-center gap-3 w-full sm:w-auto">
+          <div class="relative w-full sm:w-80">
+            <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+            <input type="text" id="req-search" oninput="renderRequestsTable()" placeholder="Cari nomor tiket atau judul kasbon..." class="w-full pl-9 pr-4 py-2 text-xs rounded-lg border border-slate-300 focus:outline-none focus:border-blue-500 bg-white">
+          </div>
+          <select id="req-status-filter" onchange="renderRequestsTable()" class="px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-700 focus:outline-none">
+            <option value="ALL">Semua Status</option>
+            <option value="SUBMITTED">Menunggu Review</option>
+            <option value="APPROVED_DIRECTOR">Disetujui Direksi</option>
+            <option value="DISBURSED">Dana Dicairkan</option>
+            <option value="SETTLED">Selesai / Ditutup</option>
+          </select>
+        </div>
+        <button onclick="openRequestModal()" class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-lg bg-slate-900 text-white hover:bg-slate-800 transition">
+          <i data-lucide="plus" class="w-4 h-4"></i> Buat Kasbon Baru
+        </button>
+      </div>
+
+      <div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-600">
+            <thead class="bg-slate-50 border-b border-slate-200 text-slate-700 font-semibold uppercase tracking-wider text-[11px]">
+              <tr>
+                <th class="px-5 py-3.5">No. Tiket</th>
+                <th class="px-5 py-3.5">Uraian Kasbon</th>
+                <th class="px-5 py-3.5">Nominal</th>
+                <th class="px-5 py-3.5">Tenggat</th>
+                <th class="px-5 py-3.5">Status Alur</th>
+                <th class="px-5 py-3.5 text-right">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="requests-tbody" class="divide-y divide-slate-100">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: REALIZATIONS TABLE -->
+    <div id="tab-realizations" class="hidden space-y-4">
+      <div class="flex items-center justify-between">
+        <h2 class="text-sm font-bold text-slate-900">Daftar Pertanggungjawaban Belanja (LPJ & Kwitansi)</h2>
+        <button onclick="openRealizationModal()" class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white transition">
+          <i data-lucide="receipt" class="w-4 h-4"></i> Buat LPJ Baru
+        </button>
+      </div>
+
+      <div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-600">
+            <thead class="bg-slate-50 border-b border-slate-200 text-slate-700 font-semibold uppercase tracking-wider text-[11px]">
+              <tr>
+                <th class="px-5 py-3.5">No. LPJ</th>
+                <th class="px-5 py-3.5">Uraian Pembelian</th>
+                <th class="px-5 py-3.5">Kasbon Awal</th>
+                <th class="px-5 py-3.5">Realisasi Aktual</th>
+                <th class="px-5 py-3.5">Selisih Kas</th>
+                <th class="px-5 py-3.5">Status LPJ</th>
+                <th class="px-5 py-3.5 text-right">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="realizations-tbody" class="divide-y divide-slate-100">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: ALERTS TAB -->
+    <div id="tab-alerts" class="hidden space-y-4">
+      <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
+        <h2 class="text-sm font-bold text-slate-900 mb-1">Pusat Peringatan & Alerta Dini Anggaran</h2>
+        <p class="text-xs text-slate-500 mb-4">Sistem otomatis mendeteksi pagu menipis (sisa &le; 15%) dan tiket yang membutuhkan tindakan segera.</p>
+        <div id="alerts-container" class="space-y-3">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 1: BUAT PENGAJUAN KASBON BARU (RELATIONAL WITH OVER-BUDGET WARNING) -->
+  <!-- ========================================================================= -->
+  <div id="modal-request" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+        <div>
+          <h3 class="text-base font-bold text-slate-900">Form Pengajuan Kasbon Lapangan</h3>
+          <p class="text-xs text-slate-400">Pilih akun RAB dan tentukan estimasi kuantitas.</p>
+        </div>
+        <button onclick="closeRequestModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+
+      <div id="modal-req-error" class="hidden mt-3 p-3 bg-rose-50 border border-rose-200 rounded-lg text-xs text-rose-700 flex items-center gap-2">
+        <i data-lucide="alert-circle" class="w-4 h-4 shrink-0"></i>
+        <span id="modal-req-error-text"></span>
+      </div>
+
+      <form id="form-create-request" onsubmit="submitNewRequest(event)" class="mt-4 space-y-4 text-xs">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="font-semibold text-slate-700">Proyek</label>
+            <select id="modal-req-project" class="mt-1 w-full p-2 border border-slate-300 rounded-lg bg-white" required>
+              <option value="33333333-3333-3333-3333-333333333301">PRJ-TBN-2026-001 - Gudang Tambun</option>
+            </select>
+          </div>
+          <div>
+            <label class="font-semibold text-slate-700">Tipe Pengeluaran</label>
+            <select id="modal-req-type" class="mt-1 w-full p-2 border border-slate-300 rounded-lg bg-white">
+              <option value="CASH_ADVANCE">Kas Bon Operasional Lapangan</option>
+              <option value="DIRECT_PURCHASE">Pembelian Langsung / PO Pabrik</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="font-semibold text-slate-700">Judul Pengajuan</label>
+          <input type="text" id="modal-req-title" placeholder="Misal: Kas Bon Semen & Pasir Cor Batch 2" class="mt-1 w-full p-2 border border-slate-300 rounded-lg" required>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="font-semibold text-slate-700">Target Tanggal Dibutuhkan</label>
+            <input type="date" id="modal-req-date" class="mt-1 w-full p-2 border border-slate-300 rounded-lg" required>
+          </div>
+          <div>
+            <label class="font-semibold text-slate-700">Tujuan Belanja</label>
+            <input type="text" id="modal-req-purpose" placeholder="Kebutuhan pengecoran sloof..." class="mt-1 w-full p-2 border border-slate-300 rounded-lg" required>
+          </div>
+        </div>
+
+        <!-- RELATIONAL ITEM SELECTION -->
+        <div class="border-t border-slate-200 pt-3">
+          <label class="font-bold text-slate-800 uppercase tracking-wider text-[11px] block mb-2">Akun Anggaran (RAB Item)</label>
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-3">
+            <div>
+              <label class="text-slate-500 text-[11px]">Pilih Item Biaya</label>
+              <select id="modal-req-item-select" onchange="onBudgetItemChanged()" class="mt-1 w-full p-2 border border-slate-300 rounded-lg bg-white" required>
+                <!-- Rendered dynamically -->
+              </select>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <div>
+                <label class="text-slate-500 text-[11px]">Kuantitas</label>
+                <input type="number" id="modal-req-qty" value="1" min="1" step="any" oninput="calculateRequestSubtotal()" class="mt-1 w-full p-2 border border-slate-300 rounded-lg bg-white" required>
+              </div>
+              <div>
+                <label class="text-slate-500 text-[11px]">Harga Satuan (Rp)</label>
+                <input type="number" id="modal-req-price" value="0" min="0" oninput="calculateRequestSubtotal()" class="mt-1 w-full p-2 border border-slate-300 rounded-lg bg-white" required>
+              </div>
+              <div class="col-span-2 sm:col-span-1">
+                <label class="text-slate-500 text-[11px]">Sisa Pagu Tersedia</label>
+                <div id="modal-req-available-display" class="mt-1 p-2 bg-slate-100 rounded-lg font-bold text-slate-800">Rp 0</div>
+              </div>
+            </div>
+
+            <!-- LIVE OVER-BUDGET WARNING BANNER -->
+            <div id="modal-overrun-warning" class="hidden p-2.5 bg-rose-50 border border-rose-300 rounded-lg text-rose-700 font-semibold flex items-center gap-2">
+              <i data-lucide="alert-triangle" class="w-4 h-4 shrink-0 text-rose-600"></i>
+              <span id="modal-overrun-text"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between border-t border-slate-200 pt-3">
+          <div>
+            <span class="text-slate-500 text-[11px]">Total Estimasi:</span>
+            <div id="modal-req-subtotal-display" class="text-lg font-black text-slate-900">Rp 0</div>
+          </div>
+          <div class="flex gap-2">
+            <button type="button" onclick="closeRequestModal()" class="px-4 py-2 border border-slate-300 rounded-lg font-semibold hover:bg-slate-50">Batal</button>
+            <button type="submit" id="btn-submit-request" class="px-4 py-2 bg-slate-900 text-white rounded-lg font-semibold hover:bg-slate-800 disabled:opacity-50">Kirim Kasbon</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 2: INPUT LPJ REALISASI & KWITANSI -->
+  <!-- ========================================================================= -->
+  <div id="modal-realization" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+        <div>
+          <h3 class="text-base font-bold text-slate-900">Input LPJ Realisasi & Kwitansi</h3>
+          <p class="text-xs text-slate-400">Pertanggungjawaban pembelanjaan fisik di lapangan.</p>
+        </div>
+        <button onclick="closeRealizationModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+
+      <form id="form-create-realization" onsubmit="submitNewRealization(event)" class="mt-4 space-y-4 text-xs">
+        <div>
+          <label class="font-semibold text-slate-700">Pilih Tiket Kasbon Dicairkan</label>
+          <select id="modal-rlz-req-select" onchange="onRealizationRequestChanged()" class="mt-1 w-full p-2 border border-slate-300 rounded-lg bg-white" required>
+            <!-- Rendered dynamically -->
+          </select>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="font-semibold text-slate-700">Nomor Nota / Faktur Toko</label>
+            <input type="text" id="modal-rlz-invoice" placeholder="INV-TBJ-2026-099" class="mt-1 w-full p-2 border border-slate-300 rounded-lg" required>
+          </div>
+          <div>
+            <label class="font-semibold text-slate-700">Tanggal Faktur</label>
+            <input type="date" id="modal-rlz-date" class="mt-1 w-full p-2 border border-slate-300 rounded-lg" required>
+          </div>
+        </div>
+
+        <div>
+          <label class="font-semibold text-slate-700">Uraian Barang Riil</label>
+          <input type="text" id="modal-rlz-itemname" placeholder="Pembelian Semen & Paku..." class="mt-1 w-full p-2 border border-slate-300 rounded-lg" required>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="font-semibold text-slate-700">Total Belanja Riil (Rp)</label>
+            <input type="number" id="modal-rlz-amount" min="1" oninput="calculateRealizationDiff()" class="mt-1 w-full p-2 border border-slate-300 rounded-lg font-bold" required>
+          </div>
+          <div>
+            <label class="font-semibold text-slate-700">Lampiran Kwitansi (Simulasi)</label>
+            <div class="mt-1 p-2 border border-dashed border-slate-300 rounded-lg text-slate-500 flex items-center justify-center gap-1.5 bg-slate-50">
+              <i data-lucide="upload-cloud" class="w-4 h-4 text-blue-500"></i>
+              <span>Foto_Kwitansi.jpg</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- RECONCILIATION SUMMARY BANNER -->
+        <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
+          <div class="flex justify-between text-slate-600">
+            <span>Kasbon Awal Diterima:</span>
+            <span id="modal-rlz-initial-display" class="font-semibold text-slate-900">Rp 0</span>
+          </div>
+          <div class="flex justify-between text-slate-600">
+            <span>Realisasi Belanja Riil:</span>
+            <span id="modal-rlz-actual-display" class="font-semibold text-slate-900">Rp 0</span>
+          </div>
+          <div class="flex justify-between border-t border-slate-200 pt-1 font-bold">
+            <span>Hasil Rekonsiliasi:</span>
+            <span id="modal-rlz-diff-display" class="text-emerald-600">Rp 0</span>
+          </div>
+        </div>
+
+        <div class="flex justify-end gap-2 border-t border-slate-200 pt-3">
+          <button type="button" onclick="closeRealizationModal()" class="px-4 py-2 border border-slate-300 rounded-lg font-semibold hover:bg-slate-50">Batal</button>
+          <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-700">Kirim Berkas LPJ</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- CLIENT JAVASCRIPT APP ENGINE -->
+  <!-- ========================================================================= -->
+  <script>
+    let appData = {
+      projects: [],
+      categories: [],
+      budgetItems: [],
+      requests: [],
+      realizations: [],
+      auditLogs: []
+    };
+
+    const formatRp = (num) => 'Rp ' + Number(num || 0).toLocaleString('id-ID');
+
+    async function loadData() {
+      try {
+        const res = await fetch('/api/v1/data');
+        appData = await res.json();
+        renderAll();
+      } catch (e) {
+        console.error('Failed to load data:', e);
+      }
+    }
+
+    function renderAll() {
+      renderKpi();
+      renderWbs();
+      renderAuditFeed();
+      renderRequestsTable();
+      renderRealizationsTable();
+      renderAlerts();
+      lucide.createIcons();
+    }
+
+    function renderKpi() {
+      const prj = appData.projects[0] || {};
+      const totalBudget = prj.totalBudget || 0;
+      const contractValue = prj.contractValue || 0;
+
+      let committed = 0;
+      appData.requests.forEach(r => {
+        if (['DISBURSED', 'APPROVED_FINANCE', 'APPROVED_DIRECTOR', 'APPROVED_PM'].includes(r.currentStatus)) {
+          committed += Number(r.totalAmountRequested);
+        }
+      });
+
+      let realized = 0;
+      appData.realizations.forEach(rz => {
+        if (rz.status === 'SETTLED') {
+          realized += Number(rz.totalRealizedAmount);
+        }
+      });
+
+      const remaining = totalBudget - (committed + realized);
+      const committedPct = totalBudget > 0 ? ((committed / totalBudget) * 100).toFixed(1) : 0;
+      const realizedPct = totalBudget > 0 ? ((realized / totalBudget) * 100).toFixed(1) : 0;
+
+      document.getElementById('kpi-budget').innerText = formatRp(totalBudget);
+      document.getElementById('kpi-contract').innerText = formatRp(contractValue);
+      document.getElementById('kpi-committed').innerText = formatRp(committed);
+      document.getElementById('kpi-committed-pct').innerText = committedPct + '%';
+      document.getElementById('kpi-committed-bar').style.width = Math.min(100, committedPct) + '%';
+
+      document.getElementById('kpi-realized').innerText = formatRp(realized);
+      document.getElementById('kpi-realized-pct').innerText = realizedPct + '%';
+      document.getElementById('kpi-realized-bar').style.width = Math.min(100, realizedPct) + '%';
+
+      document.getElementById('kpi-remaining').innerText = formatRp(remaining);
+      document.getElementById('kpi-active-tickets').innerText = appData.requests.length + ' Kasbon';
+
+      document.getElementById('count-requests').innerText = appData.requests.length;
+      document.getElementById('count-realizations').innerText = appData.realizations.length;
+    }
+
+    function renderWbs() {
+      const container = document.getElementById('wbs-breakdown-list');
+      container.innerHTML = '';
+
+      appData.categories.forEach(cat => {
+        const catItems = appData.budgetItems.filter(i => i.categoryId === cat.id);
+        let catCommitted = 0;
+        let catRealized = 0;
+
+        catItems.forEach(i => {
+          catCommitted += Number(i.committedAmount || 0);
+          catRealized += Number(i.realizedAmount || 0);
+        });
+
+        const totalUsed = catCommitted + catRealized;
+        const allocated = Number(cat.allocatedAmount || 1);
+        const percent = ((totalUsed / allocated) * 100).toFixed(1);
+        const isOver = totalUsed > allocated;
+
+        container.innerHTML += `
+          <div class="p-3 bg-slate-50/80 rounded-xl border border-slate-100">
+            <div class="flex justify-between items-center text-xs mb-1.5">
+              <span class="font-bold text-slate-800">${cat.categoryCode} - ${cat.name}</span>
+              <span class="font-bold ${isOver ? 'text-rose-600' : 'text-slate-900'}">${formatRp(totalUsed)} / ${formatRp(allocated)}</span>
+            </div>
+            <div class="w-full bg-slate-200 rounded-full h-2">
+              <div class="${isOver ? 'bg-rose-500' : 'bg-blue-600'} h-2 rounded-full" style="width: ${Math.min(100, percent)}%"></div>
+            </div>
+            <div class="flex justify-between text-[11px] text-slate-500 mt-1">
+              <span>Realisasi Sah: ${formatRp(catRealized)}</span>
+              <span>Kasbon Aktif: ${formatRp(catCommitted)}</span>
+              <span class="font-bold ${isOver ? 'text-rose-600' : 'text-slate-700'}">${percent}% Terserap</span>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function renderAuditFeed() {
+      const container = document.getElementById('audit-feed-list');
+      container.innerHTML = '';
+
+      appData.auditLogs.slice(0, 5).forEach(log => {
+        container.innerHTML += `
+          <div class="py-2.5 flex justify-between items-start">
+            <div>
+              <div class="font-bold text-slate-800">${log.userName}</div>
+              <div class="text-[11px] text-slate-500">${log.ticket} - ${log.detail}</div>
+            </div>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${log.action === 'SETTLE' ? 'badge-success' : log.action === 'DISBURSE' ? 'badge-info' : 'badge-purple'}">${log.action}</span>
+          </div>
+        `;
+      });
+    }
+
+    function renderRequestsTable() {
+      const tbody = document.getElementById('requests-tbody');
+      tbody.innerHTML = '';
+
+      const query = (document.getElementById('req-search')?.value || '').toLowerCase();
+      const statusFilter = document.getElementById('req-status-filter')?.value || 'ALL';
+
+      const filtered = appData.requests.filter(r => {
+        const matchQ = r.requestNumber.toLowerCase().includes(query) || r.title.toLowerCase().includes(query);
+        const matchS = statusFilter === 'ALL' || r.currentStatus === statusFilter;
+        return matchQ && matchS;
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-slate-400">Tidak ada pengajuan kasbon.</td></tr>`;
+        return;
+      }
+
+      filtered.forEach(r => {
+        let badgeClass = 'badge-neutral';
+        let statusLabel = r.currentStatus;
+
+        if (r.currentStatus === 'SETTLED') { badgeClass = 'badge-success'; statusLabel = 'Selesai (Settled)'; }
+        else if (r.currentStatus === 'DISBURSED') { badgeClass = 'badge-info'; statusLabel = 'Dana Dicairkan'; }
+        else if (r.currentStatus === 'APPROVED_DIRECTOR') { badgeClass = 'badge-purple'; statusLabel = 'Disetujui Direksi'; }
+        else if (r.currentStatus === 'APPROVED_PM') { badgeClass = 'badge-info'; statusLabel = 'Disetujui PM'; }
+        else if (r.currentStatus === 'SUBMITTED') { badgeClass = 'badge-warning'; statusLabel = 'Menunggu Review'; }
+
+        let actionBtn = '-';
+        if (r.currentStatus === 'SUBMITTED') {
+          actionBtn = `<button onclick="approveRequest('${r.id}', 'PM')" class="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded font-semibold text-[11px]">Setujui PM</button>`;
+        } else if (r.currentStatus === 'APPROVED_DIRECTOR' || r.currentStatus === 'APPROVED_PM') {
+          actionBtn = `<button onclick="disburseRequest('${r.id}')" class="px-2.5 py-1 bg-purple-600 hover:bg-purple-700 text-white rounded font-semibold text-[11px]">Cairkan Dana</button>`;
+        } else if (r.currentStatus === 'DISBURSED') {
+          actionBtn = `<button onclick="openRealizationModal('${r.id}')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-semibold text-[11px]">Laporkan LPJ</button>`;
+        }
+
+        tbody.innerHTML += `
+          <tr class="hover:bg-slate-50 transition">
+            <td class="px-5 py-3.5 font-bold text-slate-900">${r.requestNumber}</td>
+            <td class="px-5 py-3.5">
+              <div class="font-medium text-slate-800">${r.title}</div>
+              <div class="text-[11px] text-slate-400">Oleh: ${r.requesterName}</div>
+            </td>
+            <td class="px-5 py-3.5 font-bold text-slate-900">${formatRp(r.totalAmountRequested)}</td>
+            <td class="px-5 py-3.5 text-slate-500">${r.needByDate}</td>
+            <td class="px-5 py-3.5"><span class="px-2.5 py-1 rounded-full font-bold text-[10px] ${badgeClass}">${statusLabel}</span></td>
+            <td class="px-5 py-3.5 text-right">${actionBtn}</td>
+          </tr>
+        `;
+      });
+      lucide.createIcons();
+    }
+
+    function renderRealizationsTable() {
+      const tbody = document.getElementById('realizations-tbody');
+      tbody.innerHTML = '';
+
+      if (appData.realizations.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-400">Belum ada berkas LPJ diajukan.</td></tr>`;
+        return;
+      }
+
+      appData.realizations.forEach(rz => {
+        const isSettled = rz.status === 'SETTLED';
+        const diff = Number(rz.remainingBalance || 0);
+
+        tbody.innerHTML += `
+          <tr class="hover:bg-slate-50 transition">
+            <td class="px-5 py-3.5 font-bold text-slate-900">${rz.realizationNumber}<div class="text-[10px] text-slate-400 font-normal">Tiket: ${rz.requestNumber}</div></td>
+            <td class="px-5 py-3.5 font-medium text-slate-800">${rz.title}<div class="text-[10px] text-slate-400">Pelapor: ${rz.submitterName}</div></td>
+            <td class="px-5 py-3.5 text-slate-600">${formatRp(rz.totalRequested)}</td>
+            <td class="px-5 py-3.5 font-bold text-slate-900">${formatRp(rz.totalRealizedAmount)}</td>
+            <td class="px-5 py-3.5 font-bold ${diff > 0 ? 'text-emerald-600' : diff < 0 ? 'text-amber-600' : 'text-slate-600'}">
+              ${diff > 0 ? '+ ' + formatRp(diff) + ' (Sisa Kas)' : diff < 0 ? '- ' + formatRp(Math.abs(diff)) + ' (Reimburse)' : 'Rp 0'}
+            </td>
+            <td class="px-5 py-3.5"><span class="px-2.5 py-1 rounded-full font-bold text-[10px] ${isSettled ? 'badge-success' : 'badge-purple'}">${isSettled ? 'Selesai (Settled)' : 'Terverifikasi Finance'}</span></td>
+            <td class="px-5 py-3.5 text-right">
+              ${!isSettled ? `<button onclick="settleRealization('${rz.id}')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-semibold text-[11px]">Tutup Settlement</button>` : `<span class="text-emerald-600 font-bold">✓ Selesai</span>`}
+            </td>
+          </tr>
+        `;
+      });
+      lucide.createIcons();
+    }
+
+    function renderAlerts() {
+      const container = document.getElementById('alerts-container');
+      container.innerHTML = '';
+      let alertCount = 0;
+
+      appData.budgetItems.forEach(item => {
+        const total = Number(item.totalBudget || 0);
+        const used = Number(item.committedAmount || 0) + Number(item.realizedAmount || 0);
+        const rem = total - used;
+        const remPct = total > 0 ? (rem / total) * 100 : 0;
+
+        if (rem < 0) {
+          alertCount++;
+          container.innerHTML += `
+            <div class="p-3.5 bg-rose-50 border border-rose-200 rounded-xl flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="p-2 bg-rose-100 text-rose-700 rounded-lg"><i data-lucide="alert-triangle" class="w-5 h-5"></i></div>
+                <div>
+                  <div class="font-bold text-rose-900 text-xs">Peringatan Kritis: Overrun pada ${item.name} (${item.itemCode})</div>
+                  <div class="text-[11px] text-rose-700">Total belanja & komitmen melampaui pagu sebesar ${formatRp(Math.abs(rem))}!</div>
+                </div>
+              </div>
+              <span class="px-2 py-1 bg-rose-600 text-white font-bold text-[10px] rounded">CRITICAL</span>
+            </div>
+          `;
+        } else if (remPct <= 20) {
+          alertCount++;
+          container.innerHTML += `
+            <div class="p-3.5 bg-amber-50 border border-amber-200 rounded-xl flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="p-2 bg-amber-100 text-amber-700 rounded-lg"><i data-lucide="alert-circle" class="w-5 h-5"></i></div>
+                <div>
+                  <div class="font-bold text-amber-900 text-xs">Peringatan: Pagu ${item.name} (${item.itemCode}) Tersisa ${remPct.toFixed(1)}%</div>
+                  <div class="text-[11px] text-amber-700">Sisa dana tersedia tinggal ${formatRp(rem)} dari pagu ${formatRp(total)}.</div>
+                </div>
+              </div>
+              <span class="px-2 py-1 bg-amber-600 text-white font-bold text-[10px] rounded">WARNING</span>
+            </div>
+          `;
+        }
+      });
+
+      if (alertCount === 0) {
+        container.innerHTML = `<div class="p-6 text-center text-slate-400 text-xs">Semua alokasi pagu anggaran berada dalam batas aman.</div>`;
+      }
+      document.getElementById('count-alerts').innerText = alertCount;
+    }
+
+    // MODAL REQUEST LOGIC
+    function openRequestModal() {
+      const select = document.getElementById('modal-req-item-select');
+      select.innerHTML = '';
+      appData.budgetItems.forEach(item => {
+        const total = Number(item.totalBudget || 0);
+        const used = Number(item.committedAmount || 0) + Number(item.realizedAmount || 0);
+        const available = total - used;
+        select.innerHTML += `<option value="${item.id}" data-price="${item.unitPrice}" data-available="${available}">${item.itemCode} - ${item.name} (Sisa: ${formatRp(available)})</option>`;
+      });
+      onBudgetItemChanged();
+      document.getElementById('modal-request').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeRequestModal() {
+      document.getElementById('modal-request').classList.add('hidden');
+    }
+
+    function onBudgetItemChanged() {
+      const select = document.getElementById('modal-req-item-select');
+      const opt = select.selectedOptions[0];
+      if (!opt) return;
+
+      const price = Number(opt.dataset.price || 0);
+      const available = Number(opt.dataset.available || 0);
+
+      document.getElementById('modal-req-price').value = price;
+      document.getElementById('modal-req-available-display').innerText = formatRp(available);
+      calculateRequestSubtotal();
+    }
+
+    function calculateRequestSubtotal() {
+      const qty = Number(document.getElementById('modal-req-qty').value || 0);
+      const price = Number(document.getElementById('modal-req-price').value || 0);
+      const subtotal = qty * price;
+
+      document.getElementById('modal-req-subtotal-display').innerText = formatRp(subtotal);
+
+      const opt = document.getElementById('modal-req-item-select').selectedOptions[0];
+      const available = Number(opt?.dataset.available || 0);
+
+      const warningBox = document.getElementById('modal-overrun-warning');
+      const warningText = document.getElementById('modal-overrun-text');
+      const submitBtn = document.getElementById('btn-submit-request');
+
+      if (subtotal > available) {
+        warningBox.classList.remove('hidden');
+        warningText.innerText = `Peringatan Over-Budget! Subtotal ${formatRp(subtotal)} melebihi sisa pagu (${formatRp(available)})!`;
+        submitBtn.disabled = true;
+      } else {
+        warningBox.classList.add('hidden');
+        submitBtn.disabled = false;
+      }
+    }
+
+    async function submitNewRequest(e) {
+      e.preventDefault();
+      const select = document.getElementById('modal-req-item-select');
+      const opt = select.selectedOptions[0];
+      const budgetItemId = select.value;
+      const qty = Number(document.getElementById('modal-req-qty').value);
+      const price = Number(document.getElementById('modal-req-price').value);
+      const subtotal = qty * price;
+
+      const payload = {
+        title: document.getElementById('modal-req-title').value,
+        type: document.getElementById('modal-req-type').value,
+        needByDate: document.getElementById('modal-req-date').value,
+        purpose: document.getElementById('modal-req-purpose').value,
+        totalAmountRequested: subtotal,
+        items: [{
+          budgetItemId,
+          description: opt.text.split('(')[0],
+          requestedQty: qty,
+          estimatedUnitPrice: price,
+          estimatedTotal: subtotal
+        }]
+      };
+
+      const res = await fetch('/api/v1/requests', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok) {
+        closeRequestModal();
+        await loadData();
+        switchTab('requests');
+      } else {
+        const err = await res.json();
+        alert(err.message || 'Gagal menyimpan kasbon');
+      }
+    }
+
+    // APPROVAL / DISBURSEMENT
+    async function approveRequest(id, stage) {
+      if (!confirm('Setujui pengajuan kasbon ini?')) return;
+      await fetch(`/api/v1/requests/${id}/approve`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ stage, decision: 'APPROVED' })
+      });
+      await loadData();
+    }
+
+    async function disburseRequest(id) {
+      if (!confirm('Cairkan dana kasbon dan kunci pagu komitmen?')) return;
+      await fetch(`/api/v1/requests/${id}/disburse`, { method: 'POST' });
+      await loadData();
+    }
+
+    // MODAL REALIZATION LOGIC
+    function openRealizationModal(preselectedReqId) {
+      const select = document.getElementById('modal-rlz-req-select');
+      select.innerHTML = '';
+
+      const disbursedList = appData.requests.filter(r => r.currentStatus === 'DISBURSED');
+      if (disbursedList.length === 0) {
+        alert('Tidak ada tiket kasbon berstatus DISBURSED yang siap dibuatkan LPJ.');
+        return;
+      }
+
+      disbursedList.forEach(r => {
+        select.innerHTML += `<option value="${r.id}" data-amount="${r.totalAmountRequested}" ${r.id === preselectedReqId ? 'selected' : ''}>${r.requestNumber} - ${r.title} (${formatRp(r.totalAmountRequested)})</option>`;
+      });
+
+      onRealizationRequestChanged();
+      document.getElementById('modal-realization').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeRealizationModal() {
+      document.getElementById('modal-realization').classList.add('hidden');
+    }
+
+    function onRealizationRequestChanged() {
+      const select = document.getElementById('modal-rlz-req-select');
+      const opt = select.selectedOptions[0];
+      const initialAmt = Number(opt?.dataset.amount || 0);
+
+      document.getElementById('modal-rlz-amount').value = initialAmt;
+      document.getElementById('modal-rlz-date').value = new Date().toISOString().slice(0, 10);
+      calculateRealizationDiff();
+    }
+
+    function calculateRealizationDiff() {
+      const select = document.getElementById('modal-rlz-req-select');
+      const opt = select.selectedOptions[0];
+      const initialAmt = Number(opt?.dataset.amount || 0);
+      const actualAmt = Number(document.getElementById('modal-rlz-amount').value || 0);
+      const diff = initialAmt - actualAmt;
+
+      document.getElementById('modal-rlz-initial-display').innerText = formatRp(initialAmt);
+      document.getElementById('modal-rlz-actual-display').innerText = formatRp(actualAmt);
+
+      const diffDisplay = document.getElementById('modal-rlz-diff-display');
+      if (diff > 0) {
+        diffDisplay.className = 'text-emerald-600';
+        diffDisplay.innerText = `+ ${formatRp(diff)} (Sisa Kasbon Kembali)`;
+      } else if (diff < 0) {
+        diffDisplay.className = 'text-amber-600';
+        diffDisplay.innerText = `- ${formatRp(Math.abs(diff))} (Klaim Reimbursement)`;
+      } else {
+        diffDisplay.className = 'text-slate-900';
+        diffDisplay.innerText = 'Rp 0 (Jumlah Pas)';
+      }
+    }
+
+    async function submitNewRealization(e) {
+      e.preventDefault();
+      const select = document.getElementById('modal-rlz-req-select');
+      const requestId = select.value;
+      const actualAmt = Number(document.getElementById('modal-rlz-amount').value);
+
+      const payload = {
+        requestId,
+        invoiceNumber: document.getElementById('modal-rlz-invoice').value,
+        invoiceDate: document.getElementById('modal-rlz-date').value,
+        itemName: document.getElementById('modal-rlz-itemname').value,
+        actualTotalPrice: actualAmt
+      };
+
+      const res = await fetch('/api/v1/realizations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok) {
+        closeRealizationModal();
+        await loadData();
+        switchTab('realizations');
+      } else {
+        alert('Gagal menyimpan LPJ realisasi.');
+      }
+    }
+
+    async function settleRealization(id) {
+      if (!confirm('Tutup settlement LPJ dan perbarui realisasi anggaran permanen?')) return;
+      await fetch(`/api/v1/realizations/${id}/settle`, { method: 'POST' });
+      await loadData();
+    }
+
+    // TAB SWITCHER
+    function switchTab(tabId) {
+      ['overview', 'requests', 'realizations', 'alerts'].forEach(t => {
+        document.getElementById(`tab-${t}`)?.classList.add('hidden');
+        document.getElementById(`tab-btn-${t}`)?.classList.remove('border-slate-900', 'text-slate-900');
+        document.getElementById(`tab-btn-${t}`)?.classList.add('border-transparent', 'text-slate-500');
+      });
+
+      document.getElementById(`tab-${tabId}`)?.classList.remove('hidden');
+      document.getElementById(`tab-btn-${tabId}`)?.classList.add('border-slate-900', 'text-slate-900');
+      document.getElementById(`tab-btn-${tabId}`)?.classList.remove('border-transparent', 'text-slate-500');
+      lucide.createIcons();
+    }
+
+    // INIT
+    window.addEventListener('DOMContentLoaded', loadData);
+  </script>
+</body>
+</html>

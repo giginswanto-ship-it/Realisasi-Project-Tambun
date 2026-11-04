@@ -1,0 +1,388 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==========================================
+// ENUMS
+// ==========================================
+
+enum RoleName {
+  SUPERADMIN
+  PROJECT_MANAGER
+  SITE_ENGINEER
+  FINANCE
+  DIRECTOR
+}
+
+enum ProjectStatus {
+  PLANNING
+  ACTIVE
+  ON_HOLD
+  COMPLETED
+}
+
+enum ExpenseRequestType {
+  CASH_ADVANCE
+  DIRECT_PURCHASE
+  REIMBURSEMENT
+}
+
+enum ExpenseRequestStatus {
+  DRAFT
+  SUBMITTED
+  APPROVED_PM
+  APPROVED_DIRECTOR
+  APPROVED_FINANCE
+  DISBURSED
+  SETTLED
+  REJECTED
+  REVISION_REQUESTED
+}
+
+enum ApprovalStage {
+  PM_APPROVAL
+  FINANCE_APPROVAL
+  DIRECTOR_APPROVAL
+}
+
+enum ApprovalDecision {
+  APPROVED
+  REJECTED
+  REVISION_REQUESTED
+}
+
+enum RealizationStatus {
+  DRAFT
+  SUBMITTED
+  VERIFIED_FINANCE
+  REVISION_REQUESTED
+  SETTLED
+}
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  SUBMIT
+  APPROVE
+  REJECT
+  DISBURSE
+  SETTLE
+}
+
+// ==========================================
+// 1. MASTER & ACCESS CONTROL
+// ==========================================
+
+model Role {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        RoleName @unique
+  description String?  @db.Text
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  users User[]
+
+  @@map("roles")
+}
+
+model User {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  roleId       String   @map("role_id") @db.Uuid
+  fullName     String   @map("full_name") @db.VarChar(100)
+  email        String   @unique @db.VarChar(150)
+  passwordHash String   @map("password_hash") @db.VarChar(255)
+  phone        String?  @db.VarChar(25)
+  isActive     Boolean  @default(true) @map("is_active")
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  role Role @relation(fields: [roleId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  // Reverse Relations
+  managedProjects      Project[]        @relation("ProjectManager")
+  createdProjects      Project[]        @relation("ProjectCreator")
+  createdCategories    BudgetCategory[] @relation("CategoryCreator")
+  createdBudgetItems   BudgetItem[]     @relation("BudgetItemCreator")
+  expenseRequests      ExpenseRequest[] @relation("ExpenseRequester")
+  approvalLogs         ApprovalLog[]    @relation("Approver")
+  submittedRealizations Realization[]   @relation("RealizationSubmitter")
+  verifiedRealizations  Realization[]   @relation("RealizationVerifier")
+  auditLogs            AuditLog[]       @relation("AuditUser")
+
+  @@index([roleId])
+  @@index([email])
+  @@map("users")
+}
+
+model AuditLog {
+  id         String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId     String?     @map("user_id") @db.Uuid
+  action     AuditAction
+  entityName String      @map("entity_name") @db.VarChar(60)
+  entityId   String      @map("entity_id") @db.Uuid
+  oldValues  Json?       @map("old_values")
+  newValues  Json?       @map("new_values")
+  ipAddress  String?     @map("ip_address") @db.VarChar(45)
+  userAgent  String?     @map("user_agent") @db.Text
+  createdAt  DateTime    @default(now()) @map("created_at") @db.Timestamptz
+
+  user User? @relation("AuditUser", fields: [userId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+
+  @@index([entityName, entityId])
+  @@index([userId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+// ==========================================
+// 2. PROJECT & BUDGET (WBS / RAB)
+// ==========================================
+
+model Project {
+  id            String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  projectCode   String        @unique @map("project_code") @db.VarChar(50)
+  name          String        @db.VarChar(200)
+  description   String?       @db.Text
+  location      String        @db.Text
+  clientName    String        @map("client_name") @db.VarChar(150)
+  contractValue Decimal       @map("contract_value") @db.Decimal(15, 2)
+  totalBudget   Decimal       @map("total_budget") @db.Decimal(15, 2)
+  startDate     DateTime      @map("start_date") @db.Date
+  endDate       DateTime      @map("end_date") @db.Date
+  status        ProjectStatus @default(PLANNING)
+  managerId     String?       @map("manager_id") @db.Uuid
+  createdBy     String?       @map("created_by") @db.Uuid
+  createdAt     DateTime      @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt     DateTime      @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  manager User? @relation("ProjectManager", fields: [managerId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  creator User? @relation("ProjectCreator", fields: [createdBy], references: [id], onDelete: SetNull, onUpdate: Cascade)
+
+  categories      BudgetCategory[]
+  expenseRequests ExpenseRequest[]
+
+  @@index([projectCode])
+  @@index([status])
+  @@map("projects")
+}
+
+model BudgetCategory {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  projectId       String   @map("project_id") @db.Uuid
+  categoryCode    String   @map("category_code") @db.VarChar(30)
+  name            String   @db.VarChar(150)
+  allocatedAmount Decimal  @map("allocated_amount") @db.Decimal(15, 2)
+  createdBy       String?  @map("created_by") @db.Uuid
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  creator User?   @relation("CategoryCreator", fields: [createdBy], references: [id], onDelete: SetNull, onUpdate: Cascade)
+
+  items BudgetItem[]
+
+  @@unique([projectId, categoryCode])
+  @@index([projectId])
+  @@map("budget_categories")
+}
+
+model BudgetItem {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  categoryId      String   @map("category_id") @db.Uuid
+  itemCode        String   @map("item_code") @db.VarChar(50)
+  name            String   @db.VarChar(200)
+  description     String?  @db.Text
+  unit            String   @db.VarChar(30)
+  quantity        Decimal  @db.Decimal(12, 2)
+  unitPrice       Decimal  @map("unit_price") @db.Decimal(15, 2)
+  totalBudget     Decimal  @map("total_budget") @db.Decimal(15, 2)
+  committedAmount Decimal  @default(0) @map("committed_amount") @db.Decimal(15, 2)
+  realizedAmount  Decimal  @default(0) @map("realized_amount") @db.Decimal(15, 2)
+  createdBy       String?  @map("created_by") @db.Uuid
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  category BudgetCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  creator  User?          @relation("BudgetItemCreator", fields: [createdBy], references: [id], onDelete: SetNull, onUpdate: Cascade)
+
+  requestItems     ExpenseRequestItem[]
+  realizationItems RealizationItem[]
+
+  @@unique([categoryId, itemCode])
+  @@index([categoryId])
+  @@index([itemCode])
+  @@map("budget_items")
+}
+
+// ==========================================
+// 3. PROCUREMENT & EXPENSE REQUESTS (KASBON)
+// ==========================================
+
+model ExpenseRequest {
+  id                   String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  requestNumber        String               @unique @map("request_number") @db.VarChar(50)
+  projectId            String               @map("project_id") @db.Uuid
+  requesterId          String               @map("requester_id") @db.Uuid
+  type                 ExpenseRequestType   @default(CASH_ADVANCE)
+  title                String               @db.VarChar(255)
+  purpose              String               @db.Text
+  totalAmountRequested Decimal              @map("total_amount_requested") @db.Decimal(15, 2)
+  currentStatus        ExpenseRequestStatus @default(DRAFT) @map("current_status")
+  needByDate           DateTime             @map("need_by_date") @db.Date
+  disbursedAt          DateTime?            @map("disbursed_at") @db.Timestamptz
+  notes                String?              @db.Text
+  createdAt            DateTime             @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt            DateTime             @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  requester User    @relation("ExpenseRequester", fields: [requesterId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  items        ExpenseRequestItem[]
+  approvalLogs ApprovalLog[]
+  realization  Realization?
+
+  @@index([projectId])
+  @@index([requesterId])
+  @@index([currentStatus])
+  @@map("expense_requests")
+}
+
+model ExpenseRequestItem {
+  id                 String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  requestId          String   @map("request_id") @db.Uuid
+  budgetItemId       String   @map("budget_item_id") @db.Uuid
+  description        String   @db.Text
+  requestedQty       Decimal  @map("requested_qty") @db.Decimal(12, 2)
+  estimatedUnitPrice Decimal  @map("estimated_unit_price") @db.Decimal(15, 2)
+  estimatedTotal     Decimal  @map("estimated_total") @db.Decimal(15, 2)
+  createdAt          DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt          DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  request    ExpenseRequest @relation(fields: [requestId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  budgetItem BudgetItem     @relation(fields: [budgetItemId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@index([requestId])
+  @@index([budgetItemId])
+  @@map("expense_request_items")
+}
+
+model ApprovalLog {
+  id         String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  requestId  String           @map("request_id") @db.Uuid
+  approverId String           @map("approver_id") @db.Uuid
+  stage      ApprovalStage
+  decision   ApprovalDecision
+  comment    String?          @db.Text
+  decidedAt  DateTime         @default(now()) @map("decided_at") @db.Timestamptz
+
+  request  ExpenseRequest @relation(fields: [requestId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  approver User           @relation("Approver", fields: [approverId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@index([requestId])
+  @@index([approverId])
+  @@map("approval_logs")
+}
+
+// ==========================================
+// 4. REALIZATION & ATTACHMENTS (LPJ / SETTLEMENT)
+// ==========================================
+
+model Vendor {
+  id                String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name              String   @db.VarChar(150)
+  contactPerson     String?  @map("contact_person") @db.VarChar(100)
+  phone             String?  @db.VarChar(30)
+  email             String?  @db.VarChar(150)
+  address           String?  @db.Text
+  bankName          String?  @map("bank_name") @db.VarChar(50)
+  bankAccountNumber String?  @map("bank_account_number") @db.VarChar(50)
+  bankAccountHolder String?  @map("bank_account_holder") @db.VarChar(150)
+  taxNumberNpwp     String?  @map("tax_number_npwp") @db.VarChar(40)
+  isActive          Boolean  @default(true) @map("is_active")
+  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt         DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  realizationItems RealizationItem[]
+
+  @@index([name])
+  @@map("vendors")
+}
+
+model Realization {
+  id                  String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  realizationNumber   String            @unique @map("realization_number") @db.VarChar(50)
+  requestId           String            @unique @map("request_id") @db.Uuid
+  submittedBy         String            @map("submitted_by") @db.Uuid
+  totalRealizedAmount Decimal           @default(0) @map("total_realized_amount") @db.Decimal(15, 2)
+  remainingBalance    Decimal           @default(0) @map("remaining_balance") @db.Decimal(15, 2)
+  status              RealizationStatus @default(DRAFT)
+  verifiedBy          String?           @map("verified_by") @db.Uuid
+  verifiedAt          DateTime?         @map("verified_at") @db.Timestamptz
+  settledAt           DateTime?         @map("settled_at") @db.Timestamptz
+  notes               String?           @db.Text
+  createdAt           DateTime          @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt           DateTime          @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  request   ExpenseRequest @relation(fields: [requestId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  submitter User           @relation("RealizationSubmitter", fields: [submittedBy], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  verifier  User?          @relation("RealizationVerifier", fields: [verifiedBy], references: [id], onDelete: SetNull, onUpdate: Cascade)
+
+  items RealizationItem[]
+
+  @@index([requestId])
+  @@index([submittedBy])
+  @@index([status])
+  @@map("realizations")
+}
+
+model RealizationItem {
+  id               String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  realizationId    String   @map("realization_id") @db.Uuid
+  budgetItemId     String   @map("budget_item_id") @db.Uuid
+  vendorId         String?  @map("vendor_id") @db.Uuid
+  invoiceNumber    String?  @map("invoice_number") @db.VarChar(80)
+  itemName         String   @map("item_name") @db.VarChar(200)
+  description      String?  @db.Text
+  actualQty        Decimal  @map("actual_qty") @db.Decimal(12, 2)
+  actualUnitPrice  Decimal  @map("actual_unit_price") @db.Decimal(15, 2)
+  actualTotalPrice Decimal  @map("actual_total_price") @db.Decimal(15, 2)
+  invoiceDate      DateTime @map("invoice_date") @db.Date
+  notes            String?  @db.Text
+  createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt        DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  realization Realization @relation(fields: [realizationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  budgetItem  BudgetItem  @relation(fields: [budgetItemId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  vendor      Vendor?     @relation(fields: [vendorId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+
+  attachments ReceiptAttachment[]
+
+  @@index([realizationId])
+  @@index([budgetItemId])
+  @@index([vendorId])
+  @@map("realization_items")
+}
+
+model ReceiptAttachment {
+  id                String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  realizationItemId String   @map("realization_item_id") @db.Uuid
+  fileName          String   @map("file_name") @db.VarChar(255)
+  fileKey           String   @map("file_key") @db.VarChar(255)
+  fileUrl           String   @map("file_url") @db.Text
+  fileSizeBytes     Int      @map("file_size_bytes")
+  mimeType          String   @map("mime_type") @db.VarChar(80)
+  checksumSha256    String?  @map("checksum_sha256") @db.VarChar(64)
+  uploadedAt        DateTime @default(now()) @map("uploaded_at") @db.Timestamptz
+
+  realizationItem RealizationItem @relation(fields: [realizationItemId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@index([realizationItemId])
+  @@index([checksumSha256])
+  @@map("receipt_attachments")
+}

@@ -273,56 +273,48 @@ export default function DashboardPage() {
     overrunCount: 0,
   };
 
-  const categoriesSummary = [
-    {
-      categoryCode: 'CAT-01',
-      name: 'Interior dan Furniture (Fit-Out Outlet)',
-      allocatedAmount: 350000000,
-      committedAmount: 0,
-      realizedAmount: 14350000,
-      usagePercent: (14350000 / 350000000) * 100,
-    },
-    {
-      categoryCode: 'CAT-02',
-      name: 'Equipment dan Inventori (Hardware & Mesin)',
-      allocatedAmount: 550000000,
-      committedAmount: 56000000,
-      realizedAmount: 8400000,
-      usagePercent: ((56000000 + 8400000) / 550000000) * 100,
-    },
-    {
-      categoryCode: 'CAT-03',
-      name: 'Marketing Tools dan Stok Bahan Awal',
-      allocatedAmount: 200000000,
-      committedAmount: 0,
-      realizedAmount: 0,
-      usagePercent: 0,
-    },
-    {
-      categoryCode: 'CAT-04',
-      name: 'Biaya Lisensi Brand, Perizinan & Legalitas',
-      allocatedAmount: 150000000,
-      committedAmount: 15500000,
-      realizedAmount: 11000000,
-      usagePercent: ((15500000 + 11000000) / 150000000) * 100,
-    },
-    {
-      categoryCode: 'CAT-05',
-      name: 'Pekerjaan Tambahan & Contingency',
-      allocatedAmount: 150000000,
-      committedAmount: 0,
-      realizedAmount: 0,
-      usagePercent: 0,
-    },
-    {
-      categoryCode: 'CAT-06',
-      name: 'Pekerjaan diluar busget tapi penting',
-      allocatedAmount: 100000000,
-      committedAmount: 0,
-      realizedAmount: 0,
-      usagePercent: 0,
-    },
+  const defaultAllocations: Record<string, number> = {
+    'CAT-01': 350000000,
+    'CAT-02': 550000000,
+    'CAT-03': 200000000,
+    'CAT-04': 150000000,
+    'CAT-05': 150000000,
+    'CAT-06': 100000000,
+  };
+
+  const categoriesMaster = [
+    { categoryCode: 'CAT-01', name: 'Interior dan Furniture (Fit-Out Outlet)', allocatedAmount: 350000000 },
+    { categoryCode: 'CAT-02', name: 'Equipment dan Inventori (Hardware & Mesin)', allocatedAmount: 550000000 },
+    { categoryCode: 'CAT-03', name: 'Marketing Tools dan Stok Bahan Awal', allocatedAmount: 200000000 },
+    { categoryCode: 'CAT-04', name: 'Biaya Lisensi Brand, Perizinan & Legalitas', allocatedAmount: 150000000 },
+    { categoryCode: 'CAT-05', name: 'Pekerjaan Tambahan & Contingency', allocatedAmount: 150000000 },
+    { categoryCode: 'CAT-06', name: 'Pekerjaan diluar busget tapi penting', allocatedAmount: 100000000 },
   ];
+
+  const categoriesSummary = categoriesMaster.map((cat) => {
+    const catRequests = requests.filter(
+      (r: any) =>
+        (r.categoryId === cat.categoryCode || r.items?.[0]?.categoryId === cat.categoryCode) &&
+        (r.currentStatus === 'DISBURSED' || r.currentStatus === 'APPROVED_DIRECTOR')
+    );
+    const catRealizations = realizations.filter(
+      (rz: any) => rz.categoryId === cat.categoryCode || rz.categoryCode === cat.categoryCode
+    );
+
+    const committed = catRequests.reduce((sum: number, r: any) => sum + Number(r.totalAmountRequested || 0), 0);
+    const realized = catRealizations.reduce((sum: number, r: any) => sum + Number(r.totalRealizedAmount || 0), 0);
+    const totalUsed = committed + realized;
+    const usagePercent = cat.allocatedAmount > 0 ? (totalUsed / cat.allocatedAmount) * 100 : 0;
+
+    return {
+      categoryCode: cat.categoryCode,
+      name: cat.name,
+      allocatedAmount: cat.allocatedAmount,
+      committedAmount: committed,
+      realizedAmount: realized,
+      usagePercent,
+    };
+  });
 
   // Disbursed requests available for LPJ creation
   const disbursedRequests = requests.filter((r) => r.currentStatus === 'DISBURSED');

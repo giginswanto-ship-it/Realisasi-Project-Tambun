@@ -78,9 +78,7 @@ export function ExecutiveKpiCards({ summary }: { summary: DashboardSummaryData }
       {/* 3. Realisasi Belanja Sah (LPJ) */}
       <Card className="border-l-4 border-l-emerald-600">
         <div className="flex items-center justify-between">
-          <span className="text-xs font-medium uppercase tracking-wider text-slate-500">
-            Realisasi Belanja Sah (LPJ)
-          </span>
+          <span className="text-xs font-medium uppercase tracking-wider text-slate-500">Pemakaian Dana (LPJ)</span>
           <div className="rounded-lg bg-emerald-50 p-2 text-emerald-600">
             <CheckCircle2 className="h-5 w-5" />
           </div>
@@ -91,7 +89,7 @@ export function ExecutiveKpiCards({ summary }: { summary: DashboardSummaryData }
           </div>
           <div className="mt-2 space-y-1">
             <div className="flex justify-between text-xs text-slate-500">
-              <span>Burn Rate Realisasi</span>
+              <span>Burn Rate Pemakaian</span>
               <span className="font-semibold text-slate-700">{formatPercent(summary.burnRatePercent)}</span>
             </div>
             <Progress value={summary.burnRatePercent} indicatorColor="bg-emerald-600" />

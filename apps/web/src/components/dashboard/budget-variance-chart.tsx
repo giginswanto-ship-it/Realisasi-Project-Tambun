@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { formatPercent, formatRupiah } from '@/lib/utils';
+import { Badge } from '../ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Progress } from '../ui/progress';
 
@@ -21,13 +22,16 @@ export function BudgetVarianceChart({ categories }: BudgetVarianceProps) {
     <Card className="h-full">
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle>Distribusi & Realisasi Anggaran per WBS</CardTitle>
-          <span className="text-xs text-slate-500">Proyek Tambun</span>
+          <div>
+            <CardTitle>Distribusi & Serapan per Kategori Budget</CardTitle>
+            <p className="text-xs text-slate-500 mt-0.5">Proyek Fasilitas Pergudangan Tambun</p>
+          </div>
+          <Badge variant="info">6 Kategori Budget</Badge>
         </div>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {categories.map((cat) => {
+          {categories.map((cat, idx) => {
             const isNearLimit = cat.usagePercent > 80;
             const isExceeded = cat.usagePercent > 100;
 
@@ -35,14 +39,16 @@ export function BudgetVarianceChart({ categories }: BudgetVarianceProps) {
               ? 'bg-rose-600'
               : isNearLimit
               ? 'bg-amber-500'
-              : 'bg-blue-600';
+              : 'bg-emerald-600';
+
+            const remaining = cat.allocatedAmount - (cat.realizedAmount + cat.committedAmount);
 
             return (
-              <div key={cat.categoryCode} className="space-y-1.5 rounded-lg border border-slate-100 p-3 bg-slate-50/50">
+              <div key={cat.categoryCode || idx} className="space-y-1.5 rounded-lg border border-slate-100 p-3 bg-slate-50/50">
                 <div className="flex items-center justify-between text-xs">
                   <div className="flex items-center gap-2">
-                    <span className="font-semibold text-slate-800">{cat.categoryCode}</span>
-                    <span className="text-slate-600 font-medium">{cat.name}</span>
+                    <span className="font-bold text-slate-900">{idx + 1}.</span>
+                    <span className="text-slate-800 font-semibold">{cat.name}</span>
                   </div>
                   <div className="text-right">
                     <span className={`font-bold ${isExceeded ? 'text-rose-600' : 'text-slate-900'}`}>
@@ -55,8 +61,9 @@ export function BudgetVarianceChart({ categories }: BudgetVarianceProps) {
                 <Progress value={cat.usagePercent} indicatorColor={progressColor} className="h-2" />
 
                 <div className="flex justify-between text-[11px] text-slate-500 pt-0.5">
-                  <span>Realisasi Sah: {formatRupiah(cat.realizedAmount)}</span>
+                  <span>Pemakaian Sah: {formatRupiah(cat.realizedAmount)}</span>
                   <span>Kasbon Aktif: {formatRupiah(cat.committedAmount)}</span>
+                  <span className="text-slate-600">Sisa Pagu: <b className="text-slate-900">{formatRupiah(remaining)}</b></span>
                   <span className={`font-semibold ${isExceeded ? 'text-rose-600' : 'text-slate-700'}`}>
                     Terserap {formatPercent(cat.usagePercent)}
                   </span>

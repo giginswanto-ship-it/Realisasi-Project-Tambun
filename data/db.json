@@ -379,7 +379,7 @@
       "totalRequested": 15000000,
       "totalRealizedAmount": 14350000,
       "remainingBalance": 650000,
-      "status": "SETTLED",
+      "status": "SUDAH_DIBAYAR",
       "settledAt": "2026-04-15T15:00:00Z",
       "notes": "Sisa uang kas bon Rp 650.000 telah ditransfer kembali ke kas proyek.",
       "items": [
@@ -415,7 +415,7 @@
       "totalRequested": 8000000,
       "totalRealizedAmount": 8400000,
       "remainingBalance": -400000,
-      "status": "SETTLED",
+      "status": "SUDAH_DIBAYAR",
       "settledAt": "2026-04-22T10:00:00Z",
       "notes": "Kelebihan belanja Rp 400.000 telah direimburse ke Pak Eko.",
       "items": [
@@ -451,7 +451,7 @@
       "totalRequested": 11000000,
       "totalRealizedAmount": 11000000,
       "remainingBalance": 0,
-      "status": "SETTLED",
+      "status": "DISETUJUI",
       "settledAt": "2026-04-25T14:30:00Z",
       "notes": "Kwitansi perizinan dinas & legalitas tuntas.",
       "items": [
@@ -479,7 +479,7 @@
       "totalRequested": 5000000,
       "totalRealizedAmount": 4850000,
       "remainingBalance": 150000,
-      "status": "VERIFIED_FINANCE",
+      "status": "DIEVALUASI",
       "settledAt": null,
       "notes": "Nota cetak banner launching & spanduk outlet",
       "items": [
@@ -495,6 +495,15 @@
     }
   ],
   "auditLogs": [
+    {
+      "id": "1793852007999",
+      "userName": "Finance / Pimpinan",
+      "action": "UPDATE_STATUS_LPJ",
+      "entityName": "REALIZATION",
+      "ticket": "RLZ-TBN-202604-001",
+      "detail": "Status LPJ RLZ-TBN-202604-001 diubah menjadi: Disetujui",
+      "timestamp": "2026-11-05T04:13:27.999Z"
+    },
     {
       "id": "1793848040847",
       "userName": "Manajemen Eksekutif",

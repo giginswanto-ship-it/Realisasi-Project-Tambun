@@ -349,6 +349,49 @@ const server = http.createServer(async (req, res) => {
     return sendJson(res, 201, { success: true, message: 'LPJ berhasil dicatat.', data: newRlz });
   }
 
+  // POST /api/v1/realizations/:id/status (Update Status LPJ: Dievaluasi, Disetujui, Sudah Dibayar)
+  if (method === 'POST' && pathname.startsWith('/api/v1/realizations/') && pathname.endsWith('/status')) {
+    const parts = pathname.split('/');
+    const id = parts[4];
+    const db = readDb();
+    const payload = await parseBody(req);
+    const rlz = db.realizations.find(r => r.id === id);
+
+    if (!rlz) {
+      return sendJson(res, 404, { success: false, message: 'LPJ tidak ditemukan.' });
+    }
+
+    const validStatuses = ['DIEVALUASI', 'DISETUJUI', 'SUDAH_DIBAYAR'];
+    const newStatus = (payload.status || 'DIEVALUASI').toUpperCase();
+
+    if (!validStatuses.includes(newStatus)) {
+      return sendJson(res, 400, { success: false, message: 'Status tidak valid. Pilihan: Dievaluasi, Disetujui, Sudah Dibayar.' });
+    }
+
+    rlz.status = newStatus;
+    if (newStatus === 'SUDAH_DIBAYAR') {
+      rlz.settledAt = new Date().toISOString();
+      const relReq = db.requests.find(r => r.id === rlz.requestId);
+      if (relReq) {
+        relReq.currentStatus = 'SETTLED';
+      }
+    }
+
+    const label = newStatus === 'DIEVALUASI' ? 'Dievaluasi' : (newStatus === 'DISETUJUI' ? 'Disetujui' : 'Sudah Dibayar');
+    db.auditLogs.unshift({
+      id: String(Date.now()),
+      userName: payload.userName || 'Finance / Pimpinan',
+      action: 'UPDATE_STATUS_LPJ',
+      entityName: 'REALIZATION',
+      ticket: rlz.realizationNumber,
+      detail: 'Status LPJ ' + rlz.realizationNumber + ' diubah menjadi: ' + label,
+      timestamp: new Date().toISOString()
+    });
+
+    writeDb(db);
+    return sendJson(res, 200, { success: true, message: 'Status LPJ berhasil diperbarui menjadi ' + label, data: rlz });
+  }
+
   // POST /api/v1/realizations/:id/settle
   if (method === 'POST' && pathname.startsWith('/api/v1/realizations/') && pathname.endsWith('/settle')) {
     const id = pathname.split('/')[4];

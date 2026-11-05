@@ -33,6 +33,13 @@ export function Badge({ className, variant = 'default', children, ...props }: Ba
 
 export function StatusBadge({ status }: { status: string }) {
   switch (status) {
+    case 'DIEVALUASI':
+    case 'VERIFIED_FINANCE':
+      return <Badge variant="warning">Dievaluasi</Badge>;
+    case 'DISETUJUI':
+      return <Badge variant="info">Disetujui</Badge>;
+    case 'SUDAH_DIBAYAR':
+      return <Badge variant="success">Sudah Dibayar</Badge>;
     case 'SETTLED':
     case 'COMPLETED':
       return <Badge variant="success">Selesai / Ditutup</Badge>;

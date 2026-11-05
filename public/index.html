@@ -296,6 +296,15 @@
               <option value="44444444-4444-4444-4444-444444444406">6. Pekerjaan diluar busget tapi penting</option>
             </select>
           </div>
+          <div class="flex items-center gap-2 w-full sm:w-auto">
+            <label class="text-xs font-semibold text-slate-500 whitespace-nowrap">Status LPJ:</label>
+            <select id="rlz-status-filter" onchange="renderRealizationsTable()" class="px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-700 focus:outline-none font-semibold">
+              <option value="ALL">Semua Status (3 Status)</option>
+              <option value="DIEVALUASI">Dievaluasi</option>
+              <option value="DISETUJUI">Disetujui</option>
+              <option value="SUDAH_DIBAYAR">Sudah Dibayar</option>
+            </select>
+          </div>
         </div>
       </div>
 
@@ -1486,28 +1495,69 @@
       return appData.categories[0] || { name: 'Umum', categoryCode: 'CAT-01' };
     }
 
-    function renderRealizationsTable() {
-      renderCategoryRealizationMatrix();
+    function normalizeLpjStatus(st) {
+      const s = String(st || '').toUpperCase();
+      if (s === 'SUDAH_DIBAYAR' || s === 'SETTLED' || s === 'PAID') return 'SUDAH_DIBAYAR';
+      if (s === 'DISETUJUI' || s === 'APPROVED') return 'DISETUJUI';
+      return 'DIEVALUASI';
+    }
 
+    function renderLpjStatusBadge(normStatus) {
+      if (normStatus === 'SUDAH_DIBAYAR') {
+        return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+          Sudah Dibayar
+        </span>`;
+      }
+      if (normStatus === 'DISETUJUI') {
+        return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+          <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+          Disetujui
+        </span>`;
+      }
+      return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
+        <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+        Dievaluasi
+      </span>`;
+    }
+
+    function renderRealizationsTable() {
       const tbody = document.getElementById('realizations-tbody');
-      if (!tbody) return;
       tbody.innerHTML = '';
 
-      const query = (document.getElementById('rlz-search')?.value || '').toLowerCase();
+      const query = (document.getElementById('rlz-search')?.value || '').toLowerCase().trim();
       const catFilter = document.getElementById('rlz-category-filter')?.value || 'ALL';
+      const statusFilter = document.getElementById('rlz-status-filter')?.value || 'ALL';
 
       const filtered = appData.realizations.filter(rz => {
         const cat = getCategoryForRealization(rz);
-        const matchCat = catFilter === 'ALL' || cat.id === catFilter;
-        const matchQ = (rz.realizationNumber || '').toLowerCase().includes(query) ||
-                       (rz.requestTitle || '').toLowerCase().includes(query) ||
-                       (rz.notes || '').toLowerCase().includes(query) ||
-                       (cat.name || '').toLowerCase().includes(query);
-        return matchCat && matchQ;
+        const normStatus = normalizeLpjStatus(rz.status);
+
+        if (catFilter !== 'ALL' && cat.id !== catFilter) return false;
+        if (statusFilter !== 'ALL' && normStatus !== statusFilter) return false;
+
+        if (query) {
+          const matchNo = (rz.realizationNumber || '').toLowerCase().includes(query);
+          const matchRef = (rz.requestNumber || '').toLowerCase().includes(query);
+          const matchTitle = (rz.requestTitle || rz.title || '').toLowerCase().includes(query);
+          const matchItem = (rz.items?.[0]?.itemName || '').toLowerCase().includes(query);
+          const matchInv = (rz.items?.[0]?.invoiceNumber || '').toLowerCase().includes(query);
+          const matchCat = (cat.name || '').toLowerCase().includes(query);
+          if (!matchNo && !matchRef && !matchTitle && !matchItem && !matchInv && !matchCat) return false;
+        }
+        return true;
       });
 
       if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" class="py-8 text-center text-slate-400">Tidak ada dokumen realisasi LPJ pada kategori ini.</td></tr>`;
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="8" class="px-5 py-8 text-center text-slate-400">
+              <i data-lucide="inbox" class="w-8 h-8 mx-auto mb-2 text-slate-300"></i>
+              Tidak ada bukti realisasi LPJ yang sesuai dengan filter.
+            </td>
+          </tr>
+        `;
+        lucide.createIcons();
         return;
       }
 
@@ -1519,6 +1569,49 @@
         if (bal < 0) balText = `<span class="text-rose-600 font-bold">Nombok: ${formatRp(Math.abs(bal))}</span>`;
 
         const invDate = rz.items?.[0]?.invoiceDate || rz.settledAt || '2026-04-20';
+        const normStatus = normalizeLpjStatus(rz.status);
+
+        let actionHtml = '';
+        if (normStatus === 'DIEVALUASI') {
+          actionHtml = `
+            <div class="flex items-center justify-end gap-1.5">
+              <button onclick="updateRealizationStatus('${rz.id}', 'DISETUJUI')" title="Setujui dokumen LPJ ini" class="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold text-[11px] inline-flex items-center gap-1 shadow-sm transition">
+                <i data-lucide="check" class="w-3.5 h-3.5"></i> Setujui
+              </button>
+              <select onchange="updateRealizationStatus('${rz.id}', this.value)" class="text-[10px] font-semibold py-1 px-1.5 border border-slate-200 rounded-lg bg-slate-50 text-slate-600">
+                <option value="DIEVALUASI" selected>Dievaluasi</option>
+                <option value="DISETUJUI">Disetujui</option>
+                <option value="SUDAH_DIBAYAR">Sudah Dibayar</option>
+              </select>
+            </div>
+          `;
+        } else if (normStatus === 'DISETUJUI') {
+          actionHtml = `
+            <div class="flex items-center justify-end gap-1.5">
+              <button onclick="updateRealizationStatus('${rz.id}', 'SUDAH_DIBAYAR')" title="Bayar / Selesaikan LPJ ini" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-semibold text-[11px] inline-flex items-center gap-1 shadow-sm transition">
+                <i data-lucide="check-check" class="w-3.5 h-3.5"></i> Sudah Dibayar
+              </button>
+              <select onchange="updateRealizationStatus('${rz.id}', this.value)" class="text-[10px] font-semibold py-1 px-1.5 border border-slate-200 rounded-lg bg-slate-50 text-slate-600">
+                <option value="DIEVALUASI">Dievaluasi</option>
+                <option value="DISETUJUI" selected>Disetujui</option>
+                <option value="SUDAH_DIBAYAR">Sudah Dibayar</option>
+              </select>
+            </div>
+          `;
+        } else {
+          actionHtml = `
+            <div class="flex items-center justify-end gap-1.5">
+              <span class="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700">
+                <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-600"></i> Lunas
+              </span>
+              <select onchange="updateRealizationStatus('${rz.id}', this.value)" title="Ubah Status LPJ" class="text-[10px] font-semibold py-1 px-1.5 border border-slate-200 rounded-lg bg-slate-50 text-slate-600">
+                <option value="DIEVALUASI">Dievaluasi</option>
+                <option value="DISETUJUI">Disetujui</option>
+                <option value="SUDAH_DIBAYAR" selected>Sudah Dibayar</option>
+              </select>
+            </div>
+          `;
+        }
 
         tbody.innerHTML += `
           <tr class="hover:bg-slate-50/70 transition">
@@ -1532,23 +1625,61 @@
               </span>
             </td>
             <td class="px-5 py-3.5">
-              <div class="font-bold text-slate-900">${rz.requestTitle || 'Realisasi Belanja'}</div>
+              <div class="font-bold text-slate-900">${rz.requestTitle || rz.title || 'Realisasi Belanja'}</div>
               <div class="text-[11px] text-slate-400">Nota: ${rz.items?.[0]?.invoiceNumber || '-'} • Ref: ${rz.requestNumber}</div>
             </td>
             <td class="px-5 py-3.5 text-slate-500">${formatRp(rz.originalCashAdvanceDisbursed || rz.totalRequested)}</td>
             <td class="px-5 py-3.5 font-black text-slate-900">${formatRp(rz.totalRealizedAmount)}</td>
             <td class="px-5 py-3.5">${balText}</td>
             <td class="px-5 py-3.5">
-              <span class="badge ${rz.status === 'SETTLED' ? 'badge-success' : 'badge-warning'}">
-                ${rz.status === 'SETTLED' ? 'Verified & Settled' : 'Review Finance'}
-              </span>
+              ${renderLpjStatusBadge(normStatus)}
             </td>
             <td class="px-5 py-3.5 text-right">
-              ${rz.status !== 'SETTLED' ? `<button onclick="settleRealization('${rz.id}')" class="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 text-white rounded font-semibold text-[11px]">Tutup & Rekonsiliasi</button>` : `<span class="badge badge-success">Closed</span>`}
+              ${actionHtml}
             </td>
           </tr>
         `;
       });
+      lucide.createIcons();
+    }
+
+    async function updateRealizationStatus(id, newStatus) {
+      const rz = appData.realizations.find(r => r.id === id);
+      const label = newStatus === 'DIEVALUASI' ? 'Dievaluasi' : (newStatus === 'DISETUJUI' ? 'Disetujui' : 'Sudah Dibayar');
+
+      try {
+        const res = await fetch(`/api/v1/realizations/${id}/status`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: newStatus })
+        });
+        if (res.ok) {
+          await loadData();
+          renderRealizationsTable();
+          return;
+        }
+      } catch (err) {
+        console.warn('Backend server offline, updating status locally:', err);
+      }
+
+      // Local fallback
+      if (rz) {
+        rz.status = newStatus;
+        if (newStatus === 'SUDAH_DIBAYAR') {
+          rz.settledAt = new Date().toISOString();
+          const req = appData.requests.find(r => r.id === rz.requestId);
+          if (req) req.currentStatus = 'SETTLED';
+        }
+        appData.auditLogs.unshift({
+          id: String(Date.now()),
+          userName: 'Finance / Pimpinan',
+          action: 'UPDATE_STATUS_LPJ',
+          ticket: rz.realizationNumber,
+          detail: `Status LPJ ${rz.realizationNumber} diubah menjadi: ${label}`,
+          timestamp: new Date().toISOString()
+        });
+        renderAll();
+      }
     }
 
     function renderAlerts() {

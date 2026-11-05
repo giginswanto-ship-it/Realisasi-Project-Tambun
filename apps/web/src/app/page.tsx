@@ -646,7 +646,7 @@ export default function DashboardPage() {
                   : 'border-transparent text-slate-500 hover:text-slate-800'
               }`}
             >
-              <FileCheck className="h-4 w-4" /> Realisasi LPJ & Kwitansi ({realizations.length})
+              <FileCheck className="h-4 w-4" /> Pemakaian Dana ({realizations.length})
             </button>
           </nav>
         </div>

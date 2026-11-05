@@ -81,13 +81,77 @@
 
     <!-- TAB 1: OVERVIEW -->
     <div id="tab-overview" class="space-y-6">
+
+      <!-- REAL IN-OUT CASH FLOW BANNER -->
+      <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-blue-950 rounded-2xl p-6 text-white shadow-lg relative overflow-hidden">
+        <div class="absolute right-0 top-0 bottom-0 w-96 bg-blue-500/10 blur-3xl pointer-events-none"></div>
+        <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                Live Cash Flow Monitoring
+              </span>
+              <span class="text-xs text-slate-300">Proyek Gudang Tambun</span>
+            </div>
+            <h1 class="text-xl sm:text-2xl font-black mt-1">Dashboard Arus Kas & Real In-Out Dana</h1>
+            <p class="text-xs text-slate-300 mt-1 max-w-2xl">
+              Memantau posisi kas masuk (Pagu/Dropping Anggaran), kas keluar (Pemakaian LPJ Sah & Kasbon), serta sisa saldo kas riil secara terintegrasi real-time.
+            </p>
+          </div>
+          <div class="flex items-center gap-2.5 shrink-0">
+            <button onclick="openBudgetSettingsModal()" class="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-semibold backdrop-blur border border-white/10 transition flex items-center gap-1.5">
+              <i data-lucide="sliders" class="w-4 h-4 text-purple-300"></i>
+              <span>Atur Pagu Budget</span>
+            </button>
+            <button onclick="openRealizationModal()" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold shadow-md transition flex items-center gap-1.5">
+              <i data-lucide="receipt" class="w-4 h-4"></i>
+              <span>Input LPJ Pemakaian</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Real In-Out Quick Metrics Inside Banner -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-5 pt-5 border-t border-white/10">
+          <div class="bg-white/5 rounded-xl p-3 border border-white/10">
+            <div class="text-[11px] text-emerald-400 font-semibold flex items-center gap-1">
+              <i data-lucide="arrow-down-left" class="w-3.5 h-3.5"></i> DANA MASUK (IN)
+            </div>
+            <div id="banner-inflow" class="text-base sm:text-lg font-black text-white mt-1">Rp 0</div>
+            <div class="text-[10px] text-slate-400 mt-0.5">Pagu Anggaran Disetujui</div>
+          </div>
+          <div class="bg-white/5 rounded-xl p-3 border border-white/10">
+            <div class="text-[11px] text-rose-400 font-semibold flex items-center gap-1">
+              <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i> DANA KELUAR (OUT)
+            </div>
+            <div id="banner-outflow" class="text-base sm:text-lg font-black text-rose-200 mt-1">Rp 0</div>
+            <div class="text-[10px] text-slate-400 mt-0.5" id="banner-burnrate-desc">Serapan: 0%</div>
+          </div>
+          <div class="bg-white/5 rounded-xl p-3 border border-white/10">
+            <div class="text-[11px] text-blue-300 font-semibold flex items-center gap-1">
+              <i data-lucide="wallet" class="w-3.5 h-3.5"></i> SALDO SISA KAS
+            </div>
+            <div id="banner-balance" class="text-base sm:text-lg font-black text-blue-200 mt-1">Rp 0</div>
+            <div class="text-[10px] text-slate-400 mt-0.5">Kas Siap Pakai</div>
+          </div>
+          <div class="bg-white/5 rounded-xl p-3 border border-white/10">
+            <div class="text-[11px] text-amber-300 font-semibold flex items-center gap-1">
+              <i data-lucide="coins" class="w-3.5 h-3.5"></i> KASBON BEREDAR
+            </div>
+            <div id="banner-advance" class="text-base sm:text-lg font-black text-amber-200 mt-1">Rp 0</div>
+            <div class="text-[10px] text-slate-400 mt-0.5" id="banner-advance-desc">0 Tiket Kasbon</div>
+          </div>
+        </div>
+      </div>
+
       <!-- 4 EXECUTIVE KPI CARDS -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <!-- Card 1 -->
-        <div class="bg-white rounded-xl border border-slate-200/90 p-5 shadow-sm border-l-4 border-l-slate-900">
+        <!-- Card 1: INFLOW (DANA MASUK) -->
+        <div class="bg-white rounded-xl border border-slate-200/90 p-5 shadow-sm border-l-4 border-l-emerald-600">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Pagu Anggaran</span>
-            <div class="p-2 rounded-lg bg-slate-100 text-slate-700"><i data-lucide="wallet" class="w-5 h-5"></i></div>
+            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Dana Masuk (Pagu)</span>
+            <div class="p-2 rounded-lg bg-emerald-50 text-emerald-600">
+              <i data-lucide="arrow-down-circle" class="w-5 h-5"></i>
+            </div>
           </div>
           <div class="mt-3">
             <div id="kpi-budget" class="text-2xl font-black text-slate-900">Rp 0</div>
@@ -95,52 +159,58 @@
           </div>
         </div>
 
-        <!-- Card 2 -->
-        <div class="bg-white rounded-xl border border-slate-200/90 p-5 shadow-sm border-l-4 border-l-blue-600">
+        <!-- Card 2: OUTFLOW KASBON -->
+        <div class="bg-white rounded-xl border border-slate-200/90 p-5 shadow-sm border-l-4 border-l-amber-500">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Kas Bon Dicairkan</span>
-            <div class="p-2 rounded-lg bg-blue-50 text-blue-600"><i data-lucide="coins" class="w-5 h-5"></i></div>
+            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Kas Bon Beredar (Lapangan)</span>
+            <div class="p-2 rounded-lg bg-amber-50 text-amber-600">
+              <i data-lucide="coins" class="w-5 h-5"></i>
+            </div>
           </div>
           <div class="mt-3">
             <div id="kpi-committed" class="text-2xl font-black text-slate-900">Rp 0</div>
             <div class="mt-1.5 flex justify-between text-xs text-slate-500">
-              <span>Rasio Komitmen</span>
-              <span id="kpi-committed-pct" class="font-bold text-slate-700">0%</span>
+              <span>Rasio Kasbon Lapangan</span>
+              <span id="kpi-committed-pct" class="font-bold text-amber-700">0%</span>
             </div>
             <div class="w-full bg-slate-100 rounded-full h-2 mt-1">
-              <div id="kpi-committed-bar" class="bg-blue-600 h-2 rounded-full" style="width: 0%"></div>
+              <div id="kpi-committed-bar" class="bg-amber-500 h-2 rounded-full" style="width: 0%"></div>
             </div>
           </div>
         </div>
 
-        <!-- Card 3 -->
-        <div class="bg-white rounded-xl border border-slate-200/90 p-5 shadow-sm border-l-4 border-l-emerald-600">
+        <!-- Card 3: OUTFLOW LPJ (PEMAKAIAN RIIL) -->
+        <div class="bg-white rounded-xl border border-slate-200/90 p-5 shadow-sm border-l-4 border-l-rose-600">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Realisasi Sah (LPJ)</span>
-            <div class="p-2 rounded-lg bg-emerald-50 text-emerald-600"><i data-lucide="check-circle-2" class="w-5 h-5"></i></div>
+            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Pemakaian Dana Riil (LPJ)</span>
+            <div class="p-2 rounded-lg bg-rose-50 text-rose-600">
+              <i data-lucide="arrow-up-circle" class="w-5 h-5"></i>
+            </div>
           </div>
           <div class="mt-3">
             <div id="kpi-realized" class="text-2xl font-black text-slate-900">Rp 0</div>
             <div class="mt-1.5 flex justify-between text-xs text-slate-500">
-              <span>Burn Rate</span>
-              <span id="kpi-realized-pct" class="font-bold text-slate-700">0%</span>
+              <span>Serapan Dana Riil</span>
+              <span id="kpi-realized-pct" class="font-bold text-rose-700">0%</span>
             </div>
             <div class="w-full bg-slate-100 rounded-full h-2 mt-1">
-              <div id="kpi-realized-bar" class="bg-emerald-600 h-2 rounded-full" style="width: 0%"></div>
+              <div id="kpi-realized-bar" class="bg-rose-600 h-2 rounded-full" style="width: 0%"></div>
             </div>
           </div>
         </div>
 
-        <!-- Card 4 -->
-        <div class="bg-white rounded-xl border border-slate-200/90 p-5 shadow-sm border-l-4 border-l-purple-600">
+        <!-- Card 4: NET REMAINING BALANCE -->
+        <div class="bg-white rounded-xl border border-slate-200/90 p-5 shadow-sm border-l-4 border-l-blue-600">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Sisa Pagu Tersedia</span>
-            <div class="p-2 rounded-lg bg-purple-50 text-purple-600"><i data-lucide="pie-chart" class="w-5 h-5"></i></div>
+            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Saldo Sisa Kas Tersedia</span>
+            <div class="p-2 rounded-lg bg-blue-50 text-blue-600">
+              <i data-lucide="scale" class="w-5 h-5"></i>
+            </div>
           </div>
           <div class="mt-3">
             <div id="kpi-remaining" class="text-2xl font-black text-slate-900">Rp 0</div>
             <div class="mt-1 flex items-center justify-between text-xs">
-              <span class="text-emerald-600 font-semibold flex items-center gap-1">
+              <span id="kpi-status-badge" class="text-emerald-600 font-semibold flex items-center gap-1">
                 <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Status Sehat
               </span>
               <span id="kpi-active-tickets" class="text-slate-400">0 Kasbon</span>
@@ -149,29 +219,36 @@
         </div>
       </div>
 
-      <!-- MIDDLE ROW: WBS BREAKDOWN + AUDIT TRAIL -->
+      <!-- MIDDLE ROW: 6 KATEGORI BUDGET SERAPAN + ARUS KAS FEED -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Distribution per WBS -->
+        <!-- Distribution per 6 Kategori Budget -->
         <div class="lg:col-span-2 bg-white rounded-xl border border-slate-200/90 p-5 shadow-sm">
           <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
             <div>
-              <h2 class="text-sm font-bold text-slate-900">Distribusi & Realisasi Anggaran per WBS</h2>
-              <p class="text-xs text-slate-400">Proyek Fasilitas Pergudangan Tambun</p>
+              <h2 class="text-sm font-bold text-slate-900">Distribusi & Serapan Dana per 6 Kategori Budget</h2>
+              <p class="text-xs text-slate-400">Perbandingan Pagu Dana Masuk vs Realisasi Pemakaian Dana Keluar</p>
             </div>
-            <span class="text-xs font-semibold px-2.5 py-1 bg-slate-100 text-slate-700 rounded-lg">WBS Kontrak</span>
+            <button onclick="switchTab('requests')" class="text-xs font-semibold px-2.5 py-1 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-lg transition">
+              Kelola 6 Kategori &rarr;
+            </button>
           </div>
           <div id="wbs-breakdown-list" class="space-y-3.5">
             <!-- Rendered dynamically -->
           </div>
         </div>
 
-        <!-- Recent Activity Feed -->
-        <div class="bg-white rounded-xl border border-slate-200/90 p-5 shadow-sm">
+        <!-- Recent Real In-Out Cash Flow Activity Feed -->
+        <div class="bg-white rounded-xl border border-slate-200/90 p-5 shadow-sm flex flex-col">
           <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
-            <h2 class="text-sm font-bold text-slate-900">Jejak Audit & Aktivitas</h2>
-            <span class="text-[11px] text-slate-400 flex items-center gap-1"><i data-lucide="clock" class="w-3.5 h-3.5"></i> Live</span>
+            <div>
+              <h2 class="text-sm font-bold text-slate-900">Arus Transaksi In-Out</h2>
+              <p class="text-[11px] text-slate-400">Mutasi kas masuk & keluar riil</p>
+            </div>
+            <span class="text-[11px] font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Live
+            </span>
           </div>
-          <div id="audit-feed-list" class="divide-y divide-slate-100 text-xs">
+          <div id="audit-feed-list" class="divide-y divide-slate-100 text-xs flex-1">
             <!-- Rendered dynamically -->
           </div>
         </div>
@@ -984,82 +1061,156 @@
       });
     }
 
-    function renderKpi() {
+    function calculateRealCashFlow() {
       const prj = appData.projects[0] || {};
-      const totalBudget = prj.totalBudget || 0;
-      const contractValue = prj.contractValue || 0;
+      const totalIn = Number(prj.totalBudget || 1500000000);
+      const contractValue = Number(prj.contractValue || 1850000000);
 
-      let committed = 0;
-      appData.requests.forEach(r => {
-        if (['DISBURSED', 'APPROVED_FINANCE', 'APPROVED_DIRECTOR', 'APPROVED_PM'].includes(r.currentStatus)) {
-          committed += Number(r.totalAmountRequested);
-        }
-      });
-
-      let realized = 0;
+      // Total Dana Keluar (LPJ Belanja Riil)
+      let totalOutRealized = 0;
+      let settledCount = 0;
       appData.realizations.forEach(rz => {
-        if (rz.status === 'SETTLED') {
-          realized += Number(rz.totalRealizedAmount);
+        totalOutRealized += Number(rz.totalRealizedAmount || 0);
+        settledCount++;
+      });
+
+      // Kasbon Beredar di Lapangan (belum settled)
+      let totalCashAdvanceActive = 0;
+      let activeAdvancesCount = 0;
+      appData.requests.forEach(r => {
+        if (r.currentStatus !== 'SETTLED' && r.currentStatus !== 'REJECTED') {
+          totalCashAdvanceActive += Number(r.totalAmountRequested || 0);
+          activeAdvancesCount++;
         }
       });
 
-      const remaining = totalBudget - (committed + realized);
-      const committedPct = totalBudget > 0 ? ((committed / totalBudget) * 100).toFixed(1) : 0;
-      const realizedPct = totalBudget > 0 ? ((realized / totalBudget) * 100).toFixed(1) : 0;
+      // Saldo Sisa Kas Tersedia
+      const netCashRemaining = Math.max(0, totalIn - totalOutRealized);
+      const burnRatePct = totalIn > 0 ? ((totalOutRealized / totalIn) * 100).toFixed(1) : '0.0';
+      const advancePct = totalIn > 0 ? ((totalCashAdvanceActive / totalIn) * 100).toFixed(1) : '0.0';
 
-      document.getElementById('kpi-budget').innerText = formatRp(totalBudget);
-      document.getElementById('kpi-contract').innerText = formatRp(contractValue);
-      document.getElementById('kpi-committed').innerText = formatRp(committed);
-      document.getElementById('kpi-committed-pct').innerText = committedPct + '%';
-      document.getElementById('kpi-committed-bar').style.width = Math.min(100, committedPct) + '%';
+      return {
+        totalIn,
+        contractValue,
+        totalOutRealized,
+        totalCashAdvanceActive,
+        activeAdvancesCount,
+        settledCount,
+        netCashRemaining,
+        burnRatePct,
+        advancePct
+      };
+    }
 
-      document.getElementById('kpi-realized').innerText = formatRp(realized);
-      document.getElementById('kpi-realized-pct').innerText = realizedPct + '%';
-      document.getElementById('kpi-realized-bar').style.width = Math.min(100, realizedPct) + '%';
+    function renderKpi() {
+      const cf = calculateRealCashFlow();
 
-      document.getElementById('kpi-remaining').innerText = formatRp(remaining);
-      document.getElementById('kpi-active-tickets').innerText = appData.requests.length + ' Kasbon';
+      // Top Banner Metrics
+      const bIn = document.getElementById('banner-inflow');
+      if (bIn) bIn.innerText = formatRp(cf.totalIn);
 
+      const bOut = document.getElementById('banner-outflow');
+      if (bOut) bOut.innerText = formatRp(cf.totalOutRealized);
+
+      const bBurn = document.getElementById('banner-burnrate-desc');
+      if (bBurn) bBurn.innerText = `Serapan: ${cf.burnRatePct}% Dari Pagu`;
+
+      const bBal = document.getElementById('banner-balance');
+      if (bBal) bBal.innerText = formatRp(cf.netCashRemaining);
+
+      const bAdv = document.getElementById('banner-advance');
+      if (bAdv) bAdv.innerText = formatRp(cf.totalCashAdvanceActive);
+
+      const bAdvDesc = document.getElementById('banner-advance-desc');
+      if (bAdvDesc) bAdvDesc.innerText = `${cf.activeAdvancesCount} Kasbon Lapangan`;
+
+      // 4 KPI Cards
+      document.getElementById('kpi-budget').innerText = formatRp(cf.totalIn);
+      document.getElementById('kpi-contract').innerText = formatRp(cf.contractValue);
+
+      document.getElementById('kpi-committed').innerText = formatRp(cf.totalCashAdvanceActive);
+      document.getElementById('kpi-committed-pct').innerText = cf.advancePct + '%';
+      document.getElementById('kpi-committed-bar').style.width = Math.min(100, cf.advancePct) + '%';
+
+      document.getElementById('kpi-realized').innerText = formatRp(cf.totalOutRealized);
+      document.getElementById('kpi-realized-pct').innerText = cf.burnRatePct + '%';
+      document.getElementById('kpi-realized-bar').style.width = Math.min(100, cf.burnRatePct) + '%';
+
+      document.getElementById('kpi-remaining').innerText = formatRp(cf.netCashRemaining);
+
+      const statusBadge = document.getElementById('kpi-status-badge');
+      if (statusBadge) {
+        if (Number(cf.burnRatePct) >= 90) {
+          statusBadge.innerHTML = '<i data-lucide="alert-triangle" class="w-3.5 h-3.5 text-rose-500"></i> <span class="text-rose-600">Pagu Menipis</span>';
+        } else if (Number(cf.burnRatePct) >= 70) {
+          statusBadge.innerHTML = '<i data-lucide="alert-circle" class="w-3.5 h-3.5 text-amber-500"></i> <span class="text-amber-600">Waspada Serapan</span>';
+        } else {
+          statusBadge.innerHTML = '<i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-500"></i> <span class="text-emerald-600">Status Sehat</span>';
+        }
+      }
+
+      document.getElementById('kpi-active-tickets').innerText = cf.activeAdvancesCount + ' Kasbon Aktif';
       document.getElementById('count-requests').innerText = appData.requests.length;
       document.getElementById('count-realizations').innerText = appData.realizations.length;
+
+      lucide.createIcons();
     }
 
     function renderWbs() {
       const container = document.getElementById('wbs-breakdown-list');
+      if (!container) return;
       container.innerHTML = '';
 
       appData.categories.forEach((cat, idx) => {
-        const catItems = appData.budgetItems.filter(i => i.categoryId === cat.id);
-        let catCommitted = 0;
+        // Calculate realization directly from appData.realizations
         let catRealized = 0;
-
-        catItems.forEach(i => {
-          catCommitted += Number(i.committedAmount || 0);
-          catRealized += Number(i.realizedAmount || 0);
+        appData.realizations.forEach(rz => {
+          const rzCat = getCategoryForRealization(rz);
+          if (rzCat && rzCat.id === cat.id) {
+            catRealized += Number(rz.totalRealizedAmount || 0);
+          }
         });
 
-        const totalUsed = catCommitted + catRealized;
+        // Calculate active cash advance from appData.requests
+        let catCommitted = 0;
+        appData.requests.forEach(r => {
+          if (r.currentStatus !== 'SETTLED' && r.currentStatus !== 'REJECTED') {
+            const reqCat = getCategoryForRequest(r);
+            if (reqCat && reqCat.id === cat.id) {
+              catCommitted += Number(r.totalAmountRequested || 0);
+            }
+          }
+        });
+
+        const totalUsed = catRealized + catCommitted;
         const allocated = Number(cat.allocatedAmount || 1);
         const percent = ((totalUsed / allocated) * 100).toFixed(1);
         const isOver = totalUsed > allocated;
+        const sisaPagu = Math.max(0, allocated - totalUsed);
 
         container.innerHTML += `
-          <div class="p-3 bg-slate-50/80 rounded-xl border border-slate-100">
+          <div class="p-3.5 bg-slate-50/90 hover:bg-slate-100/70 rounded-xl border border-slate-200 transition">
             <div class="flex justify-between items-center text-xs mb-1.5">
-              <span class="font-bold text-slate-800">${idx + 1}. ${cat.name}</span>
-              <span class="font-bold ${isOver ? 'text-rose-600' : 'text-slate-900'}">${formatRp(totalUsed)} / ${formatRp(allocated)}</span>
+              <span class="font-bold text-slate-900 flex items-center gap-1.5">
+                <span class="w-5 h-5 rounded-full bg-blue-100 text-blue-700 text-[10px] inline-flex items-center justify-center font-black">${idx + 1}</span>
+                ${cat.name}
+              </span>
+              <span class="font-bold ${isOver ? 'text-rose-600' : 'text-slate-900'}">
+                ${formatRp(totalUsed)} <span class="text-slate-400 font-normal">/ ${formatRp(allocated)}</span>
+              </span>
             </div>
             <div class="w-full bg-slate-200 rounded-full h-2">
-              <div class="${isOver ? 'bg-rose-500' : 'bg-blue-600'} h-2 rounded-full" style="width: ${Math.min(100, percent)}%"></div>
+              <div class="${isOver ? 'bg-rose-500' : (percent > 80 ? 'bg-amber-500' : 'bg-emerald-600')} h-2 rounded-full transition-all" style="width: ${Math.min(100, percent)}%"></div>
             </div>
-            <div class="flex justify-between text-[11px] text-slate-500 mt-1">
-              <span>Realisasi Sah: ${formatRp(catRealized)}</span>
-              <span>Kasbon Aktif: ${formatRp(catCommitted)}</span>
-              <span class="font-bold ${isOver ? 'text-rose-600' : 'text-slate-700'}">${percent}% Terserap</span>
+            <div class="flex justify-between items-center text-[11px] text-slate-500 mt-1.5 pt-1 border-t border-slate-100">
+              <span class="text-rose-600 font-semibold">Dana Keluar (LPJ): ${formatRp(catRealized)}</span>
+              <span class="text-amber-600 font-semibold">Kasbon: ${formatRp(catCommitted)}</span>
+              <span class="text-emerald-700 font-bold">Sisa: ${formatRp(sisaPagu)} (${percent}%)</span>
             </div>
           </div>
         `;
       });
+      lucide.createIcons();
     }
 
     function renderAuditFeed() {

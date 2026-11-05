@@ -1,0 +1,64 @@
+{
+  "document_reference": "BCT-SNAP-2026-04",
+  "project_name": "SNAPRINT MANGUNJAYA - EXECUTIVE DASHBOARD & BUDGET CONTROL",
+  "location": "Mangunjaya, Tambun",
+  "period": "01 Feb 2026 – 30 Jun 2026",
+  "total_budget": 450000000,
+  "categories": [
+    {
+      "id": 1,
+      "name": "Interior dan Furniture (Fit-Out Outlet)",
+      "shortName": "Interior & Furniture",
+      "budget": 120000000,
+      "color": "#0284c7",
+      "actual_amount": 0,
+      "percentage_used": 0
+    },
+    {
+      "id": 2,
+      "name": "Equipment dan Inventori (Hardware & Mesin)",
+      "shortName": "Equipment & Mesin",
+      "budget": 150000000,
+      "color": "#6366f1",
+      "actual_amount": 0,
+      "percentage_used": 0
+    },
+    {
+      "id": 3,
+      "name": "Marketing Tools dan Stok Bahan Awal",
+      "shortName": "Marketing & Stok Awal",
+      "budget": 70000000,
+      "color": "#10b981",
+      "actual_amount": 0,
+      "percentage_used": 0
+    },
+    {
+      "id": 4,
+      "name": "Biaya Lisensi Brand, Perizinan & Legalitas",
+      "shortName": "Lisensi & Legalitas",
+      "budget": 50000000,
+      "color": "#f59e0b",
+      "actual_amount": 0,
+      "percentage_used": 0
+    },
+    {
+      "id": 5,
+      "name": "Pekerjaan Tambahan & Contingency",
+      "shortName": "Pekerjaan Tambahan & Contingency",
+      "budget": 35000000,
+      "color": "#ec4899",
+      "actual_amount": 0,
+      "percentage_used": 0
+    },
+    {
+      "id": 6,
+      "name": "Pekerjaan diluar busget tapi penting",
+      "shortName": "Pekerjaan Luar Budget",
+      "budget": 25000000,
+      "color": "#8b5cf6",
+      "actual_amount": 0,
+      "percentage_used": 0
+    }
+  ],
+  "sample_transactions": []
+}

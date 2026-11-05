@@ -1,0 +1,553 @@
+{
+  "projects": [
+    {
+      "id": "33333333-3333-3333-3333-333333333301",
+      "projectCode": "PRJ-TBN-2026-001",
+      "name": "Pembangunan Gudang & Fasilitas Operasional Tambun",
+      "location": "Jl. Inspeksi Kalimalang Km. 28, Tambun Selatan, Bekasi",
+      "clientName": "PT Logistik Prima Nusantara",
+      "contractValue": 1850000000,
+      "totalBudget": 1500000000,
+      "startDate": "2026-01-15",
+      "endDate": "2026-08-31",
+      "status": "ACTIVE",
+      "managerName": "Ir. Budi Santoso, MT"
+    },
+    {
+      "id": "33333333-3333-3333-3333-333333333302",
+      "projectCode": "PRJ-TBN-2026-002",
+      "name": "Pekerjaan Saluran Drainase & Rigid Akses Kawasan Tambun",
+      "location": "Kawasan Industri Mitra Tambun, Bekasi Timur",
+      "clientName": "PT Mitra Tambun Estate",
+      "contractValue": 920000000,
+      "totalBudget": 750000000,
+      "startDate": "2026-03-01",
+      "endDate": "2026-07-31",
+      "status": "ACTIVE",
+      "managerName": "Ir. Budi Santoso, MT"
+    }
+  ],
+  "categories": [
+    {
+      "id": "44444444-4444-4444-4444-444444444401",
+      "projectId": "33333333-3333-3333-3333-333333333301",
+      "categoryCode": "CAT-01",
+      "name": "Interior dan Furniture (Fit-Out Outlet)",
+      "allocatedAmount": 350000000
+    },
+    {
+      "id": "44444444-4444-4444-4444-444444444402",
+      "projectId": "33333333-3333-3333-3333-333333333301",
+      "categoryCode": "CAT-02",
+      "name": "Equipment dan Inventori (Hardware & Mesin)",
+      "allocatedAmount": 550000000
+    },
+    {
+      "id": "44444444-4444-4444-4444-444444444403",
+      "projectId": "33333333-3333-3333-3333-333333333301",
+      "categoryCode": "CAT-03",
+      "name": "Marketing Tools dan Stok Bahan Awal",
+      "allocatedAmount": 200000000
+    },
+    {
+      "id": "44444444-4444-4444-4444-444444444404",
+      "projectId": "33333333-3333-3333-3333-333333333301",
+      "categoryCode": "CAT-04",
+      "name": "Biaya Lisensi Brand, Perizinan & Legalitas",
+      "allocatedAmount": 150000000
+    },
+    {
+      "id": "44444444-4444-4444-4444-444444444405",
+      "projectId": "33333333-3333-3333-3333-333333333301",
+      "categoryCode": "CAT-05",
+      "name": "Pekerjaan Tambahan & Contingency",
+      "allocatedAmount": 150000000
+    },
+    {
+      "id": "44444444-4444-4444-4444-444444444406",
+      "projectId": "33333333-3333-3333-3333-333333333301",
+      "categoryCode": "CAT-06",
+      "name": "Pekerjaan diluar busget tapi penting",
+      "allocatedAmount": 100000000
+    }
+  ],
+  "budgetItems": [
+    {
+      "id": "55555555-5555-5555-5555-555555555501",
+      "categoryId": "44444444-4444-4444-4444-444444444401",
+      "itemCode": "ITM-FND-001",
+      "name": "Semen Portland Komposit 50kg",
+      "unit": "ZAK",
+      "quantity": 1200,
+      "unitPrice": 68000,
+      "totalBudget": 81600000,
+      "committedAmount": 0,
+      "realizedAmount": 11900000
+    },
+    {
+      "id": "55555555-5555-5555-5555-555555555502",
+      "categoryId": "44444444-4444-4444-4444-444444444401",
+      "itemCode": "ITM-FND-002",
+      "name": "Pasir Cor Pasang Bangka",
+      "unit": "M3",
+      "quantity": 350,
+      "unitPrice": 290000,
+      "totalBudget": 101500000,
+      "committedAmount": 0,
+      "realizedAmount": 0
+    },
+    {
+      "id": "55555555-5555-5555-5555-555555555503",
+      "categoryId": "44444444-4444-4444-4444-444444444402",
+      "itemCode": "ITM-STR-001",
+      "name": "Besi Beton Ulir D16 BJTS 420B",
+      "unit": "BATANG",
+      "quantity": 1500,
+      "unitPrice": 185000,
+      "totalBudget": 277500000,
+      "committedAmount": 48000000,
+      "realizedAmount": 0
+    },
+    {
+      "id": "55555555-5555-5555-5555-555555555504",
+      "categoryId": "44444444-4444-4444-4444-444444444402",
+      "itemCode": "ITM-STR-002",
+      "name": "Kawat Bendrat Hitam BWG 21",
+      "unit": "KG",
+      "quantity": 400,
+      "unitPrice": 25000,
+      "totalBudget": 10000000,
+      "committedAmount": 0,
+      "realizedAmount": 2450000
+    },
+    {
+      "id": "55555555-5555-5555-5555-555555555505",
+      "categoryId": "44444444-4444-4444-4444-444444444402",
+      "itemCode": "ITM-STR-003",
+      "name": "Kayu Kaso & Triplek Bekisting 9mm",
+      "unit": "LEMBAR",
+      "quantity": 250,
+      "unitPrice": 160000,
+      "totalBudget": 40000000,
+      "committedAmount": 8000000,
+      "realizedAmount": 8400000
+    },
+    {
+      "id": "55555555-5555-5555-5555-555555555508",
+      "categoryId": "44444444-4444-4444-4444-444444444404",
+      "itemCode": "ITM-EQP-001",
+      "name": "Sewa Excavator Komatsu PC200",
+      "unit": "SHIFT",
+      "quantity": 40,
+      "unitPrice": 2200000,
+      "totalBudget": 88000000,
+      "committedAmount": 11000000,
+      "realizedAmount": 11000000
+    },
+    {
+      "id": "55555555-5555-5555-5555-555555555509",
+      "categoryId": "44444444-4444-4444-4444-444444444404",
+      "itemCode": "ITM-EQP-002",
+      "name": "Solar Industri B35 Non-Subsidi",
+      "unit": "LITER",
+      "quantity": 4000,
+      "unitPrice": 15500,
+      "totalBudget": 62000000,
+      "committedAmount": 15500000,
+      "realizedAmount": 0
+    },
+    {
+      "id": "55555555-5555-5555-5555-555555555506",
+      "categoryId": "44444444-4444-4444-4444-444444444403",
+      "itemCode": "ITM-MKT-001",
+      "name": "Stok Bahan Kertas Art Paper, Sticker & Toner Awal",
+      "unit": "PAKET",
+      "quantity": 1,
+      "unitPrice": 120000000,
+      "totalBudget": 120000000,
+      "committedAmount": 0,
+      "realizedAmount": 0
+    },
+    {
+      "id": "55555555-5555-5555-5555-555555555507",
+      "categoryId": "44444444-4444-4444-4444-444444444403",
+      "itemCode": "ITM-MKT-002",
+      "name": "Signage Neon Box Luar & Promo Launching",
+      "unit": "PAKET",
+      "quantity": 1,
+      "unitPrice": 35000000,
+      "totalBudget": 35000000,
+      "committedAmount": 0,
+      "realizedAmount": 4850000
+    },
+    {
+      "id": "55555555-5555-5555-5555-555555555510",
+      "categoryId": "44444444-4444-4444-4444-444444444405",
+      "itemCode": "ITM-CTG-001",
+      "name": "Pekerjaan Tambahan Instalasi Daya Listrik PLN & Panel",
+      "unit": "PAKET",
+      "quantity": 1,
+      "unitPrice": 65000000,
+      "totalBudget": 65000000,
+      "committedAmount": 0,
+      "realizedAmount": 0
+    },
+    {
+      "id": "55555555-5555-5555-5555-555555555511",
+      "categoryId": "44444444-4444-4444-4444-444444444405",
+      "itemCode": "ITM-CTG-002",
+      "name": "Cadangan Kontinjensi & Biaya Tak Terduga Lapangan",
+      "unit": "PAKET",
+      "quantity": 1,
+      "unitPrice": 50000000,
+      "totalBudget": 50000000,
+      "committedAmount": 0,
+      "realizedAmount": 0
+    },
+    {
+      "id": "55555555-5555-5555-5555-555555555512",
+      "categoryId": "44444444-4444-4444-4444-444444444406",
+      "itemCode": "ITM-EXT-001",
+      "name": "Perbaikan Pompa Air Tanah & Saluran Limbah Darurat",
+      "unit": "PAKET",
+      "quantity": 1,
+      "unitPrice": 28000000,
+      "totalBudget": 28000000,
+      "committedAmount": 0,
+      "realizedAmount": 0
+    },
+    {
+      "id": "55555555-5555-5555-5555-555555555513",
+      "categoryId": "44444444-4444-4444-4444-444444444406",
+      "itemCode": "ITM-EXT-002",
+      "name": "Pengadaan Unit CCTV Keamanan & Stabilizer Mesin",
+      "unit": "PAKET",
+      "quantity": 1,
+      "unitPrice": 35000000,
+      "totalBudget": 35000000,
+      "committedAmount": 0,
+      "realizedAmount": 0
+    }
+  ],
+  "users": [
+    {
+      "id": "22222222-2222-2222-2222-222222222202",
+      "fullName": "Ir. Budi Santoso, MT",
+      "email": "budi.pm@tambunproject.id",
+      "role": "PROJECT_MANAGER"
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222203",
+      "fullName": "Eko Prasetyo, ST",
+      "email": "eko.field@tambunproject.id",
+      "role": "SITE_ENGINEER"
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222204",
+      "fullName": "Dimas Pratama, AMd",
+      "email": "dimas.field@tambunproject.id",
+      "role": "SITE_ENGINEER"
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222205",
+      "fullName": "Siti Rahma, SE, Ak",
+      "email": "siti.finance@tambunproject.id",
+      "role": "FINANCE"
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222206",
+      "fullName": "Drs. Hendra Gunawan",
+      "email": "hendra.direksi@tambunproject.id",
+      "role": "DIRECTOR"
+    }
+  ],
+  "requests": [
+    {
+      "id": "77777777-7777-7777-7777-777777777701",
+      "requestNumber": "REQ-TBN-202604-001",
+      "projectId": "33333333-3333-3333-3333-333333333301",
+      "projectName": "Pembangunan Gudang Tambun",
+      "requesterName": "Eko Prasetyo, ST",
+      "type": "CASH_ADVANCE",
+      "title": "Kas Bon Pembelian Semen Batch 1 & Kawat Pengikat",
+      "purpose": "Kebutuhan mendesak pengecoran sloof pondasi blok A",
+      "totalAmountRequested": 15000000,
+      "currentStatus": "SETTLED",
+      "needByDate": "2026-04-10",
+      "disbursedAt": "2026-04-11T10:30:00Z",
+      "notes": "Transfer via BCA Finance ke Rekening Eko Prasetyo",
+      "items": [
+        {
+          "budgetItemId": "55555555-5555-5555-5555-555555555501",
+          "description": "Semen Portland Komposit 50kg (180 zak)",
+          "requestedQty": 180,
+          "estimatedUnitPrice": 68000,
+          "estimatedTotal": 12240000
+        },
+        {
+          "budgetItemId": "55555555-5555-5555-5555-555555555504",
+          "description": "Kawat bendrat beton (110 kg)",
+          "requestedQty": 110,
+          "estimatedUnitPrice": 25000,
+          "estimatedTotal": 2760000
+        }
+      ]
+    },
+    {
+      "id": "77777777-7777-7777-7777-777777777702",
+      "requestNumber": "REQ-TBN-202604-002",
+      "projectId": "33333333-3333-3333-3333-333333333301",
+      "projectName": "Pembangunan Gudang Tambun",
+      "requesterName": "Eko Prasetyo, ST",
+      "type": "CASH_ADVANCE",
+      "title": "Kas Bon Pembelian Kayu Bekisting Kolom Tambun",
+      "purpose": "Pengadaan kaso 5/7 dan triplek cor untuk 12 titik kolom",
+      "totalAmountRequested": 8000000,
+      "currentStatus": "DISBURSED",
+      "needByDate": "2026-04-18",
+      "disbursedAt": "2026-04-19T14:15:00Z",
+      "notes": "Kasbon dicairkan penuh",
+      "items": [
+        {
+          "budgetItemId": "55555555-5555-5555-5555-555555555505",
+          "description": "Kayu kaso 5/7 Meranti & Triplek 9mm 50 lbr",
+          "requestedQty": 50,
+          "estimatedUnitPrice": 160000,
+          "estimatedTotal": 8000000
+        }
+      ]
+    },
+    {
+      "id": "77777777-7777-7777-7777-777777777704",
+      "requestNumber": "REQ-TBN-202605-001",
+      "projectId": "33333333-3333-3333-3333-333333333301",
+      "projectName": "Pembangunan Gudang Tambun",
+      "requesterName": "Eko Prasetyo, ST",
+      "type": "DIRECT_PURCHASE",
+      "title": "Pengadaan Besi Beton Ulir D16 (260 Batang)",
+      "purpose": "Pengadaan material pembesian rangka portal gudang dari pabrik",
+      "totalAmountRequested": 48000000,
+      "currentStatus": "APPROVED_DIRECTOR",
+      "needByDate": "2026-05-05",
+      "notes": "Eskalasi persetujuan Direktur terpenuhi karena nominal > 25 Juta",
+      "items": [
+        {
+          "budgetItemId": "55555555-5555-5555-5555-555555555503",
+          "description": "Besi Beton Ulir D16 BJTS 420B (260 btg)",
+          "requestedQty": 260,
+          "estimatedUnitPrice": 184615.38,
+          "estimatedTotal": 48000000
+        }
+      ]
+    },
+    {
+      "id": "77777777-7777-7777-7777-777777777705",
+      "requestNumber": "REQ-TBN-202605-002",
+      "projectId": "33333333-3333-3333-3333-333333333301",
+      "projectName": "Pembangunan Gudang Tambun",
+      "requesterName": "Dimas Pratama, AMd",
+      "type": "CASH_ADVANCE",
+      "title": "Kas Bon Pasir Cor Tambahan 15 M3",
+      "purpose": "Tambahan pasir cor pasang untuk plesteran dinding pondasi",
+      "totalAmountRequested": 4350000,
+      "currentStatus": "SUBMITTED",
+      "needByDate": "2026-05-10",
+      "notes": "Menunggu review Project Manager",
+      "items": [
+        {
+          "budgetItemId": "55555555-5555-5555-5555-555555555502",
+          "description": "Pasir cor pasang Bangka (15 m3)",
+          "requestedQty": 15,
+          "estimatedUnitPrice": 290000,
+          "estimatedTotal": 4350000
+        }
+      ]
+    }
+  ],
+  "realizations": [
+    {
+      "id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaa01",
+      "realizationNumber": "RLZ-TBN-202604-001",
+      "requestId": "77777777-7777-7777-7777-777777777701",
+      "requestNumber": "REQ-TBN-202604-001",
+      "categoryId": "44444444-4444-4444-4444-444444444401",
+      "categoryCode": "CAT-01",
+      "categoryName": "Interior dan Furniture (Fit-Out Outlet)",
+      "requestTitle": "Kas Bon Pembelian Semen Batch 1 & Kawat Pengikat",
+      "submitterName": "Eko Prasetyo, ST",
+      "verifierName": "Siti Rahma, SE (Finance)",
+      "totalRequested": 15000000,
+      "totalRealizedAmount": 14350000,
+      "remainingBalance": 650000,
+      "status": "SUDAH_DIBAYAR",
+      "settledAt": "2026-04-15T15:00:00Z",
+      "notes": "Sisa uang kas bon Rp 650.000 telah ditransfer kembali ke kas proyek.",
+      "items": [
+        {
+          "itemName": "Semen PCC Padang 50kg (175 zak)",
+          "invoiceNumber": "INV-TJ-202604-089",
+          "actualQty": 175,
+          "actualUnitPrice": 68000,
+          "actualTotalPrice": 11900000,
+          "invoiceDate": "2026-04-12"
+        },
+        {
+          "itemName": "Kawat Bendrat Hitam BWG 21 (100 kg)",
+          "invoiceNumber": "INV-TJ-202604-090",
+          "actualQty": 100,
+          "actualUnitPrice": 24500,
+          "actualTotalPrice": 2450000,
+          "invoiceDate": "2026-04-12"
+        }
+      ]
+    },
+    {
+      "id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaa02",
+      "realizationNumber": "RLZ-TBN-202604-002",
+      "requestId": "77777777-7777-7777-7777-777777777702",
+      "requestNumber": "REQ-TBN-202604-002",
+      "categoryId": "44444444-4444-4444-4444-444444444402",
+      "categoryCode": "CAT-02",
+      "categoryName": "Equipment dan Inventori (Hardware & Mesin)",
+      "requestTitle": "Kas Bon Pembelian Kayu Bekisting Kolom Tambun",
+      "submitterName": "Eko Prasetyo, ST",
+      "verifierName": "Siti Rahma, SE (Finance)",
+      "totalRequested": 8000000,
+      "totalRealizedAmount": 8400000,
+      "remainingBalance": -400000,
+      "status": "SUDAH_DIBAYAR",
+      "settledAt": "2026-04-22T10:00:00Z",
+      "notes": "Kelebihan belanja Rp 400.000 telah direimburse ke Pak Eko.",
+      "items": [
+        {
+          "itemName": "Kayu Kaso 5/7 x 4m Meranti (50 batang)",
+          "invoiceNumber": "INV-TJ-202604-142",
+          "actualQty": 50,
+          "actualUnitPrice": 72000,
+          "actualTotalPrice": 3600000,
+          "invoiceDate": "2026-04-20"
+        },
+        {
+          "itemName": "Triplek Cor Phenolic 9mm (30 lembar)",
+          "invoiceNumber": "INV-TJ-202604-143",
+          "actualQty": 30,
+          "actualUnitPrice": 160000,
+          "actualTotalPrice": 4800000,
+          "invoiceDate": "2026-04-20"
+        }
+      ]
+    },
+    {
+      "id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaa03",
+      "realizationNumber": "RLZ-TBN-202604-003",
+      "requestId": "77777777-7777-7777-7777-777777777703",
+      "requestNumber": "REQ-TBN-202604-003",
+      "categoryId": "44444444-4444-4444-4444-444444444404",
+      "categoryCode": "CAT-04",
+      "categoryName": "Biaya Lisensi Brand, Perizinan & Legalitas",
+      "requestTitle": "Kas Bon Pengurusan Izin Usaha & Sertifikasi K3",
+      "submitterName": "Eko Prasetyo, ST",
+      "verifierName": "Siti Rahma, SE (Finance)",
+      "totalRequested": 11000000,
+      "totalRealizedAmount": 11000000,
+      "remainingBalance": 0,
+      "status": "DISETUJUI",
+      "settledAt": "2026-04-25T14:30:00Z",
+      "notes": "Kwitansi perizinan dinas & legalitas tuntas.",
+      "items": [
+        {
+          "itemName": "Retribusi Perizinan Usaha & Dokumen K3 Lapangan",
+          "invoiceNumber": "KWI-LEG-202604-019",
+          "actualQty": 1,
+          "actualUnitPrice": 11000000,
+          "actualTotalPrice": 11000000,
+          "invoiceDate": "2026-04-24"
+        }
+      ]
+    },
+    {
+      "id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaa04",
+      "realizationNumber": "RLZ-TBN-202605-001",
+      "requestId": "77777777-7777-7777-7777-777777777706",
+      "requestNumber": "REQ-TBN-202605-003",
+      "categoryId": "44444444-4444-4444-4444-444444444403",
+      "categoryCode": "CAT-03",
+      "categoryName": "Marketing Tools dan Stok Bahan Awal",
+      "requestTitle": "Kas Bon Pengadaan Banner & Signage Launching",
+      "submitterName": "Dimas Pratama, AMd",
+      "verifierName": "Siti Rahma, SE (Finance)",
+      "totalRequested": 5000000,
+      "totalRealizedAmount": 4850000,
+      "remainingBalance": 150000,
+      "status": "DIEVALUASI",
+      "settledAt": null,
+      "notes": "Nota cetak banner launching & spanduk outlet",
+      "items": [
+        {
+          "itemName": "Spanduk Flexi & X-Banner Promo Grand Opening",
+          "invoiceNumber": "INV-PRM-202605-008",
+          "actualQty": 5,
+          "actualUnitPrice": 970000,
+          "actualTotalPrice": 4850000,
+          "invoiceDate": "2026-05-03"
+        }
+      ]
+    }
+  ],
+  "auditLogs": [
+    {
+      "id": "1793852007999",
+      "userName": "Finance / Pimpinan",
+      "action": "UPDATE_STATUS_LPJ",
+      "entityName": "REALIZATION",
+      "ticket": "RLZ-TBN-202604-001",
+      "detail": "Status LPJ RLZ-TBN-202604-001 diubah menjadi: Disetujui",
+      "timestamp": "2026-11-05T04:13:27.999Z"
+    },
+    {
+      "id": "1793848040847",
+      "userName": "Manajemen Eksekutif",
+      "action": "APPROVE",
+      "entityName": "BUDGET_ADJUSTMENT",
+      "ticket": "ADJ-BUDGET-0847",
+      "detail": "Penyesuaian nilai pagu anggaran berhasil disimpan (Total Rp 1.500.000.000)",
+      "timestamp": "2026-11-05T03:07:20.861Z"
+    },
+    {
+      "id": "1",
+      "userName": "Siti Rahma (Finance)",
+      "action": "SETTLE",
+      "entityName": "REALIZATION",
+      "ticket": "RLZ-TBN-202604-001",
+      "detail": "Penutupan LPJ dan rekonsiliasi sisa kasbon Rp 650.000",
+      "timestamp": "2026-04-15T15:00:00Z"
+    },
+    {
+      "id": "2",
+      "userName": "Siti Rahma (Finance)",
+      "action": "DISBURSE",
+      "entityName": "EXPENSE_REQUEST",
+      "ticket": "REQ-TBN-202604-002",
+      "detail": "Pencairan dana kasbon bekisting Rp 8.000.000",
+      "timestamp": "2026-04-19T14:15:00Z"
+    },
+    {
+      "id": "3",
+      "userName": "Drs. Hendra Gunawan (Direktur)",
+      "action": "APPROVE",
+      "entityName": "EXPENSE_REQUEST",
+      "ticket": "REQ-TBN-202605-001",
+      "detail": "Persetujuan eskalasi pengadaan besi beton D16 (> 25 Juta)",
+      "timestamp": "2026-05-02T09:45:00Z"
+    },
+    {
+      "id": "4",
+      "userName": "Dimas Pratama, AMd",
+      "action": "SUBMIT",
+      "entityName": "EXPENSE_REQUEST",
+      "ticket": "REQ-TBN-202605-002",
+      "detail": "Pengajuan kasbon pasir cor tambahan Rp 4.350.000",
+      "timestamp": "2026-05-04T08:00:00Z"
+    }
+  ]
+}

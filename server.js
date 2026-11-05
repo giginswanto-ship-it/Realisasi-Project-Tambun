@@ -14,7 +14,9 @@ const url = require('url');
 
 const PORT = process.env.PORT || 3000;
 const DB_PATH = path.join(__dirname, 'data', 'db.json');
-const PUBLIC_HTML_PATH = path.join(__dirname, 'public', 'index.html');
+const PUBLIC_HTML_PATH = fs.existsSync(path.join(__dirname, 'public', 'index.html'))
+  ? path.join(__dirname, 'public', 'index.html')
+  : path.join(__dirname, 'index.html');
 
 // Helper to read and write database state
 function readDb() {

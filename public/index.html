@@ -37,11 +37,15 @@
             <h1 class="text-base font-bold text-slate-900 leading-tight">Realisasi Dana Proyek Tambun</h1>
             <span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-300">Live Active</span>
           </div>
-          <p class="text-xs text-slate-500">Monitoring Kasbon Lapangan, Pagu RAB & Realisasi LPJ Terpadu</p>
+          <p class="text-xs text-slate-500">Monitoring Kasbon Lapangan, Pagu RAB & Pemakaian Dana Terpadu</p>
         </div>
       </div>
 
       <div class="flex items-center gap-2">
+        <button onclick="saveAllChangesExplicitly()" id="btn-save-all-header" class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm transition active:scale-95" title="Simpan seluruh perubahan data secara permanen ke database dan browser">
+          <i data-lucide="save" class="w-4 h-4"></i>
+          <span id="btn-save-text">Simpan Perubahan Data</span>
+        </button>
         <button onclick="openBudgetSettingsModal()" class="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-lg border border-purple-200 bg-purple-50 hover:bg-purple-100 text-purple-700 shadow-sm transition">
           <i data-lucide="sliders" class="w-4 h-4 text-purple-600"></i>
           Pengaturan Nilai Budget
@@ -99,11 +103,15 @@
             </p>
           </div>
           <div class="flex items-center gap-2.5 shrink-0">
+            <button onclick="saveAllChangesExplicitly()" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-md transition flex items-center gap-1.5 active:scale-95" title="Simpan seluruh perubahan data">
+              <i data-lucide="save" class="w-4 h-4"></i>
+              <span>Simpan Perubahan</span>
+            </button>
             <button onclick="openBudgetSettingsModal()" class="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-semibold backdrop-blur border border-white/10 transition flex items-center gap-1.5">
               <i data-lucide="sliders" class="w-4 h-4 text-purple-300"></i>
               <span>Atur Pagu Budget</span>
             </button>
-            <button onclick="openRealizationModal()" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold shadow-md transition flex items-center gap-1.5">
+            <button onclick="openRealizationModal()" class="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-md transition flex items-center gap-1.5">
               <i data-lucide="receipt" class="w-4 h-4"></i>
               <span>Input LPJ Pemakaian</span>
             </button>
@@ -265,6 +273,10 @@
             <p class="text-xs text-slate-500">Pagu alokasi, realisasi belanja, dan sisa kuota per kategori</p>
           </div>
           <div class="flex items-center gap-2">
+            <button onclick="saveAllChangesExplicitly()" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm transition active:scale-95">
+              <i data-lucide="save" class="w-3.5 h-3.5"></i>
+              Simpan Perubahan
+            </button>
             <span class="text-xs font-semibold px-2.5 py-1 bg-blue-50 text-blue-700 rounded-lg">6 Kategori Aktif</span>
             <button onclick="openBudgetSettingsModal()" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition">
               <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
@@ -329,11 +341,15 @@
           <p class="text-xs text-slate-500 mt-0.5">Pertanggungjawaban belanja fisik riil & serapan pagu yang disesuaikan pada masing-masing 6 kategori budget</p>
         </div>
         <div class="flex items-center gap-2">
+          <button onclick="saveAllChangesExplicitly()" class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm transition active:scale-95">
+            <i data-lucide="save" class="w-3.5 h-3.5"></i>
+            Simpan Perubahan Data
+          </button>
           <button onclick="openBudgetSettingsModal()" class="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-lg border border-purple-200 bg-purple-50 hover:bg-purple-100 text-purple-700 shadow-sm transition">
             <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
             Atur Pagu Budget
           </button>
-          <button onclick="openRealizationModal()" class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm transition">
+          <button onclick="openRealizationModal()" class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-lg bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition">
             <i data-lucide="receipt" class="w-4 h-4"></i>
             Input LPJ Baru
           </button>
@@ -469,9 +485,9 @@
             <button type="button" onclick="closeBudgetSettingsModal()" class="w-full sm:w-auto px-4 py-2 border border-slate-300 rounded-lg font-semibold hover:bg-slate-50 text-slate-700">
               Batal
             </button>
-            <button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold shadow-md hover:shadow-lg transition">
-              <i data-lucide="check" class="w-4 h-4"></i>
-              Simpan Pengaturan Budget
+            <button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold shadow-md hover:shadow-lg transition">
+              <i data-lucide="save" class="w-4 h-4"></i>
+              Simpan Perubahan Nilai Budget
             </button>
           </div>
         </div>
@@ -695,6 +711,20 @@
       </form>
     </div>
   </div>
+
+  <!-- ========================================================================= -->
+  <!-- FLOATING TOAST NOTIFICATION -->
+  <!-- ========================================================================= -->
+  <div id="toast-notification" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-3 bg-slate-900 text-white px-5 py-3.5 rounded-xl shadow-2xl border border-slate-700/80 max-w-md">
+    <div class="w-9 h-9 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-500/30">
+      <i data-lucide="check-circle-2" class="w-5 h-5"></i>
+    </div>
+    <div class="flex-1">
+      <div id="toast-title" class="font-bold text-xs text-white">Perubahan Berhasil Disimpan!</div>
+      <div id="toast-desc" class="text-[11px] text-slate-300 mt-0.5">Seluruh data pagu, kasbon, dan pemakaian dana telah disimpan permanen.</div>
+    </div>
+  </div>
+
   <!-- ========================================================================= -->
   <!-- CLIENT JAVASCRIPT APP ENGINE -->
   <!-- ========================================================================= -->
@@ -987,18 +1017,45 @@
 
     const formatRp = (num) => 'Rp ' + Number(num || 0).toLocaleString('id-ID');
 
+    // SCHEMA / CACHE BUSTER VERSION (Enforces clean data & purges dummy records)
+    const APP_CACHE_VERSION = 'v6_clean_20261105_pemakaian_dana';
+    if (localStorage.getItem('tambun_cache_version') !== APP_CACHE_VERSION) {
+      localStorage.removeItem('tambun_master_data');
+      localStorage.removeItem('tambun_categories_budget');
+      localStorage.removeItem('tambun_total_budget');
+      localStorage.setItem('tambun_cache_version', APP_CACHE_VERSION);
+    }
+
     async function loadData() {
+      let loaded = false;
       try {
         const res = await fetch('/api/v1/data');
         if (res.ok) {
           const freshData = await res.json();
           if (freshData && freshData.categories && freshData.categories.length > 0) {
             appData = freshData;
+            loaded = true;
           }
         }
       } catch (e) {
-        console.warn('Backend server offline or running via file:// protocol. Using embedded master data.', e);
+        console.warn('Backend server offline or running via file:// protocol. Checking localStorage...', e);
       }
+
+      if (!loaded) {
+        try {
+          const localSaved = localStorage.getItem('tambun_master_data');
+          if (localSaved) {
+            const parsed = JSON.parse(localSaved);
+            if (parsed && parsed.categories && parsed.categories.length > 0) {
+              appData = parsed;
+              loaded = true;
+            }
+          }
+        } catch (lsErr) {
+          console.warn('Error reading localStorage:', lsErr);
+        }
+      }
+
       renderAll();
     }
 
@@ -1334,7 +1391,7 @@
                 <span class="font-semibold text-slate-800">${formatRp(allocated)}</span>
               </div>
               <div class="flex justify-between text-slate-500">
-                <span>Realisasi LPJ:</span>
+                <span>Pemakaian Dana:</span>
                 <span class="font-bold text-emerald-600">${formatRp(catRealized)}</span>
               </div>
               <div class="flex justify-between text-slate-500">
@@ -1443,7 +1500,7 @@
           <tr>
             <td colspan="8" class="px-5 py-8 text-center text-slate-400">
               <i data-lucide="inbox" class="w-8 h-8 mx-auto mb-2 text-slate-300"></i>
-              Tidak ada bukti realisasi LPJ yang sesuai dengan filter.
+              Tidak ada data pemakaian dana yang sesuai dengan filter.
             </td>
           </tr>
         `;
@@ -2210,6 +2267,107 @@ function switchTab(tabId) {
       const activeBtn = document.getElementById('tab-btn-' + tabId);
       activeBtn.classList.remove('border-transparent', 'text-slate-500');
       activeBtn.classList.add('border-slate-900', 'text-slate-900');
+    }
+
+
+    // SAVE ALL CHANGES EXPLICITLY (PERSISTENCE TO SERVER & LOCALSTORAGE)
+    async function saveAllChangesExplicitly() {
+      const btn = document.getElementById('btn-save-all-header');
+      const btnText = document.getElementById('btn-save-text');
+      if (btnText) btnText.innerText = 'Menyimpan...';
+
+      // 1. Save to LocalStorage immediately
+      try {
+        localStorage.setItem('tambun_master_data', JSON.stringify(appData));
+        localStorage.setItem('tambun_categories_budget', JSON.stringify(appData.categories));
+        if (appData.projects?.[0]?.totalBudget) {
+          localStorage.setItem('tambun_total_budget', String(appData.projects[0].totalBudget));
+        }
+      } catch (lsErr) {
+        console.warn('LocalStorage save error:', lsErr);
+      }
+
+      // 2. Save to Backend Server /api/v1/save-all
+      let serverSaved = false;
+      try {
+        const res = await fetch('/api/v1/save-all', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            categories: appData.categories,
+            budgetItems: appData.budgetItems,
+            requests: appData.requests,
+            realizations: appData.realizations,
+            projects: appData.projects
+          })
+        });
+        if (res.ok) {
+          const resJson = await res.json();
+          if (resJson.data) {
+            appData = resJson.data;
+          }
+          serverSaved = true;
+        }
+      } catch (err) {
+        console.warn('Server offline or running standalone:', err);
+      }
+
+      // 3. Add to local audit logs if not saved via server
+      if (!serverSaved) {
+        appData.auditLogs.unshift({
+          id: String(Date.now()),
+          userName: 'Administrator',
+          action: 'SAVE_ALL',
+          ticket: 'SAVE-' + Date.now().toString().slice(-4),
+          detail: 'Seluruh perubahan data proyek disimpan ke penyimpanan lokal browser',
+          timestamp: new Date().toISOString()
+        });
+      }
+
+      renderAll();
+
+      // 4. Visual Feedback
+      if (btn) {
+        btn.classList.remove('bg-emerald-600', 'hover:bg-emerald-700');
+        btn.classList.add('bg-blue-600', 'ring-2', 'ring-blue-400');
+      }
+      if (btnText) btnText.innerText = '✓ Berhasil Tersimpan!';
+
+      showToast(
+        'Perubahan Data Tersimpan Permanen!',
+        serverSaved
+          ? 'Seluruh nilai pagu budget, kasbon, dan realisasi pemakaian dana telah disimpan ke database server & browser.'
+          : 'Seluruh nilai pagu budget, kasbon, dan realisasi pemakaian dana telah disimpan ke penyimpanan browser.'
+      );
+
+      setTimeout(() => {
+        if (btn) {
+          btn.classList.remove('bg-blue-600', 'ring-2', 'ring-blue-400');
+          btn.classList.add('bg-emerald-600', 'hover:bg-emerald-700');
+        }
+        if (btnText) btnText.innerText = 'Simpan Perubahan Data';
+        lucide.createIcons();
+      }, 2500);
+    }
+
+    function showToast(title, desc) {
+      const toast = document.getElementById('toast-notification');
+      const tTitle = document.getElementById('toast-title');
+      const tDesc = document.getElementById('toast-desc');
+      if (!toast) return;
+
+      if (title && tTitle) tTitle.innerText = title;
+      if (desc && tDesc) tDesc.innerText = desc;
+
+      toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+      toast.classList.add('translate-y-0', 'opacity-100');
+      lucide.createIcons();
+
+      if (window._toastTimer) clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+        toast.classList.remove('translate-y-0', 'opacity-100');
+      }, 3500);
     }
 
     // INIT

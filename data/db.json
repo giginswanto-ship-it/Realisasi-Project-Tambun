@@ -271,6 +271,15 @@
   "realizations": [],
   "auditLogs": [
     {
+      "id": "1793862654120",
+      "userName": "Pimpinan Proyek Tambun",
+      "action": "SAVE_ALL",
+      "entityName": "SYSTEM_PERSISTENCE",
+      "ticket": "SAVE-4120",
+      "detail": "Seluruh perubahan data proyek (pagu budget, kasbon, pemakaian dana LPJ) disimpan permanen",
+      "timestamp": "2026-11-05T07:10:54.120Z"
+    },
+    {
       "id": "init-1793852554679",
       "userName": "Sistem Tambun",
       "action": "RESET_DATA",

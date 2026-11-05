@@ -598,6 +598,13 @@ export default function DashboardPage() {
           </div>
 
           <div className="flex items-center gap-2">
+            <Button
+              size="sm"
+              className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-sm"
+              onClick={handleSaveAllChanges}
+            >
+              <Save className="mr-1.5 h-3.5 w-3.5" /> Simpan Perubahan Data
+            </Button>
             <Button size="sm" variant="outline" onClick={() => setIsRealizationModalOpen(true)}>
               <Receipt className="mr-1.5 h-3.5 w-3.5" /> Input LPJ Belanja
             </Button>
@@ -642,6 +649,13 @@ export default function DashboardPage() {
             </button>
           </nav>
         </div>
+
+        {saveSuccessMsg && (
+          <div className="bg-emerald-600 text-white text-xs font-semibold py-2 px-4 text-center flex items-center justify-center gap-2 shadow-inner">
+            <CheckCircle className="h-4 w-4" />
+            <span>{saveSuccessMsg}</span>
+          </div>
+        )}
       </header>
 
       {/* Main Content Area */}

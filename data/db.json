@@ -31,37 +31,44 @@
     {
       "id": "44444444-4444-4444-4444-444444444401",
       "projectId": "33333333-3333-3333-3333-333333333301",
-      "categoryCode": "WBS-01",
-      "name": "Pekerjaan Tanah, Galian & Pondasi Tapak",
+      "categoryCode": "CAT-01",
+      "name": "Interior dan Furniture (Fit-Out Outlet)",
       "allocatedAmount": 350000000
     },
     {
       "id": "44444444-4444-4444-4444-444444444402",
       "projectId": "33333333-3333-3333-3333-333333333301",
-      "categoryCode": "WBS-02",
-      "name": "Pekerjaan Struktur Beton & Rangka Baja",
-      "allocatedAmount": 600000000
+      "categoryCode": "CAT-02",
+      "name": "Equipment dan Inventori (Hardware & Mesin)",
+      "allocatedAmount": 550000000
     },
     {
       "id": "44444444-4444-4444-4444-444444444403",
       "projectId": "33333333-3333-3333-3333-333333333301",
-      "categoryCode": "WBS-03",
-      "name": "Instalasi MEP, Listrik Daya & Sanitair",
-      "allocatedAmount": 250000000
+      "categoryCode": "CAT-03",
+      "name": "Marketing Tools dan Stok Bahan Awal",
+      "allocatedAmount": 200000000
     },
     {
       "id": "44444444-4444-4444-4444-444444444404",
       "projectId": "33333333-3333-3333-3333-333333333301",
-      "categoryCode": "WBS-04",
-      "name": "Sewa Alat Berat & BBM Genset Lapangan",
-      "allocatedAmount": 180000000
+      "categoryCode": "CAT-04",
+      "name": "Biaya Lisensi Brand, Perizinan & Legalitas",
+      "allocatedAmount": 150000000
     },
     {
       "id": "44444444-4444-4444-4444-444444444405",
       "projectId": "33333333-3333-3333-3333-333333333301",
-      "categoryCode": "WBS-05",
-      "name": "Biaya Operasional, K3 & Kasbon Lapangan",
-      "allocatedAmount": 120000000
+      "categoryCode": "CAT-05",
+      "name": "Pekerjaan Tambahan & Contingency",
+      "allocatedAmount": 150000000
+    },
+    {
+      "id": "44444444-4444-4444-4444-444444444406",
+      "projectId": "33333333-3333-3333-3333-333333333301",
+      "categoryCode": "CAT-06",
+      "name": "Pekerjaan diluar busget tapi penting",
+      "allocatedAmount": 100000000
     }
   ],
   "budgetItems": [
@@ -75,7 +82,7 @@
       "unitPrice": 68000,
       "totalBudget": 81600000,
       "committedAmount": 0,
-      "realizedAmount": 14350000
+      "realizedAmount": 11900000
     },
     {
       "id": "55555555-5555-5555-5555-555555555502",
@@ -147,6 +154,78 @@
       "unitPrice": 15500,
       "totalBudget": 62000000,
       "committedAmount": 15500000,
+      "realizedAmount": 0
+    },
+    {
+      "id": "55555555-5555-5555-5555-555555555506",
+      "categoryId": "44444444-4444-4444-4444-444444444403",
+      "itemCode": "ITM-MKT-001",
+      "name": "Stok Bahan Kertas Art Paper, Sticker & Toner Awal",
+      "unit": "PAKET",
+      "quantity": 1,
+      "unitPrice": 120000000,
+      "totalBudget": 120000000,
+      "committedAmount": 0,
+      "realizedAmount": 0
+    },
+    {
+      "id": "55555555-5555-5555-5555-555555555507",
+      "categoryId": "44444444-4444-4444-4444-444444444403",
+      "itemCode": "ITM-MKT-002",
+      "name": "Signage Neon Box Luar & Promo Launching",
+      "unit": "PAKET",
+      "quantity": 1,
+      "unitPrice": 35000000,
+      "totalBudget": 35000000,
+      "committedAmount": 0,
+      "realizedAmount": 4850000
+    },
+    {
+      "id": "55555555-5555-5555-5555-555555555510",
+      "categoryId": "44444444-4444-4444-4444-444444444405",
+      "itemCode": "ITM-CTG-001",
+      "name": "Pekerjaan Tambahan Instalasi Daya Listrik PLN & Panel",
+      "unit": "PAKET",
+      "quantity": 1,
+      "unitPrice": 65000000,
+      "totalBudget": 65000000,
+      "committedAmount": 0,
+      "realizedAmount": 0
+    },
+    {
+      "id": "55555555-5555-5555-5555-555555555511",
+      "categoryId": "44444444-4444-4444-4444-444444444405",
+      "itemCode": "ITM-CTG-002",
+      "name": "Cadangan Kontinjensi & Biaya Tak Terduga Lapangan",
+      "unit": "PAKET",
+      "quantity": 1,
+      "unitPrice": 50000000,
+      "totalBudget": 50000000,
+      "committedAmount": 0,
+      "realizedAmount": 0
+    },
+    {
+      "id": "55555555-5555-5555-5555-555555555512",
+      "categoryId": "44444444-4444-4444-4444-444444444406",
+      "itemCode": "ITM-EXT-001",
+      "name": "Perbaikan Pompa Air Tanah & Saluran Limbah Darurat",
+      "unit": "PAKET",
+      "quantity": 1,
+      "unitPrice": 28000000,
+      "totalBudget": 28000000,
+      "committedAmount": 0,
+      "realizedAmount": 0
+    },
+    {
+      "id": "55555555-5555-5555-5555-555555555513",
+      "categoryId": "44444444-4444-4444-4444-444444444406",
+      "itemCode": "ITM-EXT-002",
+      "name": "Pengadaan Unit CCTV Keamanan & Stabilizer Mesin",
+      "unit": "PAKET",
+      "quantity": 1,
+      "unitPrice": 35000000,
+      "totalBudget": 35000000,
+      "committedAmount": 0,
       "realizedAmount": 0
     }
   ],
@@ -291,7 +370,10 @@
       "realizationNumber": "RLZ-TBN-202604-001",
       "requestId": "77777777-7777-7777-7777-777777777701",
       "requestNumber": "REQ-TBN-202604-001",
-      "title": "Kas Bon Pembelian Semen Batch 1 & Kawat Pengikat",
+      "categoryId": "44444444-4444-4444-4444-444444444401",
+      "categoryCode": "CAT-01",
+      "categoryName": "Interior dan Furniture (Fit-Out Outlet)",
+      "requestTitle": "Kas Bon Pembelian Semen Batch 1 & Kawat Pengikat",
       "submitterName": "Eko Prasetyo, ST",
       "verifierName": "Siti Rahma, SE (Finance)",
       "totalRequested": 15000000,
@@ -324,15 +406,18 @@
       "realizationNumber": "RLZ-TBN-202604-002",
       "requestId": "77777777-7777-7777-7777-777777777702",
       "requestNumber": "REQ-TBN-202604-002",
-      "title": "Kas Bon Pembelian Kayu Bekisting Kolom Tambun",
+      "categoryId": "44444444-4444-4444-4444-444444444402",
+      "categoryCode": "CAT-02",
+      "categoryName": "Equipment dan Inventori (Hardware & Mesin)",
+      "requestTitle": "Kas Bon Pembelian Kayu Bekisting Kolom Tambun",
       "submitterName": "Eko Prasetyo, ST",
       "verifierName": "Siti Rahma, SE (Finance)",
       "totalRequested": 8000000,
       "totalRealizedAmount": 8400000,
       "remainingBalance": -400000,
-      "status": "VERIFIED_FINANCE",
-      "settledAt": null,
-      "notes": "Kelebihan belanja Rp 400.000 dijadwalkan reimburse ke Pak Eko.",
+      "status": "SETTLED",
+      "settledAt": "2026-04-22T10:00:00Z",
+      "notes": "Kelebihan belanja Rp 400.000 telah direimburse ke Pak Eko.",
       "items": [
         {
           "itemName": "Kayu Kaso 5/7 x 4m Meranti (50 batang)",
@@ -351,9 +436,74 @@
           "invoiceDate": "2026-04-20"
         }
       ]
+    },
+    {
+      "id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaa03",
+      "realizationNumber": "RLZ-TBN-202604-003",
+      "requestId": "77777777-7777-7777-7777-777777777703",
+      "requestNumber": "REQ-TBN-202604-003",
+      "categoryId": "44444444-4444-4444-4444-444444444404",
+      "categoryCode": "CAT-04",
+      "categoryName": "Biaya Lisensi Brand, Perizinan & Legalitas",
+      "requestTitle": "Kas Bon Pengurusan Izin Usaha & Sertifikasi K3",
+      "submitterName": "Eko Prasetyo, ST",
+      "verifierName": "Siti Rahma, SE (Finance)",
+      "totalRequested": 11000000,
+      "totalRealizedAmount": 11000000,
+      "remainingBalance": 0,
+      "status": "SETTLED",
+      "settledAt": "2026-04-25T14:30:00Z",
+      "notes": "Kwitansi perizinan dinas & legalitas tuntas.",
+      "items": [
+        {
+          "itemName": "Retribusi Perizinan Usaha & Dokumen K3 Lapangan",
+          "invoiceNumber": "KWI-LEG-202604-019",
+          "actualQty": 1,
+          "actualUnitPrice": 11000000,
+          "actualTotalPrice": 11000000,
+          "invoiceDate": "2026-04-24"
+        }
+      ]
+    },
+    {
+      "id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaa04",
+      "realizationNumber": "RLZ-TBN-202605-001",
+      "requestId": "77777777-7777-7777-7777-777777777706",
+      "requestNumber": "REQ-TBN-202605-003",
+      "categoryId": "44444444-4444-4444-4444-444444444403",
+      "categoryCode": "CAT-03",
+      "categoryName": "Marketing Tools dan Stok Bahan Awal",
+      "requestTitle": "Kas Bon Pengadaan Banner & Signage Launching",
+      "submitterName": "Dimas Pratama, AMd",
+      "verifierName": "Siti Rahma, SE (Finance)",
+      "totalRequested": 5000000,
+      "totalRealizedAmount": 4850000,
+      "remainingBalance": 150000,
+      "status": "VERIFIED_FINANCE",
+      "settledAt": null,
+      "notes": "Nota cetak banner launching & spanduk outlet",
+      "items": [
+        {
+          "itemName": "Spanduk Flexi & X-Banner Promo Grand Opening",
+          "invoiceNumber": "INV-PRM-202605-008",
+          "actualQty": 5,
+          "actualUnitPrice": 970000,
+          "actualTotalPrice": 4850000,
+          "invoiceDate": "2026-05-03"
+        }
+      ]
     }
   ],
   "auditLogs": [
+    {
+      "id": "1793848040847",
+      "userName": "Manajemen Eksekutif",
+      "action": "APPROVE",
+      "entityName": "BUDGET_ADJUSTMENT",
+      "ticket": "ADJ-BUDGET-0847",
+      "detail": "Penyesuaian nilai pagu anggaran berhasil disimpan (Total Rp 1.500.000.000)",
+      "timestamp": "2026-11-05T03:07:20.861Z"
+    },
     {
       "id": "1",
       "userName": "Siti Rahma (Finance)",

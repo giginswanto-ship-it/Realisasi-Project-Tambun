@@ -42,6 +42,10 @@
       </div>
 
       <div class="flex items-center gap-2">
+        <button onclick="openBudgetSettingsModal()" class="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-lg border border-purple-200 bg-purple-50 hover:bg-purple-100 text-purple-700 shadow-sm transition">
+          <i data-lucide="sliders" class="w-4 h-4 text-purple-600"></i>
+          Pengaturan Nilai Budget
+        </button>
         <button onclick="openRealizationModal()" class="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-lg border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 shadow-sm transition">
           <i data-lucide="receipt" class="w-4 h-4 text-blue-600"></i>
           Input LPJ Belanja
@@ -56,10 +60,10 @@
     <!-- TABS -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 flex gap-8 text-xs font-semibold">
       <button onclick="switchTab('overview')" id="tab-btn-overview" class="py-3 border-b-2 border-slate-900 text-slate-900 flex items-center gap-1.5 transition">
-        <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Ikhtisar Eksekutif
+        <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard Eksekutif
       </button>
       <button onclick="switchTab('requests')" id="tab-btn-requests" class="py-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-1.5 transition">
-        <i data-lucide="wallet" class="w-4 h-4"></i> Pengajuan Kasbon (<span id="count-requests">0</span>)
+        <i data-lucide="wallet" class="w-4 h-4"></i> Kategori Budget (<span id="count-requests">0</span>)
       </button>
       <button onclick="switchTab('realizations')" id="tab-btn-realizations" class="py-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-1.5 transition">
         <i data-lucide="file-check-2" class="w-4 h-4"></i> Realisasi LPJ (<span id="count-realizations">0</span>)
@@ -175,8 +179,28 @@
     </div>
 
     <!-- TAB 2: REQUESTS TABLE -->
-    <div id="tab-requests" class="hidden space-y-4">
-      <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+    <div id="tab-requests" class="hidden space-y-6">
+      <!-- 6 KATEGORI BUDGET CARDS -->
+      <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+          <div>
+            <h2 class="text-sm font-bold text-slate-900">Daftar 6 Pilihan Kategori Budget</h2>
+            <p class="text-xs text-slate-500">Pagu alokasi, realisasi belanja, dan sisa kuota per kategori</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-semibold px-2.5 py-1 bg-blue-50 text-blue-700 rounded-lg">6 Kategori Aktif</span>
+            <button onclick="openBudgetSettingsModal()" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition">
+              <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
+              Pengaturan Nilai Budget
+            </button>
+          </div>
+        </div>
+        <div id="categories-grid-view" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
         <div class="flex items-center gap-3 w-full sm:w-auto">
           <div class="relative w-full sm:w-80">
             <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
@@ -216,22 +240,74 @@
       </div>
     </div>
 
-    <!-- TAB 3: REALIZATIONS TABLE -->
-    <div id="tab-realizations" class="hidden space-y-4">
-      <div class="flex items-center justify-between">
-        <h2 class="text-sm font-bold text-slate-900">Daftar Pertanggungjawaban Belanja (LPJ & Kwitansi)</h2>
-        <button onclick="openRealizationModal()" class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white transition">
-          <i data-lucide="receipt" class="w-4 h-4"></i> Buat LPJ Baru
-        </button>
+    <!-- TAB 3: REALISASI LPJ PER KATEGORI BUDGET -->
+    <div id="tab-realizations" class="hidden space-y-6">
+      <!-- Title & Actions Bar -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200">
+        <div>
+          <h2 class="text-base font-bold text-slate-900 flex items-center gap-2">
+            <i data-lucide="file-check-2" class="w-5 h-5 text-emerald-600"></i>
+            Realisasi Pemakaian Dana per Kategori Budget
+          </h2>
+          <p class="text-xs text-slate-500 mt-0.5">Pertanggungjawaban belanja fisik riil & serapan pagu yang disesuaikan pada masing-masing 6 kategori budget</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="openBudgetSettingsModal()" class="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-lg border border-purple-200 bg-purple-50 hover:bg-purple-100 text-purple-700 shadow-sm transition">
+            <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
+            Atur Pagu Budget
+          </button>
+          <button onclick="openRealizationModal()" class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm transition">
+            <i data-lucide="receipt" class="w-4 h-4"></i>
+            Input LPJ Baru
+          </button>
+        </div>
       </div>
 
+      <!-- 6 KATEGORI REALISASI SUMMARY MATRIX -->
+      <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+          <div>
+            <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Pemakaian Dana per Masing-Masing Kategori Budget</h3>
+            <p class="text-[11px] text-slate-400">Total belanja riil (LPJ) terhadap plafon pagu anggaran setiap kategori (klik kartu untuk memfilter)</p>
+          </div>
+          <span class="text-xs font-semibold px-2.5 py-1 bg-emerald-50 text-emerald-700 rounded-lg">6 Kategori Termonitor</span>
+        </div>
+        <div id="category-realization-matrix" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+          <!-- Dynamically populated per category -->
+        </div>
+      </div>
+
+      <!-- FILTER & SEARCH BAR -->
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-1">
+        <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+          <div class="relative w-full sm:w-72">
+            <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+            <input type="text" id="rlz-search" oninput="renderRealizationsTable()" placeholder="Cari No. LPJ, uraian barang, nota..." class="w-full pl-9 pr-4 py-2 text-xs rounded-lg border border-slate-300 focus:outline-none focus:border-emerald-500 bg-white">
+          </div>
+          <div class="flex items-center gap-2 w-full sm:w-auto">
+            <label class="text-xs font-semibold text-slate-500 whitespace-nowrap">Filter Kategori:</label>
+            <select id="rlz-category-filter" onchange="renderRealizationsTable()" class="px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white text-slate-700 focus:outline-none font-semibold">
+              <option value="ALL">Semua Kategori (6 Kategori)</option>
+              <option value="44444444-4444-4444-4444-444444444401">1. Interior dan Furniture (Fit-Out Outlet)</option>
+              <option value="44444444-4444-4444-4444-444444444402">2. Equipment dan Inventori (Hardware & Mesin)</option>
+              <option value="44444444-4444-4444-4444-444444444403">3. Marketing Tools dan Stok Bahan Awal</option>
+              <option value="44444444-4444-4444-4444-444444444404">4. Biaya Lisensi Brand, Perizinan & Legalitas</option>
+              <option value="44444444-4444-4444-4444-444444444405">5. Pekerjaan Tambahan & Contingency</option>
+              <option value="44444444-4444-4444-4444-444444444406">6. Pekerjaan diluar busget tapi penting</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- TABEL DAFTAR LPJ PER KATEGORI -->
       <div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
         <div class="overflow-x-auto">
           <table class="w-full text-left text-xs text-slate-600">
             <thead class="bg-slate-50 border-b border-slate-200 text-slate-700 font-semibold uppercase tracking-wider text-[11px]">
               <tr>
-                <th class="px-5 py-3.5">No. LPJ</th>
-                <th class="px-5 py-3.5">Uraian Pembelian</th>
+                <th class="px-5 py-3.5">No. LPJ & Tanggal</th>
+                <th class="px-5 py-3.5">Kategori Budget</th>
+                <th class="px-5 py-3.5">Uraian Pembelian Riil</th>
                 <th class="px-5 py-3.5">Kasbon Awal</th>
                 <th class="px-5 py-3.5">Realisasi Aktual</th>
                 <th class="px-5 py-3.5">Selisih Kas</th>
@@ -260,6 +336,63 @@
   </main>
 
   <!-- ========================================================================= -->
+  
+  <!-- ========================================================================= -->
+  <!-- MODAL: PENGATURAN NILAI BUDGET                                            -->
+  <!-- ========================================================================= -->
+  <div id="modal-budget-settings" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl max-h-[92vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-3.5 border-b border-slate-200">
+        <div class="flex items-center gap-3">
+          <div class="p-2.5 bg-blue-50 text-blue-600 rounded-xl">
+            <i data-lucide="sliders" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-slate-900">Pengaturan Nilai Budget Proyek</h3>
+            <p class="text-xs text-slate-500">Sesuaikan nominal pagu anggaran untuk masing-masing 6 kategori budget</p>
+          </div>
+        </div>
+        <button onclick="closeBudgetSettingsModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="form-budget-settings" onsubmit="saveBudgetSettings(event)" class="mt-4 space-y-4 text-xs">
+        <!-- Akumulasi Total -->
+        <div class="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/80 rounded-xl flex items-center justify-between">
+          <div>
+            <span class="font-bold text-slate-800 text-xs block">Akumulasi Total Plafon Budget</span>
+            <span class="text-[11px] text-slate-500">Penjumlahan otomatis pagu 6 kategori</span>
+          </div>
+          <div class="text-right">
+            <span id="preview-total-budget-sum" class="text-xl font-black text-blue-700">Rp 0</span>
+          </div>
+        </div>
+
+        <!-- Inputs Container -->
+        <div class="space-y-3" id="budget-settings-inputs-list">
+          <!-- Dynamically populated -->
+        </div>
+
+        <!-- Footer -->
+        <div class="pt-4 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <button type="button" onclick="resetBudgetToDefault()" class="text-xs text-slate-500 hover:text-blue-600 transition underline">
+            Kembalikan ke Nilai Default
+          </button>
+          <div class="flex items-center gap-2 w-full sm:w-auto">
+            <button type="button" onclick="closeBudgetSettingsModal()" class="w-full sm:w-auto px-4 py-2 border border-slate-300 rounded-lg font-semibold hover:bg-slate-50 text-slate-700">
+              Batal
+            </button>
+            <button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold shadow-md hover:shadow-lg transition">
+              <i data-lucide="check" class="w-4 h-4"></i>
+              Simpan Pengaturan Budget
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- MODAL 1: BUAT PENGAJUAN KASBON BARU (RELATIONAL WITH OVER-BUDGET WARNING) -->
   <!-- ========================================================================= -->
   <div id="modal-request" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
@@ -292,6 +425,21 @@
               <option value="DIRECT_PURCHASE">Pembelian Langsung / PO Pabrik</option>
             </select>
           </div>
+        </div>
+
+        <div>
+          <label class="font-semibold text-slate-700 flex items-center justify-between">
+            <span>Pilihan Kategori Budget</span>
+            <span class="text-[11px] text-blue-600 font-bold">6 Kategori Anggaran</span>
+          </label>
+          <select id="modal-req-category" onchange="onCategoryChanged()" class="mt-1 w-full p-2.5 border-2 border-blue-500 focus:border-blue-600 rounded-lg bg-blue-50/60 text-slate-900 font-bold text-xs" required>
+            <option value="44444444-4444-4444-4444-444444444401">1. Interior dan Furniture (Fit-Out Outlet)</option>
+            <option value="44444444-4444-4444-4444-444444444402">2. Equipment dan Inventori (Hardware & Mesin)</option>
+            <option value="44444444-4444-4444-4444-444444444403">3. Marketing Tools dan Stok Bahan Awal</option>
+            <option value="44444444-4444-4444-4444-444444444404">4. Biaya Lisensi Brand, Perizinan & Legalitas</option>
+            <option value="44444444-4444-4444-4444-444444444405">5. Pekerjaan Tambahan & Contingency</option>
+            <option value="44444444-4444-4444-4444-444444444406">6. Pekerjaan diluar busget tapi penting</option>
+          </select>
         </div>
 
         <div>
@@ -379,6 +527,17 @@
           </select>
         </div>
 
+        <div class="p-3 bg-blue-50/70 border border-blue-200 rounded-xl flex items-center justify-between text-xs">
+          <div>
+            <span class="text-slate-500 block text-[11px]">Kategori Budget Terdebet:</span>
+            <span id="modal-rlz-cat-display" class="font-bold text-blue-900">-</span>
+          </div>
+          <div class="text-right">
+            <span class="text-slate-500 block text-[11px]">Kasbon Dicairkan:</span>
+            <span id="modal-rlz-cashadvance-display" class="font-bold text-slate-900">Rp 0</span>
+          </div>
+        </div>
+
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="font-semibold text-slate-700">Nomor Nota / Faktur Toko</label>
@@ -437,35 +596,627 @@
   <!-- CLIENT JAVASCRIPT APP ENGINE -->
   <!-- ========================================================================= -->
   <script>
-    let appData = {
-      projects: [],
-      categories: [],
-      budgetItems: [],
-      requests: [],
-      realizations: [],
-      auditLogs: []
-    };
+    const EMBEDDED_MASTER_DATA = {
+  "projects": [
+    {
+      "id": "33333333-3333-3333-3333-333333333301",
+      "projectCode": "PRJ-TBN-2026-001",
+      "name": "Pembangunan Gudang & Fasilitas Operasional Tambun",
+      "location": "Jl. Inspeksi Kalimalang Km. 28, Tambun Selatan, Bekasi",
+      "clientName": "PT Logistik Prima Nusantara",
+      "contractValue": 1850000000,
+      "totalBudget": 1500000000,
+      "startDate": "2026-01-15",
+      "endDate": "2026-08-31",
+      "status": "ACTIVE",
+      "managerName": "Ir. Budi Santoso, MT"
+    },
+    {
+      "id": "33333333-3333-3333-3333-333333333302",
+      "projectCode": "PRJ-TBN-2026-002",
+      "name": "Pekerjaan Saluran Drainase & Rigid Akses Kawasan Tambun",
+      "location": "Kawasan Industri Mitra Tambun, Bekasi Timur",
+      "clientName": "PT Mitra Tambun Estate",
+      "contractValue": 920000000,
+      "totalBudget": 750000000,
+      "startDate": "2026-03-01",
+      "endDate": "2026-07-31",
+      "status": "ACTIVE",
+      "managerName": "Ir. Budi Santoso, MT"
+    }
+  ],
+  "categories": [
+    {
+      "id": "44444444-4444-4444-4444-444444444401",
+      "projectId": "33333333-3333-3333-3333-333333333301",
+      "categoryCode": "CAT-01",
+      "name": "Interior dan Furniture (Fit-Out Outlet)",
+      "allocatedAmount": 350000000
+    },
+    {
+      "id": "44444444-4444-4444-4444-444444444402",
+      "projectId": "33333333-3333-3333-3333-333333333301",
+      "categoryCode": "CAT-02",
+      "name": "Equipment dan Inventori (Hardware & Mesin)",
+      "allocatedAmount": 550000000
+    },
+    {
+      "id": "44444444-4444-4444-4444-444444444403",
+      "projectId": "33333333-3333-3333-3333-333333333301",
+      "categoryCode": "CAT-03",
+      "name": "Marketing Tools dan Stok Bahan Awal",
+      "allocatedAmount": 200000000
+    },
+    {
+      "id": "44444444-4444-4444-4444-444444444404",
+      "projectId": "33333333-3333-3333-3333-333333333301",
+      "categoryCode": "CAT-04",
+      "name": "Biaya Lisensi Brand, Perizinan & Legalitas",
+      "allocatedAmount": 150000000
+    },
+    {
+      "id": "44444444-4444-4444-4444-444444444405",
+      "projectId": "33333333-3333-3333-3333-333333333301",
+      "categoryCode": "CAT-05",
+      "name": "Pekerjaan Tambahan & Contingency",
+      "allocatedAmount": 150000000
+    },
+    {
+      "id": "44444444-4444-4444-4444-444444444406",
+      "projectId": "33333333-3333-3333-3333-333333333301",
+      "categoryCode": "CAT-06",
+      "name": "Pekerjaan diluar busget tapi penting",
+      "allocatedAmount": 100000000
+    }
+  ],
+  "budgetItems": [
+    {
+      "id": "55555555-5555-5555-5555-555555555501",
+      "categoryId": "44444444-4444-4444-4444-444444444401",
+      "itemCode": "ITM-FND-001",
+      "name": "Semen Portland Komposit 50kg",
+      "unit": "ZAK",
+      "quantity": 1200,
+      "unitPrice": 68000,
+      "totalBudget": 81600000,
+      "committedAmount": 0,
+      "realizedAmount": 11900000
+    },
+    {
+      "id": "55555555-5555-5555-5555-555555555502",
+      "categoryId": "44444444-4444-4444-4444-444444444401",
+      "itemCode": "ITM-FND-002",
+      "name": "Pasir Cor Pasang Bangka",
+      "unit": "M3",
+      "quantity": 350,
+      "unitPrice": 290000,
+      "totalBudget": 101500000,
+      "committedAmount": 0,
+      "realizedAmount": 0
+    },
+    {
+      "id": "55555555-5555-5555-5555-555555555503",
+      "categoryId": "44444444-4444-4444-4444-444444444402",
+      "itemCode": "ITM-STR-001",
+      "name": "Besi Beton Ulir D16 BJTS 420B",
+      "unit": "BATANG",
+      "quantity": 1500,
+      "unitPrice": 185000,
+      "totalBudget": 277500000,
+      "committedAmount": 48000000,
+      "realizedAmount": 0
+    },
+    {
+      "id": "55555555-5555-5555-5555-555555555504",
+      "categoryId": "44444444-4444-4444-4444-444444444402",
+      "itemCode": "ITM-STR-002",
+      "name": "Kawat Bendrat Hitam BWG 21",
+      "unit": "KG",
+      "quantity": 400,
+      "unitPrice": 25000,
+      "totalBudget": 10000000,
+      "committedAmount": 0,
+      "realizedAmount": 2450000
+    },
+    {
+      "id": "55555555-5555-5555-5555-555555555505",
+      "categoryId": "44444444-4444-4444-4444-444444444402",
+      "itemCode": "ITM-STR-003",
+      "name": "Kayu Kaso & Triplek Bekisting 9mm",
+      "unit": "LEMBAR",
+      "quantity": 250,
+      "unitPrice": 160000,
+      "totalBudget": 40000000,
+      "committedAmount": 8000000,
+      "realizedAmount": 8400000
+    },
+    {
+      "id": "55555555-5555-5555-5555-555555555508",
+      "categoryId": "44444444-4444-4444-4444-444444444404",
+      "itemCode": "ITM-EQP-001",
+      "name": "Sewa Excavator Komatsu PC200",
+      "unit": "SHIFT",
+      "quantity": 40,
+      "unitPrice": 2200000,
+      "totalBudget": 88000000,
+      "committedAmount": 11000000,
+      "realizedAmount": 11000000
+    },
+    {
+      "id": "55555555-5555-5555-5555-555555555509",
+      "categoryId": "44444444-4444-4444-4444-444444444404",
+      "itemCode": "ITM-EQP-002",
+      "name": "Solar Industri B35 Non-Subsidi",
+      "unit": "LITER",
+      "quantity": 4000,
+      "unitPrice": 15500,
+      "totalBudget": 62000000,
+      "committedAmount": 15500000,
+      "realizedAmount": 0
+    },
+    {
+      "id": "55555555-5555-5555-5555-555555555506",
+      "categoryId": "44444444-4444-4444-4444-444444444403",
+      "itemCode": "ITM-MKT-001",
+      "name": "Stok Bahan Kertas Art Paper, Sticker & Toner Awal",
+      "unit": "PAKET",
+      "quantity": 1,
+      "unitPrice": 120000000,
+      "totalBudget": 120000000,
+      "committedAmount": 0,
+      "realizedAmount": 0
+    },
+    {
+      "id": "55555555-5555-5555-5555-555555555507",
+      "categoryId": "44444444-4444-4444-4444-444444444403",
+      "itemCode": "ITM-MKT-002",
+      "name": "Signage Neon Box Luar & Promo Launching",
+      "unit": "PAKET",
+      "quantity": 1,
+      "unitPrice": 35000000,
+      "totalBudget": 35000000,
+      "committedAmount": 0,
+      "realizedAmount": 4850000
+    },
+    {
+      "id": "55555555-5555-5555-5555-555555555510",
+      "categoryId": "44444444-4444-4444-4444-444444444405",
+      "itemCode": "ITM-CTG-001",
+      "name": "Pekerjaan Tambahan Instalasi Daya Listrik PLN & Panel",
+      "unit": "PAKET",
+      "quantity": 1,
+      "unitPrice": 65000000,
+      "totalBudget": 65000000,
+      "committedAmount": 0,
+      "realizedAmount": 0
+    },
+    {
+      "id": "55555555-5555-5555-5555-555555555511",
+      "categoryId": "44444444-4444-4444-4444-444444444405",
+      "itemCode": "ITM-CTG-002",
+      "name": "Cadangan Kontinjensi & Biaya Tak Terduga Lapangan",
+      "unit": "PAKET",
+      "quantity": 1,
+      "unitPrice": 50000000,
+      "totalBudget": 50000000,
+      "committedAmount": 0,
+      "realizedAmount": 0
+    },
+    {
+      "id": "55555555-5555-5555-5555-555555555512",
+      "categoryId": "44444444-4444-4444-4444-444444444406",
+      "itemCode": "ITM-EXT-001",
+      "name": "Perbaikan Pompa Air Tanah & Saluran Limbah Darurat",
+      "unit": "PAKET",
+      "quantity": 1,
+      "unitPrice": 28000000,
+      "totalBudget": 28000000,
+      "committedAmount": 0,
+      "realizedAmount": 0
+    },
+    {
+      "id": "55555555-5555-5555-5555-555555555513",
+      "categoryId": "44444444-4444-4444-4444-444444444406",
+      "itemCode": "ITM-EXT-002",
+      "name": "Pengadaan Unit CCTV Keamanan & Stabilizer Mesin",
+      "unit": "PAKET",
+      "quantity": 1,
+      "unitPrice": 35000000,
+      "totalBudget": 35000000,
+      "committedAmount": 0,
+      "realizedAmount": 0
+    }
+  ],
+  "users": [
+    {
+      "id": "22222222-2222-2222-2222-222222222202",
+      "fullName": "Ir. Budi Santoso, MT",
+      "email": "budi.pm@tambunproject.id",
+      "role": "PROJECT_MANAGER"
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222203",
+      "fullName": "Eko Prasetyo, ST",
+      "email": "eko.field@tambunproject.id",
+      "role": "SITE_ENGINEER"
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222204",
+      "fullName": "Dimas Pratama, AMd",
+      "email": "dimas.field@tambunproject.id",
+      "role": "SITE_ENGINEER"
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222205",
+      "fullName": "Siti Rahma, SE, Ak",
+      "email": "siti.finance@tambunproject.id",
+      "role": "FINANCE"
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222206",
+      "fullName": "Drs. Hendra Gunawan",
+      "email": "hendra.direksi@tambunproject.id",
+      "role": "DIRECTOR"
+    }
+  ],
+  "requests": [
+    {
+      "id": "77777777-7777-7777-7777-777777777701",
+      "requestNumber": "REQ-TBN-202604-001",
+      "projectId": "33333333-3333-3333-3333-333333333301",
+      "projectName": "Pembangunan Gudang Tambun",
+      "requesterName": "Eko Prasetyo, ST",
+      "type": "CASH_ADVANCE",
+      "title": "Kas Bon Pembelian Semen Batch 1 & Kawat Pengikat",
+      "purpose": "Kebutuhan mendesak pengecoran sloof pondasi blok A",
+      "totalAmountRequested": 15000000,
+      "currentStatus": "SETTLED",
+      "needByDate": "2026-04-10",
+      "disbursedAt": "2026-04-11T10:30:00Z",
+      "notes": "Transfer via BCA Finance ke Rekening Eko Prasetyo",
+      "items": [
+        {
+          "budgetItemId": "55555555-5555-5555-5555-555555555501",
+          "description": "Semen Portland Komposit 50kg (180 zak)",
+          "requestedQty": 180,
+          "estimatedUnitPrice": 68000,
+          "estimatedTotal": 12240000
+        },
+        {
+          "budgetItemId": "55555555-5555-5555-5555-555555555504",
+          "description": "Kawat bendrat beton (110 kg)",
+          "requestedQty": 110,
+          "estimatedUnitPrice": 25000,
+          "estimatedTotal": 2760000
+        }
+      ]
+    },
+    {
+      "id": "77777777-7777-7777-7777-777777777702",
+      "requestNumber": "REQ-TBN-202604-002",
+      "projectId": "33333333-3333-3333-3333-333333333301",
+      "projectName": "Pembangunan Gudang Tambun",
+      "requesterName": "Eko Prasetyo, ST",
+      "type": "CASH_ADVANCE",
+      "title": "Kas Bon Pembelian Kayu Bekisting Kolom Tambun",
+      "purpose": "Pengadaan kaso 5/7 dan triplek cor untuk 12 titik kolom",
+      "totalAmountRequested": 8000000,
+      "currentStatus": "DISBURSED",
+      "needByDate": "2026-04-18",
+      "disbursedAt": "2026-04-19T14:15:00Z",
+      "notes": "Kasbon dicairkan penuh",
+      "items": [
+        {
+          "budgetItemId": "55555555-5555-5555-5555-555555555505",
+          "description": "Kayu kaso 5/7 Meranti & Triplek 9mm 50 lbr",
+          "requestedQty": 50,
+          "estimatedUnitPrice": 160000,
+          "estimatedTotal": 8000000
+        }
+      ]
+    },
+    {
+      "id": "77777777-7777-7777-7777-777777777704",
+      "requestNumber": "REQ-TBN-202605-001",
+      "projectId": "33333333-3333-3333-3333-333333333301",
+      "projectName": "Pembangunan Gudang Tambun",
+      "requesterName": "Eko Prasetyo, ST",
+      "type": "DIRECT_PURCHASE",
+      "title": "Pengadaan Besi Beton Ulir D16 (260 Batang)",
+      "purpose": "Pengadaan material pembesian rangka portal gudang dari pabrik",
+      "totalAmountRequested": 48000000,
+      "currentStatus": "APPROVED_DIRECTOR",
+      "needByDate": "2026-05-05",
+      "notes": "Eskalasi persetujuan Direktur terpenuhi karena nominal > 25 Juta",
+      "items": [
+        {
+          "budgetItemId": "55555555-5555-5555-5555-555555555503",
+          "description": "Besi Beton Ulir D16 BJTS 420B (260 btg)",
+          "requestedQty": 260,
+          "estimatedUnitPrice": 184615.38,
+          "estimatedTotal": 48000000
+        }
+      ]
+    },
+    {
+      "id": "77777777-7777-7777-7777-777777777705",
+      "requestNumber": "REQ-TBN-202605-002",
+      "projectId": "33333333-3333-3333-3333-333333333301",
+      "projectName": "Pembangunan Gudang Tambun",
+      "requesterName": "Dimas Pratama, AMd",
+      "type": "CASH_ADVANCE",
+      "title": "Kas Bon Pasir Cor Tambahan 15 M3",
+      "purpose": "Tambahan pasir cor pasang untuk plesteran dinding pondasi",
+      "totalAmountRequested": 4350000,
+      "currentStatus": "SUBMITTED",
+      "needByDate": "2026-05-10",
+      "notes": "Menunggu review Project Manager",
+      "items": [
+        {
+          "budgetItemId": "55555555-5555-5555-5555-555555555502",
+          "description": "Pasir cor pasang Bangka (15 m3)",
+          "requestedQty": 15,
+          "estimatedUnitPrice": 290000,
+          "estimatedTotal": 4350000
+        }
+      ]
+    }
+  ],
+  "realizations": [
+    {
+      "id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaa01",
+      "realizationNumber": "RLZ-TBN-202604-001",
+      "requestId": "77777777-7777-7777-7777-777777777701",
+      "requestNumber": "REQ-TBN-202604-001",
+      "categoryId": "44444444-4444-4444-4444-444444444401",
+      "categoryCode": "CAT-01",
+      "categoryName": "Interior dan Furniture (Fit-Out Outlet)",
+      "requestTitle": "Kas Bon Pembelian Semen Batch 1 & Kawat Pengikat",
+      "submitterName": "Eko Prasetyo, ST",
+      "verifierName": "Siti Rahma, SE (Finance)",
+      "totalRequested": 15000000,
+      "totalRealizedAmount": 14350000,
+      "remainingBalance": 650000,
+      "status": "SETTLED",
+      "settledAt": "2026-04-15T15:00:00Z",
+      "notes": "Sisa uang kas bon Rp 650.000 telah ditransfer kembali ke kas proyek.",
+      "items": [
+        {
+          "itemName": "Semen PCC Padang 50kg (175 zak)",
+          "invoiceNumber": "INV-TJ-202604-089",
+          "actualQty": 175,
+          "actualUnitPrice": 68000,
+          "actualTotalPrice": 11900000,
+          "invoiceDate": "2026-04-12"
+        },
+        {
+          "itemName": "Kawat Bendrat Hitam BWG 21 (100 kg)",
+          "invoiceNumber": "INV-TJ-202604-090",
+          "actualQty": 100,
+          "actualUnitPrice": 24500,
+          "actualTotalPrice": 2450000,
+          "invoiceDate": "2026-04-12"
+        }
+      ]
+    },
+    {
+      "id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaa02",
+      "realizationNumber": "RLZ-TBN-202604-002",
+      "requestId": "77777777-7777-7777-7777-777777777702",
+      "requestNumber": "REQ-TBN-202604-002",
+      "categoryId": "44444444-4444-4444-4444-444444444402",
+      "categoryCode": "CAT-02",
+      "categoryName": "Equipment dan Inventori (Hardware & Mesin)",
+      "requestTitle": "Kas Bon Pembelian Kayu Bekisting Kolom Tambun",
+      "submitterName": "Eko Prasetyo, ST",
+      "verifierName": "Siti Rahma, SE (Finance)",
+      "totalRequested": 8000000,
+      "totalRealizedAmount": 8400000,
+      "remainingBalance": -400000,
+      "status": "SETTLED",
+      "settledAt": "2026-04-22T10:00:00Z",
+      "notes": "Kelebihan belanja Rp 400.000 telah direimburse ke Pak Eko.",
+      "items": [
+        {
+          "itemName": "Kayu Kaso 5/7 x 4m Meranti (50 batang)",
+          "invoiceNumber": "INV-TJ-202604-142",
+          "actualQty": 50,
+          "actualUnitPrice": 72000,
+          "actualTotalPrice": 3600000,
+          "invoiceDate": "2026-04-20"
+        },
+        {
+          "itemName": "Triplek Cor Phenolic 9mm (30 lembar)",
+          "invoiceNumber": "INV-TJ-202604-143",
+          "actualQty": 30,
+          "actualUnitPrice": 160000,
+          "actualTotalPrice": 4800000,
+          "invoiceDate": "2026-04-20"
+        }
+      ]
+    },
+    {
+      "id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaa03",
+      "realizationNumber": "RLZ-TBN-202604-003",
+      "requestId": "77777777-7777-7777-7777-777777777703",
+      "requestNumber": "REQ-TBN-202604-003",
+      "categoryId": "44444444-4444-4444-4444-444444444404",
+      "categoryCode": "CAT-04",
+      "categoryName": "Biaya Lisensi Brand, Perizinan & Legalitas",
+      "requestTitle": "Kas Bon Pengurusan Izin Usaha & Sertifikasi K3",
+      "submitterName": "Eko Prasetyo, ST",
+      "verifierName": "Siti Rahma, SE (Finance)",
+      "totalRequested": 11000000,
+      "totalRealizedAmount": 11000000,
+      "remainingBalance": 0,
+      "status": "SETTLED",
+      "settledAt": "2026-04-25T14:30:00Z",
+      "notes": "Kwitansi perizinan dinas & legalitas tuntas.",
+      "items": [
+        {
+          "itemName": "Retribusi Perizinan Usaha & Dokumen K3 Lapangan",
+          "invoiceNumber": "KWI-LEG-202604-019",
+          "actualQty": 1,
+          "actualUnitPrice": 11000000,
+          "actualTotalPrice": 11000000,
+          "invoiceDate": "2026-04-24"
+        }
+      ]
+    },
+    {
+      "id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaa04",
+      "realizationNumber": "RLZ-TBN-202605-001",
+      "requestId": "77777777-7777-7777-7777-777777777706",
+      "requestNumber": "REQ-TBN-202605-003",
+      "categoryId": "44444444-4444-4444-4444-444444444403",
+      "categoryCode": "CAT-03",
+      "categoryName": "Marketing Tools dan Stok Bahan Awal",
+      "requestTitle": "Kas Bon Pengadaan Banner & Signage Launching",
+      "submitterName": "Dimas Pratama, AMd",
+      "verifierName": "Siti Rahma, SE (Finance)",
+      "totalRequested": 5000000,
+      "totalRealizedAmount": 4850000,
+      "remainingBalance": 150000,
+      "status": "VERIFIED_FINANCE",
+      "settledAt": null,
+      "notes": "Nota cetak banner launching & spanduk outlet",
+      "items": [
+        {
+          "itemName": "Spanduk Flexi & X-Banner Promo Grand Opening",
+          "invoiceNumber": "INV-PRM-202605-008",
+          "actualQty": 5,
+          "actualUnitPrice": 970000,
+          "actualTotalPrice": 4850000,
+          "invoiceDate": "2026-05-03"
+        }
+      ]
+    }
+  ],
+  "auditLogs": [
+    {
+      "id": "1793848040847",
+      "userName": "Manajemen Eksekutif",
+      "action": "APPROVE",
+      "entityName": "BUDGET_ADJUSTMENT",
+      "ticket": "ADJ-BUDGET-0847",
+      "detail": "Penyesuaian nilai pagu anggaran berhasil disimpan (Total Rp 1.500.000.000)",
+      "timestamp": "2026-11-05T03:07:20.861Z"
+    },
+    {
+      "id": "1",
+      "userName": "Siti Rahma (Finance)",
+      "action": "SETTLE",
+      "entityName": "REALIZATION",
+      "ticket": "RLZ-TBN-202604-001",
+      "detail": "Penutupan LPJ dan rekonsiliasi sisa kasbon Rp 650.000",
+      "timestamp": "2026-04-15T15:00:00Z"
+    },
+    {
+      "id": "2",
+      "userName": "Siti Rahma (Finance)",
+      "action": "DISBURSE",
+      "entityName": "EXPENSE_REQUEST",
+      "ticket": "REQ-TBN-202604-002",
+      "detail": "Pencairan dana kasbon bekisting Rp 8.000.000",
+      "timestamp": "2026-04-19T14:15:00Z"
+    },
+    {
+      "id": "3",
+      "userName": "Drs. Hendra Gunawan (Direktur)",
+      "action": "APPROVE",
+      "entityName": "EXPENSE_REQUEST",
+      "ticket": "REQ-TBN-202605-001",
+      "detail": "Persetujuan eskalasi pengadaan besi beton D16 (> 25 Juta)",
+      "timestamp": "2026-05-02T09:45:00Z"
+    },
+    {
+      "id": "4",
+      "userName": "Dimas Pratama, AMd",
+      "action": "SUBMIT",
+      "entityName": "EXPENSE_REQUEST",
+      "ticket": "REQ-TBN-202605-002",
+      "detail": "Pengajuan kasbon pasir cor tambahan Rp 4.350.000",
+      "timestamp": "2026-05-04T08:00:00Z"
+    }
+  ]
+};
+
+    let appData = JSON.parse(JSON.stringify(EMBEDDED_MASTER_DATA));
 
     const formatRp = (num) => 'Rp ' + Number(num || 0).toLocaleString('id-ID');
 
     async function loadData() {
       try {
         const res = await fetch('/api/v1/data');
-        appData = await res.json();
-        renderAll();
+        if (res.ok) {
+          const freshData = await res.json();
+          if (freshData && freshData.categories && freshData.categories.length > 0) {
+            appData = freshData;
+          }
+        }
       } catch (e) {
-        console.error('Failed to load data:', e);
+        console.warn('Backend server offline or running via file:// protocol. Using embedded master data.', e);
       }
+      renderAll();
     }
 
     function renderAll() {
       renderKpi();
       renderWbs();
+      renderCategoryCards();
       renderAuditFeed();
       renderRequestsTable();
       renderRealizationsTable();
       renderAlerts();
       lucide.createIcons();
+    }
+
+    function renderCategoryCards() {
+      const grid = document.getElementById('categories-grid-view');
+      if (!grid) return;
+      grid.innerHTML = '';
+      appData.categories.forEach((cat, idx) => {
+        const catItems = appData.budgetItems.filter(i => i.categoryId === cat.id);
+        let catCommitted = 0;
+        let catRealized = 0;
+        catItems.forEach(i => {
+          catCommitted += Number(i.committedAmount || 0);
+          catRealized += Number(i.realizedAmount || 0);
+        });
+        const totalUsed = catCommitted + catRealized;
+        const allocated = Number(cat.allocatedAmount || 1);
+        const remaining = allocated - totalUsed;
+        const percent = ((totalUsed / allocated) * 100).toFixed(1);
+        const isOver = totalUsed > allocated;
+
+        grid.innerHTML += `
+          <div class="p-4 rounded-xl border border-slate-200/90 bg-gradient-to-br from-white to-slate-50 shadow-sm hover:border-blue-400 transition">
+            <div class="flex items-start justify-between gap-2 mb-2">
+              <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-blue-600 text-white font-bold text-xs">${idx + 1}</span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded ${isOver ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}">${isOver ? 'OVER-BUDGET' : 'AMAN'}</span>
+            </div>
+            <div class="font-bold text-xs text-slate-900 leading-snug min-h-[32px]">${cat.name}</div>
+            <div class="mt-3 pt-3 border-t border-slate-100 space-y-1.5 text-xs">
+              <div class="flex justify-between text-slate-500">
+                <span>Pagu Alokasi:</span>
+                <span class="font-semibold text-slate-800">${formatRp(allocated)}</span>
+              </div>
+              <div class="flex justify-between text-slate-500">
+                <span>Realisasi & Kasbon:</span>
+                <span class="font-semibold text-blue-600">${formatRp(totalUsed)}</span>
+              </div>
+              <div class="flex justify-between text-slate-500">
+                <span>Sisa Kuota:</span>
+                <span class="font-bold ${isOver ? 'text-rose-600' : 'text-emerald-600'}">${formatRp(remaining)}</span>
+              </div>
+              <div class="w-full bg-slate-200 rounded-full h-1.5 mt-2">
+                <div class="${isOver ? 'bg-rose-500' : 'bg-blue-600'} h-1.5 rounded-full" style="width: ${Math.min(100, percent)}%"></div>
+              </div>
+              <div class="text-right text-[10px] text-slate-400 pt-0.5">${percent}% terpakai</div>
+            </div>
+          </div>
+        `;
+      });
     }
 
     function renderKpi() {
@@ -512,7 +1263,7 @@
       const container = document.getElementById('wbs-breakdown-list');
       container.innerHTML = '';
 
-      appData.categories.forEach(cat => {
+      appData.categories.forEach((cat, idx) => {
         const catItems = appData.budgetItems.filter(i => i.categoryId === cat.id);
         let catCommitted = 0;
         let catRealized = 0;
@@ -530,7 +1281,7 @@
         container.innerHTML += `
           <div class="p-3 bg-slate-50/80 rounded-xl border border-slate-100">
             <div class="flex justify-between items-center text-xs mb-1.5">
-              <span class="font-bold text-slate-800">${cat.categoryCode} - ${cat.name}</span>
+              <span class="font-bold text-slate-800">${idx + 1}. ${cat.name}</span>
               <span class="font-bold ${isOver ? 'text-rose-600' : 'text-slate-900'}">${formatRp(totalUsed)} / ${formatRp(allocated)}</span>
             </div>
             <div class="w-full bg-slate-200 rounded-full h-2">
@@ -550,14 +1301,22 @@
       const container = document.getElementById('audit-feed-list');
       container.innerHTML = '';
 
-      appData.auditLogs.slice(0, 5).forEach(log => {
+      appData.auditLogs.slice(0, 7).forEach(log => {
+        let badgeColor = 'text-blue-600 bg-blue-50';
+        if (log.action === 'APPROVE') badgeColor = 'text-emerald-600 bg-emerald-50';
+        if (log.action === 'DISBURSE') badgeColor = 'text-purple-600 bg-purple-50';
+        if (log.action === 'SETTLE') badgeColor = 'text-slate-700 bg-slate-100';
+
         container.innerHTML += `
-          <div class="py-2.5 flex justify-between items-start">
-            <div>
-              <div class="font-bold text-slate-800">${log.userName}</div>
-              <div class="text-[11px] text-slate-500">${log.ticket} - ${log.detail}</div>
+          <div class="py-2.5 flex items-start justify-between gap-3">
+            <div class="space-y-0.5">
+              <div class="font-semibold text-slate-800 flex items-center gap-1.5">
+                <span class="px-1.5 py-0.5 text-[10px] font-bold rounded ${badgeColor}">${log.action}</span>
+                <span>${log.ticket || '-'}</span>
+              </div>
+              <div class="text-[11px] text-slate-500">${log.detail}</div>
+              <div class="text-[10px] text-slate-400">${log.userName} • ${new Date(log.timestamp).toLocaleDateString('id-ID', { day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' })}</div>
             </div>
-            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${log.action === 'SETTLE' ? 'badge-success' : log.action === 'DISBURSE' ? 'badge-info' : 'badge-purple'}">${log.action}</span>
           </div>
         `;
       });
@@ -601,52 +1360,178 @@
         }
 
         tbody.innerHTML += `
-          <tr class="hover:bg-slate-50 transition">
-            <td class="px-5 py-3.5 font-bold text-slate-900">${r.requestNumber}</td>
+          <tr class="hover:bg-slate-50/70 transition">
+            <td class="px-5 py-3.5 font-bold text-blue-600">${r.requestNumber}</td>
             <td class="px-5 py-3.5">
-              <div class="font-medium text-slate-800">${r.title}</div>
-              <div class="text-[11px] text-slate-400">Oleh: ${r.requesterName}</div>
+              <div class="font-bold text-slate-900">${r.title}</div>
+              <div class="text-[11px] text-slate-400">${r.purpose || '-'}</div>
             </td>
-            <td class="px-5 py-3.5 font-bold text-slate-900">${formatRp(r.totalAmountRequested)}</td>
-            <td class="px-5 py-3.5 text-slate-500">${r.needByDate}</td>
-            <td class="px-5 py-3.5"><span class="px-2.5 py-1 rounded-full font-bold text-[10px] ${badgeClass}">${statusLabel}</span></td>
+            <td class="px-5 py-3.5 font-black text-slate-900">${formatRp(r.totalAmountRequested)}</td>
+            <td class="px-5 py-3.5 text-slate-500">${r.needByDate || '-'}</td>
+            <td class="px-5 py-3.5"><span class="badge ${badgeClass}">${statusLabel}</span></td>
             <td class="px-5 py-3.5 text-right">${actionBtn}</td>
           </tr>
         `;
       });
-      lucide.createIcons();
+    }
+
+    function renderCategoryRealizationMatrix() {
+      const container = document.getElementById('category-realization-matrix');
+      if (!container) return;
+      container.innerHTML = '';
+
+      appData.categories.forEach((cat, idx) => {
+        const catRealizations = appData.realizations.filter(rz => {
+          const rzCat = getCategoryForRealization(rz);
+          return rzCat.id === cat.id;
+        });
+
+        let catRealized = 0;
+        catRealizations.forEach(rz => {
+          catRealized += Number(rz.totalRealizedAmount || 0);
+        });
+
+        const catRequests = appData.requests.filter(r => {
+          const reqCat = getCategoryForRequest(r);
+          return reqCat.id === cat.id && ['DISBURSED', 'APPROVED_DIRECTOR', 'APPROVED_PM'].includes(r.currentStatus);
+        });
+        let catCommitted = 0;
+        catRequests.forEach(r => {
+          catCommitted += Number(r.totalAmountRequested || 0);
+        });
+
+        const allocated = Number(cat.allocatedAmount || 1);
+        const remaining = allocated - (catRealized + catCommitted);
+        const percent = ((catRealized / allocated) * 100).toFixed(1);
+        const isOver = (catRealized + catCommitted) > allocated;
+
+        container.innerHTML += `
+          <div onclick="filterRealizationByCategory('${cat.id}')" class="cursor-pointer p-4 rounded-xl border border-slate-200/90 bg-gradient-to-br from-white to-slate-50 hover:border-emerald-500 hover:shadow-md transition">
+            <div class="flex items-start justify-between gap-2 mb-1.5">
+              <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-600 text-white font-bold text-xs">${idx + 1}</span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded ${isOver ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}">${isOver ? 'OVER-BUDGET' : 'TERKENDALI'}</span>
+            </div>
+            <div class="font-bold text-xs text-slate-900 leading-snug min-h-[30px]">${cat.name}</div>
+            <div class="mt-2.5 pt-2.5 border-t border-slate-100 space-y-1.5 text-xs">
+              <div class="flex justify-between text-slate-500">
+                <span>Pagu Anggaran:</span>
+                <span class="font-semibold text-slate-800">${formatRp(allocated)}</span>
+              </div>
+              <div class="flex justify-between text-slate-500">
+                <span>Realisasi LPJ:</span>
+                <span class="font-bold text-emerald-600">${formatRp(catRealized)}</span>
+              </div>
+              <div class="flex justify-between text-slate-500">
+                <span>Sisa Pagu:</span>
+                <span class="font-semibold ${isOver ? 'text-rose-600' : 'text-slate-700'}">${formatRp(remaining)}</span>
+              </div>
+              <div class="w-full bg-slate-200 rounded-full h-1.5 mt-2">
+                <div class="${isOver ? 'bg-rose-500' : 'bg-emerald-600'} h-1.5 rounded-full" style="width: ${Math.min(100, percent)}%"></div>
+              </div>
+              <div class="flex justify-between items-center text-[10px] text-slate-400 pt-0.5">
+                <span>${catRealizations.length} Dokumen LPJ</span>
+                <span class="font-bold text-emerald-700">${percent}% terpakai</span>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function filterRealizationByCategory(catId) {
+      const select = document.getElementById('rlz-category-filter');
+      if (select) {
+        select.value = catId;
+        renderRealizationsTable();
+      }
+    }
+
+    function getCategoryForRequest(req) {
+      if (req.items?.[0]?.budgetItemId) {
+        const item = appData.budgetItems.find(i => i.id === req.items[0].budgetItemId);
+        if (item) {
+          const cat = appData.categories.find(c => c.id === item.categoryId);
+          if (cat) return cat;
+        }
+      }
+      return appData.categories[0] || { name: 'Umum', categoryCode: 'CAT-01' };
+    }
+
+    function getCategoryForRealization(rz) {
+      if (rz.categoryId) {
+        const cat = appData.categories.find(c => c.id === rz.categoryId);
+        if (cat) return cat;
+      }
+      const req = appData.requests.find(r => r.id === rz.requestId || r.requestNumber === rz.requestNumber);
+      if (req) {
+        return getCategoryForRequest(req);
+      }
+      return appData.categories[0] || { name: 'Umum', categoryCode: 'CAT-01' };
     }
 
     function renderRealizationsTable() {
+      renderCategoryRealizationMatrix();
+
       const tbody = document.getElementById('realizations-tbody');
+      if (!tbody) return;
       tbody.innerHTML = '';
 
-      if (appData.realizations.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-400">Belum ada berkas LPJ diajukan.</td></tr>`;
+      const query = (document.getElementById('rlz-search')?.value || '').toLowerCase();
+      const catFilter = document.getElementById('rlz-category-filter')?.value || 'ALL';
+
+      const filtered = appData.realizations.filter(rz => {
+        const cat = getCategoryForRealization(rz);
+        const matchCat = catFilter === 'ALL' || cat.id === catFilter;
+        const matchQ = (rz.realizationNumber || '').toLowerCase().includes(query) ||
+                       (rz.requestTitle || '').toLowerCase().includes(query) ||
+                       (rz.notes || '').toLowerCase().includes(query) ||
+                       (cat.name || '').toLowerCase().includes(query);
+        return matchCat && matchQ;
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="py-8 text-center text-slate-400">Tidak ada dokumen realisasi LPJ pada kategori ini.</td></tr>`;
         return;
       }
 
-      appData.realizations.forEach(rz => {
-        const isSettled = rz.status === 'SETTLED';
-        const diff = Number(rz.remainingBalance || 0);
+      filtered.forEach(rz => {
+        const cat = getCategoryForRealization(rz);
+        const bal = Number(rz.remainingBalance || 0);
+        let balText = `<span class="text-emerald-600 font-bold">Pas (Rp 0)</span>`;
+        if (bal > 0) balText = `<span class="text-blue-600 font-bold">Lebih Kasbon: ${formatRp(bal)}</span>`;
+        if (bal < 0) balText = `<span class="text-rose-600 font-bold">Nombok: ${formatRp(Math.abs(bal))}</span>`;
+
+        const invDate = rz.items?.[0]?.invoiceDate || rz.settledAt || '2026-04-20';
 
         tbody.innerHTML += `
-          <tr class="hover:bg-slate-50 transition">
-            <td class="px-5 py-3.5 font-bold text-slate-900">${rz.realizationNumber}<div class="text-[10px] text-slate-400 font-normal">Tiket: ${rz.requestNumber}</div></td>
-            <td class="px-5 py-3.5 font-medium text-slate-800">${rz.title}<div class="text-[10px] text-slate-400">Pelapor: ${rz.submitterName}</div></td>
-            <td class="px-5 py-3.5 text-slate-600">${formatRp(rz.totalRequested)}</td>
-            <td class="px-5 py-3.5 font-bold text-slate-900">${formatRp(rz.totalRealizedAmount)}</td>
-            <td class="px-5 py-3.5 font-bold ${diff > 0 ? 'text-emerald-600' : diff < 0 ? 'text-amber-600' : 'text-slate-600'}">
-              ${diff > 0 ? '+ ' + formatRp(diff) + ' (Sisa Kas)' : diff < 0 ? '- ' + formatRp(Math.abs(diff)) + ' (Reimburse)' : 'Rp 0'}
+          <tr class="hover:bg-slate-50/70 transition">
+            <td class="px-5 py-3.5">
+              <div class="font-bold text-emerald-600">${rz.realizationNumber}</div>
+              <div class="text-[11px] text-slate-400">${new Date(invDate).toLocaleDateString('id-ID', { day:'2-digit', month:'short', year:'numeric' })}</div>
             </td>
-            <td class="px-5 py-3.5"><span class="px-2.5 py-1 rounded-full font-bold text-[10px] ${isSettled ? 'badge-success' : 'badge-purple'}">${isSettled ? 'Selesai (Settled)' : 'Terverifikasi Finance'}</span></td>
+            <td class="px-5 py-3.5">
+              <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                ${cat.name}
+              </span>
+            </td>
+            <td class="px-5 py-3.5">
+              <div class="font-bold text-slate-900">${rz.requestTitle || 'Realisasi Belanja'}</div>
+              <div class="text-[11px] text-slate-400">Nota: ${rz.items?.[0]?.invoiceNumber || '-'} • Ref: ${rz.requestNumber}</div>
+            </td>
+            <td class="px-5 py-3.5 text-slate-500">${formatRp(rz.originalCashAdvanceDisbursed || rz.totalRequested)}</td>
+            <td class="px-5 py-3.5 font-black text-slate-900">${formatRp(rz.totalRealizedAmount)}</td>
+            <td class="px-5 py-3.5">${balText}</td>
+            <td class="px-5 py-3.5">
+              <span class="badge ${rz.status === 'SETTLED' ? 'badge-success' : 'badge-warning'}">
+                ${rz.status === 'SETTLED' ? 'Verified & Settled' : 'Review Finance'}
+              </span>
+            </td>
             <td class="px-5 py-3.5 text-right">
-              ${!isSettled ? `<button onclick="settleRealization('${rz.id}')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-semibold text-[11px]">Tutup Settlement</button>` : `<span class="text-emerald-600 font-bold">✓ Selesai</span>`}
+              ${rz.status !== 'SETTLED' ? `<button onclick="settleRealization('${rz.id}')" class="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 text-white rounded font-semibold text-[11px]">Tutup & Rekonsiliasi</button>` : `<span class="badge badge-success">Closed</span>`}
             </td>
           </tr>
         `;
       });
-      lucide.createIcons();
     }
 
     function renderAlerts() {
@@ -699,21 +1584,37 @@
 
     // MODAL REQUEST LOGIC
     function openRequestModal() {
-      const select = document.getElementById('modal-req-item-select');
-      select.innerHTML = '';
-      appData.budgetItems.forEach(item => {
-        const total = Number(item.totalBudget || 0);
-        const used = Number(item.committedAmount || 0) + Number(item.realizedAmount || 0);
-        const available = total - used;
-        select.innerHTML += `<option value="${item.id}" data-price="${item.unitPrice}" data-available="${available}">${item.itemCode} - ${item.name} (Sisa: ${formatRp(available)})</option>`;
-      });
-      onBudgetItemChanged();
+      const catSelect = document.getElementById('modal-req-category');
+      if (catSelect) {
+        catSelect.innerHTML = appData.categories.map((c, idx) =>
+          `<option value="${c.id}">${idx + 1}. ${c.name}</option>`
+        ).join('');
+      }
+      onCategoryChanged();
       document.getElementById('modal-request').classList.remove('hidden');
       lucide.createIcons();
     }
 
     function closeRequestModal() {
       document.getElementById('modal-request').classList.add('hidden');
+    }
+
+    function onCategoryChanged() {
+      const catSelect = document.getElementById('modal-req-category');
+      const selectedCatId = catSelect ? catSelect.value : (appData.categories[0]?.id || '');
+      const select = document.getElementById('modal-req-item-select');
+      select.innerHTML = '';
+
+      const filteredItems = appData.budgetItems.filter(item => !selectedCatId || item.categoryId === selectedCatId);
+      const itemsToRender = filteredItems.length > 0 ? filteredItems : appData.budgetItems;
+
+      itemsToRender.forEach(item => {
+        const total = Number(item.totalBudget || 0);
+        const used = Number(item.committedAmount || 0) + Number(item.realizedAmount || 0);
+        const available = total - used;
+        select.innerHTML += `<option value="${item.id}" data-price="${item.unitPrice}" data-available="${available}">${item.itemCode} - ${item.name} (Sisa: ${formatRp(available)})</option>`;
+      });
+      onBudgetItemChanged();
     }
 
     function onBudgetItemChanged() {
@@ -738,93 +1639,104 @@
 
       const opt = document.getElementById('modal-req-item-select').selectedOptions[0];
       const available = Number(opt?.dataset.available || 0);
-
-      const warningBox = document.getElementById('modal-overrun-warning');
-      const warningText = document.getElementById('modal-overrun-text');
-      const submitBtn = document.getElementById('btn-submit-request');
+      const errBox = document.getElementById('modal-req-error');
+      const errText = document.getElementById('modal-req-error-text');
 
       if (subtotal > available) {
-        warningBox.classList.remove('hidden');
-        warningText.innerText = `Peringatan Over-Budget! Subtotal ${formatRp(subtotal)} melebihi sisa pagu (${formatRp(available)})!`;
-        submitBtn.disabled = true;
+        errBox.classList.remove('hidden');
+        errText.innerText = `Peringatan: Nominal belanja (${formatRp(subtotal)}) melampaui sisa pagu (${formatRp(available)}). Tetap bisa diajukan dengan eskalasi persetujuan Direktur.`;
       } else {
-        warningBox.classList.add('hidden');
-        submitBtn.disabled = false;
+        errBox.classList.add('hidden');
       }
     }
 
     async function submitNewRequest(e) {
       e.preventDefault();
+      const catSelect = document.getElementById('modal-req-category');
+      const selectedCatText = catSelect?.selectedOptions[0]?.innerText || '';
+      const title = document.getElementById('modal-req-title').value;
+      const needByDate = document.getElementById('modal-req-date').value;
+      const purpose = document.getElementById('modal-req-purpose').value;
+      const type = document.getElementById('modal-req-type').value;
+
       const select = document.getElementById('modal-req-item-select');
-      const opt = select.selectedOptions[0];
-      const budgetItemId = select.value;
-      const qty = Number(document.getElementById('modal-req-qty').value);
-      const price = Number(document.getElementById('modal-req-price').value);
-      const subtotal = qty * price;
+      const itemOpt = select.selectedOptions[0];
+      const budgetItemId = itemOpt.value;
+      const requestedQty = Number(document.getElementById('modal-req-qty').value);
+      const estimatedUnitPrice = Number(document.getElementById('modal-req-price').value);
 
       const payload = {
-        title: document.getElementById('modal-req-title').value,
-        type: document.getElementById('modal-req-type').value,
-        needByDate: document.getElementById('modal-req-date').value,
-        purpose: document.getElementById('modal-req-purpose').value,
-        totalAmountRequested: subtotal,
-        items: [{
-          budgetItemId,
-          description: opt.text.split('(')[0],
-          requestedQty: qty,
-          estimatedUnitPrice: price,
-          estimatedTotal: subtotal
-        }]
+        title: `[${selectedCatText.split('.')[1]?.trim() || 'Budget'}] ${title}`,
+        needByDate,
+        purpose,
+        type,
+        items: [
+          {
+            budgetItemId,
+            description: itemOpt.innerText.split('(')[0].trim(),
+            requestedQty,
+            estimatedUnitPrice
+          }
+        ]
       };
 
-      const res = await fetch('/api/v1/requests', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-
-      if (res.ok) {
-        closeRequestModal();
-        await loadData();
-        switchTab('requests');
-      } else {
-        const err = await res.json();
-        alert(err.message || 'Gagal menyimpan kasbon');
+      try {
+        const res = await fetch('/api/v1/requests', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (res.ok) {
+          closeRequestModal();
+          await loadData();
+          switchTab('requests');
+          return;
+        }
+      } catch (err) {
+        console.warn('Backend offline, saving locally in session:', err);
       }
-    }
 
-    // APPROVAL / DISBURSEMENT
-    async function approveRequest(id, stage) {
-      if (!confirm('Setujui pengajuan kasbon ini?')) return;
-      await fetch(`/api/v1/requests/${id}/approve`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ stage, decision: 'APPROVED' })
+      // Local fallback
+      const totalAmt = requestedQty * estimatedUnitPrice;
+      const newReq = {
+        id: String(Date.now()),
+        requestNumber: 'REQ-TBN-' + new Date().toISOString().slice(0, 10).replace(/-/g, '') + '-' + String(appData.requests.length + 1).padStart(3, '0'),
+        title: payload.title,
+        purpose,
+        type,
+        needByDate,
+        totalAmountRequested: totalAmt,
+        currentStatus: 'SUBMITTED',
+        items: payload.items
+      };
+      appData.requests.unshift(newReq);
+      appData.auditLogs.unshift({
+        id: String(Date.now()),
+        userName: 'Operator (Local)',
+        action: 'SUBMIT',
+        ticket: newReq.requestNumber,
+        detail: `Pengajuan kasbon ${payload.title} senilai ${formatRp(totalAmt)}`,
+        timestamp: new Date().toISOString()
       });
-      await loadData();
-    }
-
-    async function disburseRequest(id) {
-      if (!confirm('Cairkan dana kasbon dan kunci pagu komitmen?')) return;
-      await fetch(`/api/v1/requests/${id}/disburse`, { method: 'POST' });
-      await loadData();
+      closeRequestModal();
+      renderAll();
+      switchTab('requests');
+      alert('Pengajuan kasbon berhasil disimpan!');
     }
 
     // MODAL REALIZATION LOGIC
-    function openRealizationModal(preselectedReqId) {
+    function openRealizationModal(reqId) {
       const select = document.getElementById('modal-rlz-req-select');
-      select.innerHTML = '';
+      select.innerHTML = '<option value="">-- Pilih Kasbon Yang Telah Dicairkan --</option>';
 
-      const disbursedList = appData.requests.filter(r => r.currentStatus === 'DISBURSED');
-      if (disbursedList.length === 0) {
-        alert('Tidak ada tiket kasbon berstatus DISBURSED yang siap dibuatkan LPJ.');
-        return;
-      }
-
-      disbursedList.forEach(r => {
-        select.innerHTML += `<option value="${r.id}" data-amount="${r.totalAmountRequested}" ${r.id === preselectedReqId ? 'selected' : ''}>${r.requestNumber} - ${r.title} (${formatRp(r.totalAmountRequested)})</option>`;
+      const candidates = appData.requests.filter(r => r.currentStatus === 'DISBURSED');
+      candidates.forEach(r => {
+        select.innerHTML += `<option value="${r.id}" data-number="${r.requestNumber}" data-amount="${r.totalAmountRequested}">${r.requestNumber} - ${r.title} (${formatRp(r.totalAmountRequested)})</option>`;
       });
 
+      if (reqId) {
+        select.value = reqId;
+      }
       onRealizationRequestChanged();
       document.getElementById('modal-realization').classList.remove('hidden');
       lucide.createIcons();
@@ -837,87 +1749,324 @@
     function onRealizationRequestChanged() {
       const select = document.getElementById('modal-rlz-req-select');
       const opt = select.selectedOptions[0];
-      const initialAmt = Number(opt?.dataset.amount || 0);
+      const amt = Number(opt?.dataset.amount || 0);
 
-      document.getElementById('modal-rlz-amount').value = initialAmt;
-      document.getElementById('modal-rlz-date').value = new Date().toISOString().slice(0, 10);
-      calculateRealizationDiff();
+      document.getElementById('modal-rlz-cashadvance-display').innerText = formatRp(amt);
+
+      const reqId = select.value;
+      const req = appData.requests.find(r => r.id === reqId);
+      const catEl = document.getElementById('modal-rlz-cat-display');
+      if (req && catEl) {
+        const cat = getCategoryForRequest(req);
+        catEl.innerText = `${cat.name} (Pagu: ${formatRp(cat.allocatedAmount)})`;
+      } else if (catEl) {
+        catEl.innerText = '-';
+      }
+
+      calculateRealizationTotal();
     }
 
-    function calculateRealizationDiff() {
-      const select = document.getElementById('modal-rlz-req-select');
-      const opt = select.selectedOptions[0];
-      const initialAmt = Number(opt?.dataset.amount || 0);
-      const actualAmt = Number(document.getElementById('modal-rlz-amount').value || 0);
-      const diff = initialAmt - actualAmt;
+    function addRealizationRow() {
+      const container = document.getElementById('modal-rlz-items-container');
+      const row = document.createElement('div');
+      row.className = 'grid grid-cols-12 gap-2 items-center text-xs';
+      row.innerHTML = `
+        <input type="text" placeholder="Uraian Nota..." class="col-span-4 p-2 border border-slate-300 rounded-lg rlz-item-name" required>
+        <input type="text" placeholder="No. Nota" class="col-span-2 p-2 border border-slate-300 rounded-lg rlz-item-inv" required>
+        <input type="number" value="1" min="1" step="any" oninput="calculateRealizationTotal()" class="col-span-2 p-2 border border-slate-300 rounded-lg rlz-item-qty" required>
+        <input type="number" placeholder="Harga" oninput="calculateRealizationTotal()" class="col-span-3 p-2 border border-slate-300 rounded-lg rlz-item-price" required>
+        <button type="button" onclick="this.parentElement.remove(); calculateRealizationTotal();" class="col-span-1 text-slate-400 hover:text-rose-600 text-center"><i data-lucide="trash-2" class="w-4 h-4 mx-auto"></i></button>
+      `;
+      container.appendChild(row);
+      lucide.createIcons();
+    }
 
-      document.getElementById('modal-rlz-initial-display').innerText = formatRp(initialAmt);
-      document.getElementById('modal-rlz-actual-display').innerText = formatRp(actualAmt);
+    function calculateRealizationTotal() {
+      const rows = document.querySelectorAll('#modal-rlz-items-container > div');
+      let total = 0;
+      rows.forEach(r => {
+        const qty = Number(r.querySelector('.rlz-item-qty')?.value || 0);
+        const price = Number(r.querySelector('.rlz-item-price')?.value || 0);
+        total += qty * price;
+      });
 
-      const diffDisplay = document.getElementById('modal-rlz-diff-display');
+      const opt = document.getElementById('modal-rlz-req-select').selectedOptions[0];
+      const advance = Number(opt?.dataset.amount || 0);
+      const diff = advance - total;
+
+      document.getElementById('modal-rlz-total-display').innerText = formatRp(total);
+      const diffEl = document.getElementById('modal-rlz-diff-display');
       if (diff > 0) {
-        diffDisplay.className = 'text-emerald-600';
-        diffDisplay.innerText = `+ ${formatRp(diff)} (Sisa Kasbon Kembali)`;
+        diffEl.innerText = `Lebih Kasbon: ${formatRp(diff)} (Wajib dikembalikan ke kasir)`;
+        diffEl.className = 'text-blue-600 font-bold';
       } else if (diff < 0) {
-        diffDisplay.className = 'text-amber-600';
-        diffDisplay.innerText = `- ${formatRp(Math.abs(diff))} (Klaim Reimbursement)`;
+        diffEl.innerText = `Kekurangan Kasbon (Nombok): ${formatRp(Math.abs(diff))} (Akan diganti/reimburse)`;
+        diffEl.className = 'text-rose-600 font-bold';
       } else {
-        diffDisplay.className = 'text-slate-900';
-        diffDisplay.innerText = 'Rp 0 (Jumlah Pas)';
+        diffEl.innerText = 'Pas: Sesuai nominal kasbon';
+        diffEl.className = 'text-emerald-600 font-bold';
       }
     }
 
     async function submitNewRealization(e) {
       e.preventDefault();
-      const select = document.getElementById('modal-rlz-req-select');
-      const requestId = select.value;
-      const actualAmt = Number(document.getElementById('modal-rlz-amount').value);
+      const reqSelect = document.getElementById('modal-rlz-req-select');
+      const reqId = reqSelect.value;
+      if (!reqId) { alert('Silakan pilih tiket kasbon!'); return; }
 
-      const payload = {
-        requestId,
-        invoiceNumber: document.getElementById('modal-rlz-invoice').value,
-        invoiceDate: document.getElementById('modal-rlz-date').value,
-        itemName: document.getElementById('modal-rlz-itemname').value,
-        actualTotalPrice: actualAmt
-      };
-
-      const res = await fetch('/api/v1/realizations', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+      const rows = document.querySelectorAll('#modal-rlz-items-container > div');
+      const items = [];
+      rows.forEach(r => {
+        items.push({
+          itemName: r.querySelector('.rlz-item-name').value,
+          invoiceNumber: r.querySelector('.rlz-item-inv').value,
+          actualQty: Number(r.querySelector('.rlz-item-qty').value),
+          actualUnitPrice: Number(r.querySelector('.rlz-item-price').value),
+          actualTotalPrice: Number(r.querySelector('.rlz-item-qty').value) * Number(r.querySelector('.rlz-item-price').value),
+          invoiceDate: new Date().toISOString().slice(0, 10)
+        });
       });
 
-      if (res.ok) {
-        closeRealizationModal();
+      const payload = {
+        expenseRequestId: reqId,
+        notes: document.getElementById('modal-rlz-notes').value,
+        items
+      };
+
+      try {
+        const res = await fetch('/api/v1/realizations', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (res.ok) {
+          closeRealizationModal();
+          await loadData();
+          switchTab('realizations');
+          return;
+        }
+      } catch (err) {
+        console.warn('Backend offline, saving realization locally:', err);
+      }
+
+      // Local fallback
+      const reqObj = appData.requests.find(r => r.id === reqId) || {};
+      reqObj.currentStatus = 'SETTLED';
+      const totalRealized = items.reduce((s, i) => s + i.actualTotalPrice, 0);
+      const newRlz = {
+        id: String(Date.now()),
+        realizationNumber: 'RLZ-TBN-' + new Date().toISOString().slice(0, 10).replace(/-/g, '') + '-' + String(appData.realizations.length + 1).padStart(3, '0'),
+        expenseRequestId: reqId,
+        requestNumber: reqObj.requestNumber,
+        requestTitle: reqObj.title,
+        originalCashAdvanceDisbursed: reqObj.totalAmountRequested || totalRealized,
+        totalRealizedAmount: totalRealized,
+        remainingBalance: (reqObj.totalAmountRequested || totalRealized) - totalRealized,
+        status: 'SETTLED',
+        notes: payload.notes,
+        items
+      };
+      appData.realizations.unshift(newRlz);
+      appData.auditLogs.unshift({
+        id: String(Date.now()),
+        userName: 'Finance (Local)',
+        action: 'SETTLE',
+        ticket: newRlz.realizationNumber,
+        detail: `Pertanggungjawaban LPJ ${newRlz.realizationNumber} senilai ${formatRp(totalRealized)}`,
+        timestamp: new Date().toISOString()
+      });
+      closeRealizationModal();
+      renderAll();
+      switchTab('realizations');
+      alert('Dokumen LPJ berhasil dicatat!');
+    }
+
+    // ACTIONS
+    async function approveRequest(id, role) {
+      if (!confirm('Setujui kasbon ini?')) return;
+      try {
+        await fetch(`/api/v1/requests/${id}/approve`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ role, notes: 'Disetujui secara otomatis via portal' })
+        });
         await loadData();
-        switchTab('realizations');
-      } else {
-        alert('Gagal menyimpan LPJ realisasi.');
+      } catch (e) {
+        const req = appData.requests.find(r => r.id === id);
+        if (req) {
+          req.currentStatus = 'APPROVED_DIRECTOR';
+          renderAll();
+        }
+      }
+    }
+
+    async function disburseRequest(id) {
+      if (!confirm('Cairkan dana kasbon ke pelaksana lapangan?')) return;
+      try {
+        await fetch(`/api/v1/requests/${id}/disburse`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ referenceNumber: 'TRF-BCA-' + Date.now(), notes: 'Dana ditransfer' })
+        });
+        await loadData();
+      } catch (e) {
+        const req = appData.requests.find(r => r.id === id);
+        if (req) {
+          req.currentStatus = 'DISBURSED';
+          renderAll();
+        }
       }
     }
 
     async function settleRealization(id) {
-      if (!confirm('Tutup settlement LPJ dan perbarui realisasi anggaran permanen?')) return;
-      await fetch(`/api/v1/realizations/${id}/settle`, { method: 'POST' });
-      await loadData();
+      if (!confirm('Selesaikan dan tutup rekonsiliasi LPJ ini?')) return;
+      try {
+        await fetch(`/api/v1/realizations/${id}/settle`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ notes: 'Rekonsiliasi ditutup' })
+        });
+        await loadData();
+      } catch (e) {
+        const rz = appData.realizations.find(r => r.id === id);
+        if (rz) {
+          rz.status = 'SETTLED';
+          renderAll();
+        }
+      }
     }
 
-    // TAB SWITCHER
-    function switchTab(tabId) {
-      ['overview', 'requests', 'realizations', 'alerts'].forEach(t => {
-        document.getElementById(`tab-${t}`)?.classList.add('hidden');
-        document.getElementById(`tab-btn-${t}`)?.classList.remove('border-slate-900', 'text-slate-900');
-        document.getElementById(`tab-btn-${t}`)?.classList.add('border-transparent', 'text-slate-500');
+    
+    // BUDGET SETTINGS FUNCTIONS
+    function openBudgetSettingsModal() {
+      const list = document.getElementById('budget-settings-inputs-list');
+      if (!list) return;
+      list.innerHTML = '';
+
+      appData.categories.forEach((cat, idx) => {
+        const catItems = appData.budgetItems.filter(i => i.categoryId === cat.id);
+        let catUsed = 0;
+        catItems.forEach(i => {
+          catUsed += Number(i.committedAmount || 0) + Number(i.realizedAmount || 0);
+        });
+
+        list.innerHTML += `
+          <div class="p-3.5 bg-slate-50/80 rounded-xl border border-slate-200 hover:border-blue-300 transition space-y-2">
+            <div class="flex items-start justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-600 text-white font-bold text-[10px]">${idx + 1}</span>
+                <span class="font-bold text-slate-900 text-xs">${cat.name}</span>
+              </div>
+              <span class="text-[11px] text-slate-500">Terpakai: <strong class="text-slate-800">${formatRp(catUsed)}</strong></span>
+            </div>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 font-bold text-slate-400 text-xs">Rp</span>
+              <input type="number" id="input-cat-budget-${cat.id}" data-cat-id="${cat.id}" value="${cat.allocatedAmount || 0}" step="100000" min="0" oninput="calculateBudgetSettingsTotal()" class="w-full pl-9 pr-3 py-2 border border-slate-300 rounded-lg text-xs font-mono font-bold text-slate-900 bg-white focus:outline-none focus:border-blue-500">
+            </div>
+          </div>
+        `;
       });
 
-      document.getElementById(`tab-${tabId}`)?.classList.remove('hidden');
-      document.getElementById(`tab-btn-${tabId}`)?.classList.add('border-slate-900', 'text-slate-900');
-      document.getElementById(`tab-btn-${tabId}`)?.classList.remove('border-transparent', 'text-slate-500');
+      calculateBudgetSettingsTotal();
+      document.getElementById('modal-budget-settings').classList.remove('hidden');
       lucide.createIcons();
     }
 
+    function closeBudgetSettingsModal() {
+      document.getElementById('modal-budget-settings').classList.add('hidden');
+    }
+
+    function calculateBudgetSettingsTotal() {
+      let total = 0;
+      appData.categories.forEach(cat => {
+        const inp = document.getElementById(`input-cat-budget-${cat.id}`);
+        if (inp) {
+          total += Number(inp.value || 0);
+        }
+      });
+      const el = document.getElementById('preview-total-budget-sum');
+      if (el) el.innerText = formatRp(total);
+    }
+
+    async function saveBudgetSettings(e) {
+      e.preventDefault();
+      const updatedCategories = [];
+      let newTotal = 0;
+
+      appData.categories.forEach(cat => {
+        const inp = document.getElementById(`input-cat-budget-${cat.id}`);
+        const val = Number(inp?.value || 0);
+        cat.allocatedAmount = val;
+        newTotal += val;
+        updatedCategories.push({ id: cat.id, allocatedAmount: val });
+      });
+
+      if (appData.projects[0]) {
+        appData.projects[0].totalBudget = newTotal;
+      }
+
+      try {
+        const res = await fetch('/api/v1/categories/budget', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ categories: updatedCategories, totalBudget: newTotal })
+        });
+        if (res.ok) {
+          const resData = await res.json();
+          if (resData.data) {
+            appData = resData.data;
+          }
+        }
+      } catch (err) {
+        console.warn('Backend server offline or running offline, saving to localStorage:', err);
+      }
+
+      localStorage.setItem('tambun_categories_budget', JSON.stringify(updatedCategories));
+      localStorage.setItem('tambun_total_budget', String(newTotal));
+
+      closeBudgetSettingsModal();
+      renderAll();
+      alert('Pengaturan nilai budget berhasil disimpan! Nilai pagu untuk seluruh 6 kategori telah diperbarui.');
+    }
+
+    function resetBudgetToDefault() {
+      if (!confirm('Kembalikan nilai budget ke alokasi baseline awal?')) return;
+      const defaultAllocations = {
+        '44444444-4444-4444-4444-444444444401': 350000000,
+        '44444444-4444-4444-4444-444444444402': 550000000,
+        '44444444-4444-4444-4444-444444444403': 200000000,
+        '44444444-4444-4444-4444-444444444404': 150000000,
+        '44444444-4444-4444-4444-444444444405': 150000000,
+        '44444444-4444-4444-4444-444444444406': 100000000,
+      };
+      appData.categories.forEach(cat => {
+        const inp = document.getElementById(`input-cat-budget-${cat.id}`);
+        if (inp && defaultAllocations[cat.id] !== undefined) {
+          inp.value = defaultAllocations[cat.id];
+        }
+      });
+      calculateBudgetSettingsTotal();
+    }
+
+function switchTab(tabId) {
+      const tabs = ['overview', 'requests', 'realizations', 'alerts'];
+      tabs.forEach(t => {
+        document.getElementById('tab-' + t).classList.add('hidden');
+        const btn = document.getElementById('tab-btn-' + t);
+        btn.classList.remove('border-slate-900', 'text-slate-900');
+        btn.classList.add('border-transparent', 'text-slate-500');
+      });
+
+      document.getElementById('tab-' + tabId).classList.remove('hidden');
+      const activeBtn = document.getElementById('tab-btn-' + tabId);
+      activeBtn.classList.remove('border-transparent', 'text-slate-500');
+      activeBtn.classList.add('border-slate-900', 'text-slate-900');
+    }
+
     // INIT
-    window.addEventListener('DOMContentLoaded', loadData);
+    window.addEventListener('DOMContentLoaded', () => {
+      loadData();
+    });
   </script>
 </body>
 </html>

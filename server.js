@@ -104,6 +104,41 @@ const server = http.createServer(async (req, res) => {
     return sendJson(res, 200, { success: true, data: db.projects });
   }
 
+  // PUT / POST /api/v1/categories/budget (Batch Update Budget Values)
+  if ((method === 'PUT' || method === 'POST') && pathname === '/api/v1/categories/budget') {
+    const db = readDb();
+    const payload = await parseBody(req);
+
+    if (payload.categories && Array.isArray(payload.categories)) {
+      payload.categories.forEach(item => {
+        const cat = db.categories.find(c => c.id === item.id);
+        if (cat) {
+          if (item.allocatedAmount !== undefined) cat.allocatedAmount = Number(item.allocatedAmount);
+          if (item.name) cat.name = item.name;
+        }
+      });
+    }
+
+    if (payload.totalBudget !== undefined && db.projects[0]) {
+      db.projects[0].totalBudget = Number(payload.totalBudget);
+    } else if (db.projects[0]) {
+      db.projects[0].totalBudget = db.categories.reduce((s, c) => s + Number(c.allocatedAmount || 0), 0);
+    }
+
+    db.auditLogs.unshift({
+      id: String(Date.now()),
+      userName: 'Manajemen Eksekutif',
+      action: 'APPROVE',
+      entityName: 'BUDGET_ADJUSTMENT',
+      ticket: 'ADJ-BUDGET-' + Date.now().toString().slice(-4),
+      detail: 'Penyesuaian nilai pagu anggaran berhasil disimpan (Total Rp ' + Number(db.projects[0]?.totalBudget || 0).toLocaleString('id-ID') + ')',
+      timestamp: new Date().toISOString()
+    });
+
+    writeDb(db);
+    return sendJson(res, 200, { success: true, message: 'Nilai budget berhasil diperbarui.', data: db });
+  }
+
   // GET /api/v1/requests
   if (method === 'GET' && pathname === '/api/v1/requests') {
     const db = readDb();
@@ -251,11 +286,19 @@ const server = http.createServer(async (req, res) => {
     const remaining = requestedAmt - actualAmt;
     const newRlzNumber = `RLZ-TBN-202605-${String(db.realizations.length + 1).padStart(3, '0')}`;
 
+    const bItemId = targetReq.items?.[0]?.budgetItemId;
+    const bItem = db.budgetItems.find(i => i.id === bItemId);
+    const cat = db.categories.find(c => c.id === bItem?.categoryId) || db.categories[0];
+
     const newRlz = {
       id: `rlz-${Date.now()}`,
       realizationNumber: newRlzNumber,
       requestId: targetReq.id,
       requestNumber: targetReq.requestNumber,
+      categoryId: cat?.id,
+      categoryCode: cat?.categoryCode,
+      categoryName: cat?.name,
+      requestTitle: targetReq.title,
       title: targetReq.title,
       submitterName: 'Eko Prasetyo, ST',
       verifierName: 'Siti Rahma, SE (Finance)',

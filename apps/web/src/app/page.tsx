@@ -36,47 +36,147 @@ const INITIAL_PROJECTS = [
     categories: [
       {
         id: '44444444-4444-4444-4444-444444444401',
-        categoryCode: 'WBS-01',
-        name: 'Pekerjaan Tanah, Galian & Pondasi Tapak',
+        categoryCode: 'CAT-01',
+        name: 'Interior dan Furniture (Fit-Out Outlet)',
         items: [
           {
             id: '55555555-5555-5555-5555-555555555501',
-            itemCode: 'ITM-FND-001',
-            name: 'Semen Portland Komposit 50kg',
-            unit: 'ZAK',
-            unitPrice: 68000,
-            availableAmount: 52250000,
+            itemCode: 'ITM-FIT-001',
+            name: 'Partisi Kaca & Meja Custom Resepsionis',
+            unit: 'PAKET',
+            unitPrice: 85000000,
+            availableAmount: 70650000,
           },
           {
             id: '55555555-5555-5555-5555-555555555502',
-            itemCode: 'ITM-FND-002',
-            name: 'Pasir Cor Pasang Bangka',
-            unit: 'M3',
-            unitPrice: 290000,
-            availableAmount: 101500000,
+            itemCode: 'ITM-FIT-002',
+            name: 'Plafon Drop Ceiling, Vinyl & Cat Interior',
+            unit: 'PAKET',
+            unitPrice: 65000000,
+            availableAmount: 65000000,
           },
         ],
       },
       {
         id: '44444444-4444-4444-4444-444444444402',
-        categoryCode: 'WBS-02',
-        name: 'Pekerjaan Struktur Beton & Rangka Baja',
+        categoryCode: 'CAT-02',
+        name: 'Equipment dan Inventori (Hardware & Mesin)',
         items: [
           {
             id: '55555555-5555-5555-5555-555555555503',
-            itemCode: 'ITM-STR-001',
-            name: 'Besi Beton Ulir D16 BJTS 420B',
-            unit: 'BATANG',
-            unitPrice: 185000,
+            itemCode: 'ITM-EQP-001',
+            name: 'Mesin Digital Printing Press & Plotter Utama',
+            unit: 'UNIT',
+            unitPrice: 277500000,
             availableAmount: 229500000,
           },
           {
+            id: '55555555-5555-5555-5555-555555555504',
+            itemCode: 'ITM-EQP-002',
+            name: 'Komputer Kasir POS & Komputer Operator Grafis',
+            unit: 'SET',
+            unitPrice: 10000000,
+            availableAmount: 7550000,
+          },
+          {
             id: '55555555-5555-5555-5555-555555555505',
-            itemCode: 'ITM-STR-003',
-            name: 'Kayu Kaso & Triplek Bekisting 9mm',
-            unit: 'LEMBAR',
-            unitPrice: 160000,
+            itemCode: 'ITM-EQP-003',
+            name: 'Mesin Finishing & Laminasi Elektrik',
+            unit: 'UNIT',
+            unitPrice: 40000000,
             availableAmount: 23600000,
+          },
+        ],
+      },
+      {
+        id: '44444444-4444-4444-4444-444444444403',
+        categoryCode: 'CAT-03',
+        name: 'Marketing Tools dan Stok Bahan Awal',
+        items: [
+          {
+            id: '55555555-5555-5555-5555-555555555506',
+            itemCode: 'ITM-MKT-001',
+            name: 'Stok Bahan Kertas Art Paper, Sticker & Toner Awal',
+            unit: 'PAKET',
+            unitPrice: 120000000,
+            availableAmount: 120000000,
+          },
+          {
+            id: '55555555-5555-5555-5555-555555555507',
+            itemCode: 'ITM-MKT-002',
+            name: 'Signage Neon Box Luar & Promo Launching',
+            unit: 'PAKET',
+            unitPrice: 35000000,
+            availableAmount: 35000000,
+          },
+        ],
+      },
+      {
+        id: '44444444-4444-4444-4444-444444444404',
+        categoryCode: 'CAT-04',
+        name: 'Biaya Lisensi Brand, Perizinan & Legalitas',
+        items: [
+          {
+            id: '55555555-5555-5555-5555-555555555508',
+            itemCode: 'ITM-LEG-001',
+            name: 'Lisensi Franchise Brand Snaprint & POS System',
+            unit: 'PAKET',
+            unitPrice: 88000000,
+            availableAmount: 66000000,
+          },
+          {
+            id: '55555555-5555-5555-5555-555555555509',
+            itemCode: 'ITM-LEG-002',
+            name: 'Perizinan Usaha, PBG & Sertifikasi Legalitas',
+            unit: 'PAKET',
+            unitPrice: 30000000,
+            availableAmount: 14500000,
+          },
+        ],
+      },
+      {
+        id: '44444444-4444-4444-4444-444444444405',
+        categoryCode: 'CAT-05',
+        name: 'Pekerjaan Tambahan & Contingency',
+        items: [
+          {
+            id: '55555555-5555-5555-5555-555555555510',
+            itemCode: 'ITM-CTG-001',
+            name: 'Pekerjaan Tambahan Instalasi Daya Listrik PLN & Panel',
+            unit: 'PAKET',
+            unitPrice: 65000000,
+            availableAmount: 65000000,
+          },
+          {
+            id: '55555555-5555-5555-5555-555555555511',
+            itemCode: 'ITM-CTG-002',
+            name: 'Cadangan Kontinjensi & Biaya Tak Terduga Lapangan',
+            unit: 'PAKET',
+            unitPrice: 50000000,
+            availableAmount: 50000000,
+          },
+        ],
+      },
+      {
+        id: '44444444-4444-4444-4444-444444444406',
+        categoryCode: 'CAT-06',
+        name: 'Pekerjaan diluar busget tapi penting',
+        items: [
+          {
+            id: '55555555-5555-5555-5555-555555555512',
+            itemCode: 'ITM-EXT-001',
+            name: 'Perbaikan Pompa Air Tanah & Saluran Limbah Darurat',
+            unit: 'PAKET',
+            unitPrice: 28000000,
+            availableAmount: 28000000,
+          },
+          {
+            id: '55555555-5555-5555-5555-555555555513',
+            itemCode: 'ITM-EXT-002',
+            name: 'Pengadaan Unit CCTV Keamanan & Stabilizer Mesin',
+            unit: 'PAKET',
+            unitPrice: 35000000,
+            availableAmount: 35000000,
           },
         ],
       },
@@ -267,36 +367,52 @@ export default function DashboardPage() {
 
   const categoriesSummary = [
     {
-      categoryCode: 'WBS-01',
-      name: 'Pekerjaan Tanah & Pondasi Tapak',
+      categoryCode: 'CAT-01',
+      name: 'Interior dan Furniture (Fit-Out Outlet)',
       allocatedAmount: 350000000,
       committedAmount: 0,
       realizedAmount: 14350000,
       usagePercent: (14350000 / 350000000) * 100,
     },
     {
-      categoryCode: 'WBS-02',
-      name: 'Struktur Beton & Rangka Baja',
-      allocatedAmount: 600000000,
+      categoryCode: 'CAT-02',
+      name: 'Equipment dan Inventori (Hardware & Mesin)',
+      allocatedAmount: 550000000,
       committedAmount: 56000000,
       realizedAmount: 8400000,
-      usagePercent: ((56000000 + 8400000) / 600000000) * 100,
+      usagePercent: ((56000000 + 8400000) / 550000000) * 100,
     },
     {
-      categoryCode: 'WBS-03',
-      name: 'Instalasi MEP & Sanitair',
-      allocatedAmount: 250000000,
+      categoryCode: 'CAT-03',
+      name: 'Marketing Tools dan Stok Bahan Awal',
+      allocatedAmount: 200000000,
       committedAmount: 0,
       realizedAmount: 0,
       usagePercent: 0,
     },
     {
-      categoryCode: 'WBS-04',
-      name: 'Sewa Alat Berat & BBM Genset',
-      allocatedAmount: 180000000,
+      categoryCode: 'CAT-04',
+      name: 'Biaya Lisensi Brand, Perizinan & Legalitas',
+      allocatedAmount: 150000000,
       committedAmount: 15500000,
+      realizedAmount: 11000000,
+      usagePercent: ((15500000 + 11000000) / 150000000) * 100,
+    },
+    {
+      categoryCode: 'CAT-05',
+      name: 'Pekerjaan Tambahan & Contingency',
+      allocatedAmount: 150000000,
+      committedAmount: 0,
       realizedAmount: 0,
-      usagePercent: (15500000 / 180000000) * 100,
+      usagePercent: 0,
+    },
+    {
+      categoryCode: 'CAT-06',
+      name: 'Pekerjaan diluar busget tapi penting',
+      allocatedAmount: 100000000,
+      committedAmount: 0,
+      realizedAmount: 0,
+      usagePercent: 0,
     },
   ];
 
@@ -602,7 +718,7 @@ export default function DashboardPage() {
                   : 'border-transparent text-slate-500 hover:text-slate-800'
               }`}
             >
-              <LayoutDashboard className="h-4 w-4" /> Ikhtisar Eksekutif
+              <LayoutDashboard className="h-4 w-4" /> Dashboard Eksekutif
             </button>
             <button
               onClick={() => setActiveTab('requests')}
@@ -612,7 +728,7 @@ export default function DashboardPage() {
                   : 'border-transparent text-slate-500 hover:text-slate-800'
               }`}
             >
-              <Wallet className="h-4 w-4" /> Pengajuan Kasbon ({requests.length})
+              <Wallet className="h-4 w-4" /> Kategori Budget ({requests.length})
             </button>
             <button
               onClick={() => setActiveTab('realizations')}

@@ -275,43 +275,59 @@ const server = http.createServer(async (req, res) => {
   if (method === 'POST' && pathname === '/api/v1/realizations') {
     const db = readDb();
     const payload = await parseBody(req);
-    const targetReq = db.requests.find(r => r.id === payload.requestId);
+    const targetReq = payload.requestId ? db.requests.find(r => r.id === payload.requestId) : null;
 
-    if (!targetReq) {
-      return sendJson(res, 404, { success: false, message: 'Kasbon terkait tidak ditemukan.' });
+    let requestedAmt = 0;
+    let targetTitle = payload.itemName || 'Pembelian Riil Lapangan';
+    let reqNumber = '-';
+    let reqId = null;
+    let cat = null;
+
+    if (targetReq) {
+      requestedAmt = Number(targetReq.totalAmountRequested || 0);
+      targetTitle = targetReq.title;
+      reqNumber = targetReq.requestNumber;
+      reqId = targetReq.id;
+      targetReq.currentStatus = 'SETTLED';
+      const bItemId = targetReq.items?.[0]?.budgetItemId;
+      const bItem = db.budgetItems.find(i => i.id === bItemId);
+      cat = db.categories.find(c => c.id === bItem?.categoryId) || db.categories.find(c => c.id === targetReq.categoryId);
     }
 
-    const requestedAmt = Number(targetReq.totalAmountRequested);
+    if (!cat && payload.categoryId) {
+      cat = db.categories.find(c => c.id === payload.categoryId);
+    }
+    if (!cat) {
+      cat = db.categories[0];
+    }
+
     const actualAmt = Number(payload.actualTotalPrice || 0);
     const remaining = requestedAmt - actualAmt;
-    const newRlzNumber = `RLZ-TBN-202605-${String(db.realizations.length + 1).padStart(3, '0')}`;
-
-    const bItemId = targetReq.items?.[0]?.budgetItemId;
-    const bItem = db.budgetItems.find(i => i.id === bItemId);
-    const cat = db.categories.find(c => c.id === bItem?.categoryId) || db.categories[0];
+    const newRlzNumber = 'RLZ-TBN-202605-' + String(db.realizations.length + 1).padStart(3, '0');
 
     const newRlz = {
-      id: `rlz-${Date.now()}`,
+      id: 'rlz-' + Date.now(),
       realizationNumber: newRlzNumber,
-      requestId: targetReq.id,
-      requestNumber: targetReq.requestNumber,
+      requestId: reqId,
+      requestNumber: reqNumber,
       categoryId: cat?.id,
       categoryCode: cat?.categoryCode,
       categoryName: cat?.name,
-      requestTitle: targetReq.title,
-      title: targetReq.title,
-      submitterName: 'Eko Prasetyo, ST',
+      requestTitle: targetTitle,
+      title: payload.itemName || targetTitle,
+      submitterName: payload.submitterName || 'Eko Prasetyo, ST (Pelaksana)',
       verifierName: 'Siti Rahma, SE (Finance)',
       totalRequested: requestedAmt,
       totalRealizedAmount: actualAmt,
       remainingBalance: remaining,
       status: 'VERIFIED_FINANCE',
-      settledAt: null,
-      notes: `Faktur: ${payload.invoiceNumber || '-'}`,
+      settledAt: new Date().toISOString(),
+      notes: 'Faktur: ' + (payload.invoiceNumber || '-') + ' | Vendor: ' + (payload.vendorName || '-'),
       items: [
         {
-          itemName: payload.itemName || targetReq.title,
-          invoiceNumber: payload.invoiceNumber,
+          itemName: payload.itemName || targetTitle,
+          invoiceNumber: payload.invoiceNumber || '-',
+          vendorName: payload.vendorName || '-',
           actualTotalPrice: actualAmt,
           invoiceDate: payload.invoiceDate || new Date().toISOString().slice(0, 10)
         }
@@ -321,16 +337,16 @@ const server = http.createServer(async (req, res) => {
     db.realizations.unshift(newRlz);
     db.auditLogs.unshift({
       id: String(Date.now()),
-      userName: 'Eko Prasetyo, ST',
-      action: 'SUBMIT',
+      userName: payload.submitterName || 'Eko Prasetyo, ST',
+      action: 'SUBMIT_LPJ',
       entityName: 'REALIZATION',
       ticket: newRlzNumber,
-      detail: `Pengajuan LPJ belanja riil Rp ${actualAmt.toLocaleString('id-ID')}`,
+      detail: 'Pencatatan LPJ ' + newRlzNumber + ' (' + cat.name + '): Belanja riil Rp ' + actualAmt.toLocaleString('id-ID') + ' (Kasbon: Rp ' + requestedAmt.toLocaleString('id-ID') + ')',
       timestamp: new Date().toISOString()
     });
 
     writeDb(db);
-    return sendJson(res, 201, { success: true, message: 'LPJ berhasil diajukan.', data: newRlz });
+    return sendJson(res, 201, { success: true, message: 'LPJ berhasil dicatat.', data: newRlz });
   }
 
   // POST /api/v1/realizations/:id/settle

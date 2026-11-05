@@ -510,88 +510,105 @@
   <!-- MODAL 2: INPUT LPJ REALISASI & KWITANSI -->
   <!-- ========================================================================= -->
   <div id="modal-realization" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
+    <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl max-h-[92vh] overflow-y-auto">
       <div class="flex items-center justify-between pb-3 border-b border-slate-200">
         <div>
-          <h3 class="text-base font-bold text-slate-900">Input LPJ Realisasi & Kwitansi</h3>
-          <p class="text-xs text-slate-400">Pertanggungjawaban pembelanjaan fisik di lapangan.</p>
+          <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+            <i data-lucide="receipt" class="w-5 h-5 text-emerald-600"></i>
+            Input LPJ Realisasi & Kwitansi Belanja
+          </h3>
+          <p class="text-xs text-slate-500">Pertanggungjawaban pembelanjaan fisik di lapangan disesuaikan dengan Kategori Budget.</p>
         </div>
-        <button onclick="closeRealizationModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg"><i data-lucide="x" class="w-5 h-5"></i></button>
+        <button onclick="closeRealizationModal()" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
       </div>
 
       <form id="form-create-realization" onsubmit="submitNewRealization(event)" class="mt-4 space-y-4 text-xs">
+        <!-- Sumber Kasbon / Jenis Pengeluaran -->
         <div>
-          <label class="font-semibold text-slate-700">Pilih Tiket Kasbon Dicairkan</label>
-          <select id="modal-rlz-req-select" onchange="onRealizationRequestChanged()" class="mt-1 w-full p-2 border border-slate-300 rounded-lg bg-white" required>
-            <!-- Rendered dynamically -->
+          <label class="font-semibold text-slate-700 block mb-1">Sumber Kasbon / Opsi Pengeluaran</label>
+          <select id="modal-rlz-req-select" onchange="onRealizationRequestChanged()" class="w-full p-2.5 border border-slate-300 rounded-lg bg-white text-xs font-semibold focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500" required>
+            <!-- Populated via openRealizationModal() -->
           </select>
         </div>
 
-        <div class="p-3 bg-blue-50/70 border border-blue-200 rounded-xl flex items-center justify-between text-xs">
+        <!-- Direct Category Selector (Muncul jika Belanja Langsung tanpa Kasbon) -->
+        <div id="modal-rlz-direct-cat-container" class="hidden">
+          <label class="font-semibold text-slate-700 block mb-1">Pilih Kategori Budget Langsung</label>
+          <select id="modal-rlz-direct-category" onchange="onRealizationRequestChanged()" class="w-full p-2.5 border-2 border-emerald-500 rounded-lg bg-emerald-50/60 text-slate-900 text-xs font-bold">
+            <!-- Populated dynamically with the 6 categories -->
+          </select>
+        </div>
+
+        <!-- Info Kategori & Pagu Banner -->
+        <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between text-xs">
           <div>
-            <span class="text-slate-500 block text-[11px]">Kategori Budget Terdebet:</span>
-            <span id="modal-rlz-cat-display" class="font-bold text-blue-900">-</span>
+            <span class="text-slate-500 block text-[11px] font-medium">Kategori Budget Terdebet:</span>
+            <span id="modal-rlz-cat-display" class="font-bold text-blue-900 text-xs">-</span>
           </div>
           <div class="text-right">
-            <span class="text-slate-500 block text-[11px]">Kasbon Dicairkan:</span>
-            <span id="modal-rlz-cashadvance-display" class="font-bold text-slate-900">Rp 0</span>
+            <span class="text-slate-500 block text-[11px] font-medium">Kasbon / Plafon Awal:</span>
+            <span id="modal-rlz-cashadvance-display" class="font-bold text-emerald-700 text-xs">Rp 0</span>
           </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
+        <!-- Detail Faktur / Kwitansi Toko -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label class="font-semibold text-slate-700">Nomor Nota / Faktur Toko</label>
-            <input type="text" id="modal-rlz-invoice" placeholder="INV-TBJ-2026-099" class="mt-1 w-full p-2 border border-slate-300 rounded-lg" required>
+            <label class="font-semibold text-slate-700 block mb-1">Nomor Nota / Faktur Toko</label>
+            <input type="text" id="modal-rlz-invoice" placeholder="Contoh: INV-TBJ-2026-099" class="w-full p-2 border border-slate-300 rounded-lg text-xs" required>
           </div>
           <div>
-            <label class="font-semibold text-slate-700">Tanggal Faktur</label>
-            <input type="date" id="modal-rlz-date" class="mt-1 w-full p-2 border border-slate-300 rounded-lg" required>
+            <label class="font-semibold text-slate-700 block mb-1">Tanggal Faktur / Kwitansi</label>
+            <input type="date" id="modal-rlz-date" class="w-full p-2 border border-slate-300 rounded-lg text-xs" required>
           </div>
         </div>
 
         <div>
-          <label class="font-semibold text-slate-700">Uraian Barang Riil</label>
-          <input type="text" id="modal-rlz-itemname" placeholder="Pembelian Semen & Paku..." class="mt-1 w-full p-2 border border-slate-300 rounded-lg" required>
+          <label class="font-semibold text-slate-700 block mb-1">Nama Toko / Supplier / Vendor</label>
+          <input type="text" id="modal-rlz-vendor" placeholder="Contoh: TB Makmur Sentosa Tambun" class="w-full p-2 border border-slate-300 rounded-lg text-xs">
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="font-semibold text-slate-700">Total Belanja Riil (Rp)</label>
-            <input type="number" id="modal-rlz-amount" min="1" oninput="calculateRealizationDiff()" class="mt-1 w-full p-2 border border-slate-300 rounded-lg font-bold" required>
-          </div>
-          <div>
-            <label class="font-semibold text-slate-700">Lampiran Kwitansi (Simulasi)</label>
-            <div class="mt-1 p-2 border border-dashed border-slate-300 rounded-lg text-slate-500 flex items-center justify-center gap-1.5 bg-slate-50">
-              <i data-lucide="upload-cloud" class="w-4 h-4 text-blue-500"></i>
-              <span>Foto_Kwitansi.jpg</span>
-            </div>
-          </div>
+        <div>
+          <label class="font-semibold text-slate-700 block mb-1">Uraian Pembelanjaan Riil</label>
+          <input type="text" id="modal-rlz-itemname" placeholder="Contoh: Pembelian Semen Gresik 80 Sak & Pasir Extra 2 Pick-Up" class="w-full p-2 border border-slate-300 rounded-lg text-xs font-medium" required>
+        </div>
+
+        <!-- Total Belanja Riil -->
+        <div>
+          <label class="font-semibold text-slate-700 block mb-1">Total Nilai Belanja Riil (Rp)</label>
+          <input type="number" id="modal-rlz-amount" min="1" step="any" oninput="calculateRealizationDiff()" placeholder="Contoh: 4250000" class="w-full p-2.5 border-2 border-emerald-500 rounded-lg font-bold text-slate-900 text-sm focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600" required>
         </div>
 
         <!-- RECONCILIATION SUMMARY BANNER -->
-        <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
+        <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-1.5 text-xs">
           <div class="flex justify-between text-slate-600">
             <span>Kasbon Awal Diterima:</span>
-            <span id="modal-rlz-initial-display" class="font-semibold text-slate-900">Rp 0</span>
+            <span id="modal-rlz-initial-display" class="font-bold text-slate-800">Rp 0</span>
           </div>
           <div class="flex justify-between text-slate-600">
             <span>Realisasi Belanja Riil:</span>
-            <span id="modal-rlz-actual-display" class="font-semibold text-slate-900">Rp 0</span>
+            <span id="modal-rlz-actual-display" class="font-bold text-emerald-700">Rp 0</span>
           </div>
-          <div class="flex justify-between border-t border-slate-200 pt-1 font-bold">
-            <span>Hasil Rekonsiliasi:</span>
-            <span id="modal-rlz-diff-display" class="text-emerald-600">Rp 0</span>
+          <div class="flex justify-between border-t border-slate-200 pt-1.5 font-bold">
+            <span>Hasil Rekonsiliasi Kas:</span>
+            <span id="modal-rlz-diff-display" class="text-slate-700">Rp 0</span>
           </div>
         </div>
 
         <div class="flex justify-end gap-2 border-t border-slate-200 pt-3">
-          <button type="button" onclick="closeRealizationModal()" class="px-4 py-2 border border-slate-300 rounded-lg font-semibold hover:bg-slate-50">Batal</button>
-          <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-700">Kirim Berkas LPJ</button>
+          <button type="button" onclick="closeRealizationModal()" class="px-4 py-2 border border-slate-300 rounded-lg font-semibold text-slate-700 hover:bg-slate-50 transition">
+            Batal
+          </button>
+          <button type="submit" id="btn-submit-rlz" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-semibold shadow-sm transition flex items-center gap-1.5">
+            <i data-lucide="check-circle" class="w-4 h-4"></i>
+            <span>Simpan & Terbitkan LPJ</span>
+          </button>
         </div>
       </form>
     </div>
   </div>
-
   <!-- ========================================================================= -->
   <!-- CLIENT JAVASCRIPT APP ENGINE -->
   <!-- ========================================================================= -->
@@ -1727,16 +1744,43 @@
     // MODAL REALIZATION LOGIC
     function openRealizationModal(reqId) {
       const select = document.getElementById('modal-rlz-req-select');
-      select.innerHTML = '<option value="">-- Pilih Kasbon Yang Telah Dicairkan --</option>';
+      const directCatSelect = document.getElementById('modal-rlz-direct-category');
+      
+      // Populate direct categories
+      if (directCatSelect && appData.categories) {
+        directCatSelect.innerHTML = appData.categories.map((c, i) =>
+          `<option value="${c.id}">${i+1}. ${c.name}</option>`
+        ).join('');
+      }
 
-      const candidates = appData.requests.filter(r => r.currentStatus === 'DISBURSED');
-      candidates.forEach(r => {
-        select.innerHTML += `<option value="${r.id}" data-number="${r.requestNumber}" data-amount="${r.totalAmountRequested}">${r.requestNumber} - ${r.title} (${formatRp(r.totalAmountRequested)})</option>`;
-      });
+      // Populate requests
+      select.innerHTML = '';
+      select.innerHTML += '<option value="">-- Pilih Tiket Kasbon Lapangan --</option>';
+      select.innerHTML += '<option value="DIRECT" data-amount="0" class="font-bold text-emerald-700">&#10010; Belanja Langsung Tanpa Kasbon (Pilih Kategori Sendiri)</option>';
+
+      if (appData.requests && appData.requests.length > 0) {
+        select.innerHTML += '<optgroup label="Daftar Kasbon Aktif">';
+        appData.requests.forEach(r => {
+          const cat = getCategoryForRequest(r);
+          select.innerHTML += `<option value="${r.id}" data-amount="${r.totalAmountRequested}" data-cat-id="${cat.id}" data-cat-name="${cat.name}">[${r.requestNumber}] ${r.title} (${formatRp(r.totalAmountRequested)}) - ${cat.name}</option>`;
+        });
+        select.innerHTML += '</optgroup>';
+      }
 
       if (reqId) {
         select.value = reqId;
       }
+
+      const dateEl = document.getElementById('modal-rlz-date');
+      if (dateEl && !dateEl.value) {
+        dateEl.value = new Date().toISOString().slice(0, 10);
+      }
+
+      document.getElementById('modal-rlz-invoice').value = '';
+      document.getElementById('modal-rlz-vendor').value = '';
+      document.getElementById('modal-rlz-itemname').value = '';
+      document.getElementById('modal-rlz-amount').value = '';
+
       onRealizationRequestChanged();
       document.getElementById('modal-realization').classList.remove('hidden');
       lucide.createIcons();
@@ -1748,90 +1792,144 @@
 
     function onRealizationRequestChanged() {
       const select = document.getElementById('modal-rlz-req-select');
+      const directContainer = document.getElementById('modal-rlz-direct-cat-container');
       const opt = select.selectedOptions[0];
-      const amt = Number(opt?.dataset.amount || 0);
+      const val = select.value;
 
-      document.getElementById('modal-rlz-cashadvance-display').innerText = formatRp(amt);
+      let catName = '-';
+      let catAllocation = 0;
+      let cashAdvance = 0;
 
-      const reqId = select.value;
-      const req = appData.requests.find(r => r.id === reqId);
-      const catEl = document.getElementById('modal-rlz-cat-display');
-      if (req && catEl) {
-        const cat = getCategoryForRequest(req);
-        catEl.innerText = `${cat.name} (Pagu: ${formatRp(cat.allocatedAmount)})`;
-      } else if (catEl) {
-        catEl.innerText = '-';
+      if (val === 'DIRECT') {
+        if (directContainer) directContainer.classList.remove('hidden');
+        const directCatSelect = document.getElementById('modal-rlz-direct-category');
+        const catId = directCatSelect ? directCatSelect.value : appData.categories[0]?.id;
+        const cat = appData.categories.find(c => c.id === catId) || appData.categories[0];
+        catName = cat ? cat.name : '-';
+        catAllocation = cat ? cat.allocatedAmount : 0;
+        cashAdvance = 0;
+      } else if (val) {
+        if (directContainer) directContainer.classList.add('hidden');
+        const req = appData.requests.find(r => r.id === val);
+        if (req) {
+          const cat = getCategoryForRequest(req);
+          catName = cat ? cat.name : '-';
+          catAllocation = cat ? cat.allocatedAmount : 0;
+          cashAdvance = Number(req.totalAmountRequested || 0);
+
+          const itemInput = document.getElementById('modal-rlz-itemname');
+          if (itemInput && !itemInput.value) {
+            itemInput.value = req.title;
+          }
+        }
+      } else {
+        if (directContainer) directContainer.classList.add('hidden');
       }
 
-      calculateRealizationTotal();
+      const catEl = document.getElementById('modal-rlz-cat-display');
+      if (catEl) catEl.innerText = catName;
+
+      const advEl = document.getElementById('modal-rlz-cashadvance-display');
+      if (advEl) advEl.innerText = formatRp(cashAdvance);
+
+      const initEl = document.getElementById('modal-rlz-initial-display');
+      if (initEl) initEl.innerText = formatRp(cashAdvance);
+
+      calculateRealizationDiff();
     }
 
-    function addRealizationRow() {
-      const container = document.getElementById('modal-rlz-items-container');
-      const row = document.createElement('div');
-      row.className = 'grid grid-cols-12 gap-2 items-center text-xs';
-      row.innerHTML = `
-        <input type="text" placeholder="Uraian Nota..." class="col-span-4 p-2 border border-slate-300 rounded-lg rlz-item-name" required>
-        <input type="text" placeholder="No. Nota" class="col-span-2 p-2 border border-slate-300 rounded-lg rlz-item-inv" required>
-        <input type="number" value="1" min="1" step="any" oninput="calculateRealizationTotal()" class="col-span-2 p-2 border border-slate-300 rounded-lg rlz-item-qty" required>
-        <input type="number" placeholder="Harga" oninput="calculateRealizationTotal()" class="col-span-3 p-2 border border-slate-300 rounded-lg rlz-item-price" required>
-        <button type="button" onclick="this.parentElement.remove(); calculateRealizationTotal();" class="col-span-1 text-slate-400 hover:text-rose-600 text-center"><i data-lucide="trash-2" class="w-4 h-4 mx-auto"></i></button>
-      `;
-      container.appendChild(row);
-      lucide.createIcons();
-    }
+    function calculateRealizationDiff() {
+      const select = document.getElementById('modal-rlz-req-select');
+      const opt = select?.selectedOptions[0];
+      const val = select?.value;
 
-    function calculateRealizationTotal() {
-      const rows = document.querySelectorAll('#modal-rlz-items-container > div');
-      let total = 0;
-      rows.forEach(r => {
-        const qty = Number(r.querySelector('.rlz-item-qty')?.value || 0);
-        const price = Number(r.querySelector('.rlz-item-price')?.value || 0);
-        total += qty * price;
-      });
+      let cashAdvance = 0;
+      if (val === 'DIRECT') {
+        cashAdvance = 0;
+      } else if (val) {
+        const req = appData.requests.find(r => r.id === val);
+        cashAdvance = Number(req?.totalAmountRequested || opt?.dataset.amount || 0);
+      }
 
-      const opt = document.getElementById('modal-rlz-req-select').selectedOptions[0];
-      const advance = Number(opt?.dataset.amount || 0);
-      const diff = advance - total;
+      const amountInput = document.getElementById('modal-rlz-amount');
+      const actualAmount = Number(amountInput?.value || 0);
 
-      document.getElementById('modal-rlz-total-display').innerText = formatRp(total);
+      const actualDisplay = document.getElementById('modal-rlz-actual-display');
+      if (actualDisplay) actualDisplay.innerText = formatRp(actualAmount);
+
+      const diff = cashAdvance - actualAmount;
       const diffEl = document.getElementById('modal-rlz-diff-display');
-      if (diff > 0) {
-        diffEl.innerText = `Lebih Kasbon: ${formatRp(diff)} (Wajib dikembalikan ke kasir)`;
-        diffEl.className = 'text-blue-600 font-bold';
-      } else if (diff < 0) {
-        diffEl.innerText = `Kekurangan Kasbon (Nombok): ${formatRp(Math.abs(diff))} (Akan diganti/reimburse)`;
-        diffEl.className = 'text-rose-600 font-bold';
-      } else {
-        diffEl.innerText = 'Pas: Sesuai nominal kasbon';
-        diffEl.className = 'text-emerald-600 font-bold';
+      if (diffEl) {
+        if (val === 'DIRECT') {
+          diffEl.innerText = `Realisasi Langsung: ${formatRp(actualAmount)} (Didebet ke Kategori)`;
+          diffEl.className = 'text-emerald-700 font-bold';
+        } else if (actualAmount <= 0) {
+          diffEl.innerText = 'Rp 0';
+          diffEl.className = 'text-slate-700 font-bold';
+        } else if (diff > 0) {
+          diffEl.innerText = `Lebih Kasbon: +${formatRp(diff)} (Kembalikan ke Kasir)`;
+          diffEl.className = 'text-blue-600 font-bold';
+        } else if (diff < 0) {
+          diffEl.innerText = `Kekurangan (Nombok): -${formatRp(Math.abs(diff))} (Reimburse Kasir)`;
+          diffEl.className = 'text-rose-600 font-bold';
+        } else {
+          diffEl.innerText = 'Pas: Sesuai nominal kasbon';
+          diffEl.className = 'text-emerald-600 font-bold';
+        }
       }
     }
 
     async function submitNewRealization(e) {
       e.preventDefault();
-      const reqSelect = document.getElementById('modal-rlz-req-select');
-      const reqId = reqSelect.value;
-      if (!reqId) { alert('Silakan pilih tiket kasbon!'); return; }
+      const select = document.getElementById('modal-rlz-req-select');
+      const val = select.value;
+      if (!val) {
+        alert('Silakan pilih tiket kasbon atau opsi Belanja Langsung!');
+        select.focus();
+        return;
+      }
 
-      const rows = document.querySelectorAll('#modal-rlz-items-container > div');
-      const items = [];
-      rows.forEach(r => {
-        items.push({
-          itemName: r.querySelector('.rlz-item-name').value,
-          invoiceNumber: r.querySelector('.rlz-item-inv').value,
-          actualQty: Number(r.querySelector('.rlz-item-qty').value),
-          actualUnitPrice: Number(r.querySelector('.rlz-item-price').value),
-          actualTotalPrice: Number(r.querySelector('.rlz-item-qty').value) * Number(r.querySelector('.rlz-item-price').value),
-          invoiceDate: new Date().toISOString().slice(0, 10)
-        });
-      });
+      const invoiceNumber = document.getElementById('modal-rlz-invoice').value.trim();
+      const invoiceDate = document.getElementById('modal-rlz-date').value;
+      const vendorName = document.getElementById('modal-rlz-vendor').value.trim();
+      const itemName = document.getElementById('modal-rlz-itemname').value.trim();
+      const actualTotalPrice = Number(document.getElementById('modal-rlz-amount').value || 0);
+
+      if (actualTotalPrice <= 0) {
+        alert('Total nilai belanja riil harus lebih besar dari 0!');
+        document.getElementById('modal-rlz-amount').focus();
+        return;
+      }
+
+      let categoryId = null;
+      let targetReq = null;
+
+      if (val === 'DIRECT') {
+        const directCatSelect = document.getElementById('modal-rlz-direct-category');
+        categoryId = directCatSelect ? directCatSelect.value : appData.categories[0]?.id;
+      } else {
+        targetReq = appData.requests.find(r => r.id === val);
+        if (targetReq) {
+          const cat = getCategoryForRequest(targetReq);
+          categoryId = cat.id;
+        }
+      }
 
       const payload = {
-        expenseRequestId: reqId,
-        notes: document.getElementById('modal-rlz-notes').value,
-        items
+        requestId: val === 'DIRECT' ? null : val,
+        categoryId: categoryId,
+        invoiceNumber: invoiceNumber,
+        invoiceDate: invoiceDate,
+        vendorName: vendorName,
+        itemName: itemName,
+        actualTotalPrice: actualTotalPrice
       };
+
+      const btnSubmit = document.getElementById('btn-submit-rlz');
+      if (btnSubmit) {
+        btnSubmit.disabled = true;
+        btnSubmit.innerText = 'Menyimpan LPJ...';
+      }
 
       try {
         const res = await fetch('/api/v1/realizations', {
@@ -1843,42 +1941,72 @@
           closeRealizationModal();
           await loadData();
           switchTab('realizations');
+          alert('Bukti LPJ berhasil dicatat dan disesuaikan dengan Kategori Budget!');
           return;
         }
       } catch (err) {
-        console.warn('Backend offline, saving realization locally:', err);
+        console.warn('Backend server offline, saving realization in local memory:', err);
+      } finally {
+        if (btnSubmit) {
+          btnSubmit.disabled = false;
+          btnSubmit.innerHTML = '<i data-lucide="check-circle" class="w-4 h-4"></i><span>Simpan & Terbitkan LPJ</span>';
+          lucide.createIcons();
+        }
       }
 
-      // Local fallback
-      const reqObj = appData.requests.find(r => r.id === reqId) || {};
-      reqObj.currentStatus = 'SETTLED';
-      const totalRealized = items.reduce((s, i) => s + i.actualTotalPrice, 0);
+      // Offline / LocalStorage Fallback
+      const catObj = appData.categories.find(c => c.id === categoryId) || appData.categories[0];
+      const newRlzNumber = 'RLZ-TBN-202605-' + String(appData.realizations.length + 1).padStart(3, '0');
+      const requestedAmt = targetReq ? Number(targetReq.totalAmountRequested || 0) : 0;
+      const remaining = requestedAmt - actualTotalPrice;
+
+      if (targetReq) {
+        targetReq.currentStatus = 'SETTLED';
+      }
+
       const newRlz = {
-        id: String(Date.now()),
-        realizationNumber: 'RLZ-TBN-' + new Date().toISOString().slice(0, 10).replace(/-/g, '') + '-' + String(appData.realizations.length + 1).padStart(3, '0'),
-        expenseRequestId: reqId,
-        requestNumber: reqObj.requestNumber,
-        requestTitle: reqObj.title,
-        originalCashAdvanceDisbursed: reqObj.totalAmountRequested || totalRealized,
-        totalRealizedAmount: totalRealized,
-        remainingBalance: (reqObj.totalAmountRequested || totalRealized) - totalRealized,
-        status: 'SETTLED',
-        notes: payload.notes,
-        items
+        id: 'rlz-' + Date.now(),
+        realizationNumber: newRlzNumber,
+        requestId: targetReq ? targetReq.id : null,
+        requestNumber: targetReq ? targetReq.requestNumber : '-',
+        categoryId: catObj.id,
+        categoryCode: catObj.categoryCode,
+        categoryName: catObj.name,
+        requestTitle: targetReq ? targetReq.title : itemName,
+        title: itemName,
+        submitterName: 'Eko Prasetyo, ST (Pelaksana)',
+        verifierName: 'Siti Rahma, SE (Finance)',
+        totalRequested: requestedAmt,
+        totalRealizedAmount: actualTotalPrice,
+        remainingBalance: remaining,
+        status: 'VERIFIED_FINANCE',
+        settledAt: new Date().toISOString(),
+        notes: 'Faktur: ' + invoiceNumber + ' | Vendor: ' + (vendorName || '-'),
+        items: [
+          {
+            itemName: itemName,
+            invoiceNumber: invoiceNumber,
+            vendorName: vendorName,
+            actualTotalPrice: actualTotalPrice,
+            invoiceDate: invoiceDate
+          }
+        ]
       };
+
       appData.realizations.unshift(newRlz);
       appData.auditLogs.unshift({
         id: String(Date.now()),
-        userName: 'Finance (Local)',
-        action: 'SETTLE',
-        ticket: newRlz.realizationNumber,
-        detail: `Pertanggungjawaban LPJ ${newRlz.realizationNumber} senilai ${formatRp(totalRealized)}`,
+        userName: 'Eko Prasetyo, ST',
+        action: 'SUBMIT_LPJ',
+        ticket: newRlzNumber,
+        detail: 'Pencatatan LPJ ' + newRlzNumber + ' (' + catObj.name + '): Belanja riil ' + formatRp(actualTotalPrice),
         timestamp: new Date().toISOString()
       });
+
       closeRealizationModal();
       renderAll();
       switchTab('realizations');
-      alert('Dokumen LPJ berhasil dicatat!');
+      alert('Bukti LPJ berhasil dicatat dan diselaraskan ke Kategori Budget!');
     }
 
     // ACTIONS
